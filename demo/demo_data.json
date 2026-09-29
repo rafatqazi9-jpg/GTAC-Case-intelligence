@@ -1,0 +1,2527 @@
+{
+ "generated_at": "2026-09-02T20:51:30",
+ "at_days": 2,
+ "threshold": "medium",
+ "n_cases_total": 59,
+ "n_defects": 10,
+ "cases": [
+  {
+   "id": "CS-6100050",
+   "platform": "5720",
+   "sw_version": "32.5.1",
+   "symptom_class": "intermittent_uplink_loss",
+   "symptom_text": "Intermittent uplink loss",
+   "features": [
+    "mlag",
+    "mac-learning",
+    "dhcp-snooping"
+   ],
+   "region": "AMER",
+   "fields": [
+    {
+     "label": "Case Number",
+     "value": "CS-6100050",
+     "src": "id"
+    },
+    {
+     "label": "Type",
+     "value": "C2",
+     "src": "-"
+    },
+    {
+     "label": "Product Platform",
+     "value": "5720",
+     "src": "platform"
+    },
+    {
+     "label": "Firmware",
+     "value": "32.5.1",
+     "src": "sw_version"
+    },
+    {
+     "label": "Product Feature",
+     "value": "mlag, mac-learning, dhcp-snooping",
+     "src": "features_enabled"
+    },
+    {
+     "label": "Symptom Reason",
+     "value": "intermittent_uplink_loss",
+     "src": "symptom_class"
+    },
+    {
+     "label": "Case Region",
+     "value": "AMER",
+     "src": "region"
+    }
+   ],
+   "created_at": "2026-06-08T09:00:00",
+   "cutoff": "2026-06-10T09:00:00",
+   "events": [
+    {
+     "at": "2026-06-08T09:00:00",
+     "kind": "note",
+     "text": "Customer reports mlag peer link flap under mac churn."
+    },
+    {
+     "at": "2026-06-08T12:00:00",
+     "kind": "note",
+     "text": "Initial assessment: Suspected bad optic / cable."
+    },
+    {
+     "at": "2026-06-09T09:00:00",
+     "kind": "attachment",
+     "text": "show tech-support uploaded"
+    }
+   ],
+   "abstained": false,
+   "abstain_reason": null,
+   "findings": [
+    {
+     "module": "m01_defect_exposure",
+     "kind": "candidate",
+     "statement": "MLAG peer link flap under high MAC churn - affects 32.5.1 with mac-learning, mlag enabled; fixed in 32.5.2",
+     "confidence": "medium",
+     "sources": [
+      "XIQ-41220"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "candidate",
+     "statement": "BPDU flood under MAC table churn - affects 32.5.1 with mac-learning enabled; no fix available",
+     "confidence": "low",
+     "sources": [
+      "XIQ-45021"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "ECMP hash imbalance after LAG member add - not exposed: requires ecmp, lag, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-43011"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "Memory leak in policy manager with dynamic ACLs - not exposed: requires acl, policy, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-42540"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "OSPF adjacency drop on MTU mismatch in fabric - not exposed: requires ospf, mtu, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-43788"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "VXLAN tunnel blackhole after VLAN prune - not exposed: requires vxlan, vlan, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44102"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "Control-plane starvation under sFlow sampling - not exposed: requires sflow, telemetry, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44510"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "PoE negotiation failure with LLDP-MED endpoints - not exposed: requires poe, lldp, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44890"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "candidate",
+     "statement": "Upgrading to 32.5.2 clears 1 of 2 exposed defects",
+     "confidence": "high",
+     "sources": [
+      "XIQ-41220"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "4 prior case(s) presented this way with the hypothesis \"Suspected bad optic / cable\". Actual cause was: MLAG peer link flap under MAC churn (XIQ-41220)",
+     "confidence": "high",
+     "sources": [
+      "CS-6100003",
+      "CS-6100002",
+      "CS-6100001",
+      "CS-6100004"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "3 prior case(s) presented this way with the hypothesis \"Suspected bad optic / cable\". Actual cause was: MTU mismatch causing OSPF adjacency drop (XIQ-43788)",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100007",
+      "CS-6100006",
+      "CS-6100005"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "2 prior case(s) presented this way with the hypothesis \"Suspected software defect in the link layer\". Actual cause was: Failed SFP+ optic on the customer patch panel",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100008",
+      "CS-6100009"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "On this symptom class the first hypothesis was wrong in 9 of 9 prior closed cases (100%)",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100003",
+      "CS-6100002",
+      "CS-6100001",
+      "CS-6100007",
+      "CS-6100008",
+      "CS-6100006",
+      "CS-6100005",
+      "CS-6100009"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Escalation package incomplete - missing: topology diagram, timeline, reproduction steps",
+     "confidence": "high",
+     "sources": [
+      "CS-6100050"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Already on the case: show tech-support, sw_version",
+     "confidence": "high",
+     "sources": [
+      "CS-6100050"
+     ]
+    }
+   ],
+   "truth": {
+    "initial_hypothesis": "Suspected bad optic / cable",
+    "actual_root_cause": "MLAG peer link flap under MAC churn (XIQ-41220)",
+    "cause_ids": [
+     "XIQ-41220"
+    ],
+    "closed_state": "Resolved",
+    "closure_comments": "Root cause confirmed: MLAG peer link flap under MAC churn (XIQ-41220). Fix identified."
+   },
+   "verdict": "HIT",
+   "asserted": 3,
+   "n_eliminated": 6
+  },
+  {
+   "id": "CS-6100051",
+   "platform": "7520",
+   "sw_version": "32.5.1",
+   "symptom_class": "intermittent_uplink_loss",
+   "symptom_text": "Intermittent uplink loss",
+   "features": [
+    "ospf",
+    "mtu",
+    "sntp-client"
+   ],
+   "region": "EMEA",
+   "fields": [
+    {
+     "label": "Case Number",
+     "value": "CS-6100051",
+     "src": "id"
+    },
+    {
+     "label": "Type",
+     "value": "C4",
+     "src": "-"
+    },
+    {
+     "label": "Product Platform",
+     "value": "7520",
+     "src": "platform"
+    },
+    {
+     "label": "Firmware",
+     "value": "32.5.1",
+     "src": "sw_version"
+    },
+    {
+     "label": "Product Feature",
+     "value": "ospf, mtu, sntp-client",
+     "src": "features_enabled"
+    },
+    {
+     "label": "Symptom Reason",
+     "value": "intermittent_uplink_loss",
+     "src": "symptom_class"
+    },
+    {
+     "label": "Case Region",
+     "value": "EMEA",
+     "src": "region"
+    }
+   ],
+   "created_at": "2026-06-09T09:00:00",
+   "cutoff": "2026-06-11T09:00:00",
+   "events": [
+    {
+     "at": "2026-06-09T09:00:00",
+     "kind": "note",
+     "text": "Customer reports mtu mismatch causing ospf adjacency drop."
+    },
+    {
+     "at": "2026-06-09T12:00:00",
+     "kind": "note",
+     "text": "Initial assessment: Suspected bad optic / cable."
+    },
+    {
+     "at": "2026-06-10T09:00:00",
+     "kind": "attachment",
+     "text": "show tech-support uploaded"
+    }
+   ],
+   "abstained": false,
+   "abstain_reason": null,
+   "findings": [
+    {
+     "module": "m01_defect_exposure",
+     "kind": "candidate",
+     "statement": "OSPF adjacency drop on MTU mismatch in fabric - affects 32.5.1 with mtu, ospf enabled; no fix available",
+     "confidence": "low",
+     "sources": [
+      "XIQ-43788"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "MLAG peer link flap under high MAC churn - not exposed: requires mlag, mac-learning, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-41220"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "ECMP hash imbalance after LAG member add - not exposed: requires ecmp, lag, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-43011"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "Memory leak in policy manager with dynamic ACLs - not exposed: requires acl, policy, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-42540"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "VXLAN tunnel blackhole after VLAN prune - not exposed: requires vxlan, vlan, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44102"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "Control-plane starvation under sFlow sampling - not exposed: requires sflow, telemetry, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44510"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "PoE negotiation failure with LLDP-MED endpoints - not exposed: requires poe, lldp, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44890"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "BPDU flood under MAC table churn - not exposed: requires stp, mac-learning, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-45021"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "4 prior case(s) presented this way with the hypothesis \"Suspected bad optic / cable\". Actual cause was: MLAG peer link flap under MAC churn (XIQ-41220)",
+     "confidence": "high",
+     "sources": [
+      "CS-6100003",
+      "CS-6100002",
+      "CS-6100001",
+      "CS-6100004"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "3 prior case(s) presented this way with the hypothesis \"Suspected bad optic / cable\". Actual cause was: MTU mismatch causing OSPF adjacency drop (XIQ-43788)",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100007",
+      "CS-6100006",
+      "CS-6100005"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "2 prior case(s) presented this way with the hypothesis \"Suspected software defect in the link layer\". Actual cause was: Failed SFP+ optic on the customer patch panel",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100008",
+      "CS-6100009"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "On this symptom class the first hypothesis was wrong in 9 of 9 prior closed cases (100%)",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100003",
+      "CS-6100002",
+      "CS-6100001",
+      "CS-6100007",
+      "CS-6100008",
+      "CS-6100006",
+      "CS-6100005",
+      "CS-6100009"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Escalation package incomplete - missing: topology diagram, timeline, reproduction steps",
+     "confidence": "high",
+     "sources": [
+      "CS-6100051"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Already on the case: show tech-support, sw_version",
+     "confidence": "high",
+     "sources": [
+      "CS-6100051"
+     ]
+    }
+   ],
+   "truth": {
+    "initial_hypothesis": "Suspected bad optic / cable",
+    "actual_root_cause": "MTU mismatch causing OSPF adjacency drop (XIQ-43788)",
+    "cause_ids": [
+     "XIQ-43788"
+    ],
+    "closed_state": "Resolved",
+    "closure_comments": "Root cause confirmed: MTU mismatch causing OSPF adjacency drop (XIQ-43788). Fix identified."
+   },
+   "verdict": "HIT",
+   "asserted": 2,
+   "n_eliminated": 7
+  },
+  {
+   "id": "CS-6100052",
+   "platform": "5520",
+   "sw_version": "32.5.2",
+   "symptom_class": "intermittent_uplink_loss",
+   "symptom_text": "Intermittent uplink loss",
+   "features": [
+    "lldp",
+    "sntp-client"
+   ],
+   "region": "APAC",
+   "fields": [
+    {
+     "label": "Case Number",
+     "value": "CS-6100052",
+     "src": "id"
+    },
+    {
+     "label": "Type",
+     "value": "C4",
+     "src": "-"
+    },
+    {
+     "label": "Product Platform",
+     "value": "5520",
+     "src": "platform"
+    },
+    {
+     "label": "Firmware",
+     "value": "32.5.2",
+     "src": "sw_version"
+    },
+    {
+     "label": "Product Feature",
+     "value": "lldp, sntp-client",
+     "src": "features_enabled"
+    },
+    {
+     "label": "Symptom Reason",
+     "value": "intermittent_uplink_loss",
+     "src": "symptom_class"
+    },
+    {
+     "label": "Case Region",
+     "value": "APAC",
+     "src": "region"
+    }
+   ],
+   "created_at": "2026-06-10T09:00:00",
+   "cutoff": "2026-06-12T09:00:00",
+   "events": [
+    {
+     "at": "2026-06-10T09:00:00",
+     "kind": "note",
+     "text": "Customer reports failed sfp+ optic on the customer patch ."
+    },
+    {
+     "at": "2026-06-10T12:00:00",
+     "kind": "note",
+     "text": "Initial assessment: Suspected software defect in the link layer."
+    },
+    {
+     "at": "2026-06-11T09:00:00",
+     "kind": "attachment",
+     "text": "show tech-support uploaded"
+    }
+   ],
+   "abstained": false,
+   "abstain_reason": null,
+   "findings": [
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "ECMP hash imbalance after LAG member add - not exposed: requires ecmp, lag, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-43011"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "VXLAN tunnel blackhole after VLAN prune - not exposed: requires vxlan, vlan, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44102"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "BPDU flood under MAC table churn - not exposed: requires stp, mac-learning, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-45021"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "4 prior case(s) presented this way with the hypothesis \"Suspected bad optic / cable\". Actual cause was: MLAG peer link flap under MAC churn (XIQ-41220)",
+     "confidence": "high",
+     "sources": [
+      "CS-6100003",
+      "CS-6100002",
+      "CS-6100001",
+      "CS-6100004"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "3 prior case(s) presented this way with the hypothesis \"Suspected bad optic / cable\". Actual cause was: MTU mismatch causing OSPF adjacency drop (XIQ-43788)",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100007",
+      "CS-6100006",
+      "CS-6100005"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "2 prior case(s) presented this way with the hypothesis \"Suspected software defect in the link layer\". Actual cause was: Failed SFP+ optic on the customer patch panel",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100008",
+      "CS-6100009"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "On this symptom class the first hypothesis was wrong in 9 of 9 prior closed cases (100%)",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100003",
+      "CS-6100002",
+      "CS-6100001",
+      "CS-6100007",
+      "CS-6100008",
+      "CS-6100006",
+      "CS-6100005",
+      "CS-6100009"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Escalation package incomplete - missing: topology diagram, timeline, reproduction steps",
+     "confidence": "high",
+     "sources": [
+      "CS-6100052"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Already on the case: show tech-support, sw_version",
+     "confidence": "high",
+     "sources": [
+      "CS-6100052"
+     ]
+    }
+   ],
+   "truth": {
+    "initial_hypothesis": "Suspected software defect in the link layer",
+    "actual_root_cause": "Failed SFP+ optic on the customer patch panel",
+    "cause_ids": [],
+    "closed_state": "Resolved",
+    "closure_comments": "Root cause confirmed: Failed SFP+ optic on the customer patch panel. Fix identified."
+   },
+   "verdict": "PARTIAL",
+   "asserted": 2,
+   "n_eliminated": 3
+  },
+  {
+   "id": "CS-6100053",
+   "platform": "5520",
+   "sw_version": "32.5.1",
+   "symptom_class": "traffic_blackhole",
+   "symptom_text": "Traffic blackholed on a subset of flows",
+   "features": [
+    "ecmp",
+    "lag",
+    "radius"
+   ],
+   "region": "AMER",
+   "fields": [
+    {
+     "label": "Case Number",
+     "value": "CS-6100053",
+     "src": "id"
+    },
+    {
+     "label": "Type",
+     "value": "C2",
+     "src": "-"
+    },
+    {
+     "label": "Product Platform",
+     "value": "5520",
+     "src": "platform"
+    },
+    {
+     "label": "Firmware",
+     "value": "32.5.1",
+     "src": "sw_version"
+    },
+    {
+     "label": "Product Feature",
+     "value": "ecmp, lag, radius",
+     "src": "features_enabled"
+    },
+    {
+     "label": "Symptom Reason",
+     "value": "traffic_blackhole",
+     "src": "symptom_class"
+    },
+    {
+     "label": "Case Region",
+     "value": "AMER",
+     "src": "region"
+    }
+   ],
+   "created_at": "2026-06-11T09:00:00",
+   "cutoff": "2026-06-13T09:00:00",
+   "events": [
+    {
+     "at": "2026-06-11T09:00:00",
+     "kind": "note",
+     "text": "Customer reports ecmp hash imbalance after lag member add."
+    },
+    {
+     "at": "2026-06-11T12:00:00",
+     "kind": "note",
+     "text": "Initial assessment: Suspected ACL misconfiguration."
+    },
+    {
+     "at": "2026-06-12T09:00:00",
+     "kind": "attachment",
+     "text": "show tech-support uploaded"
+    }
+   ],
+   "abstained": false,
+   "abstain_reason": null,
+   "findings": [
+    {
+     "module": "m01_defect_exposure",
+     "kind": "candidate",
+     "statement": "ECMP hash imbalance after LAG member add - affects 32.5.1 with ecmp, lag enabled; no fix available",
+     "confidence": "low",
+     "sources": [
+      "XIQ-43011"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "MLAG peer link flap under high MAC churn - not exposed: requires mlag, mac-learning, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-41220"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "Memory leak in policy manager with dynamic ACLs - not exposed: requires acl, policy, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-42540"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "OSPF adjacency drop on MTU mismatch in fabric - not exposed: requires ospf, mtu, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-43788"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "VXLAN tunnel blackhole after VLAN prune - not exposed: requires vxlan, vlan, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44102"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "Control-plane starvation under sFlow sampling - not exposed: requires sflow, telemetry, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44510"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "PoE negotiation failure with LLDP-MED endpoints - not exposed: requires poe, lldp, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44890"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "BPDU flood under MAC table churn - not exposed: requires stp, mac-learning, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-45021"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "4 prior case(s) presented this way with the hypothesis \"Suspected ACL misconfiguration\". Actual cause was: ECMP hash imbalance after LAG member add (XIQ-43011)",
+     "confidence": "high",
+     "sources": [
+      "CS-6100010",
+      "CS-6100012",
+      "CS-6100011",
+      "CS-6100013"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "3 prior case(s) presented this way with the hypothesis \"Suspected ACL misconfiguration\". Actual cause was: VXLAN tunnel blackhole after VLAN prune (XIQ-44102)",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100014",
+      "CS-6100016",
+      "CS-6100015"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "2 prior case(s) presented this way with the hypothesis \"Suspected forwarding table corruption\". Actual cause was: Upstream provider withdrew the BGP prefix",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100017",
+      "CS-6100018"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "On this symptom class the first hypothesis was wrong in 9 of 9 prior closed cases (100%)",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100010",
+      "CS-6100012",
+      "CS-6100014",
+      "CS-6100016",
+      "CS-6100011",
+      "CS-6100013",
+      "CS-6100015",
+      "CS-6100017"
+     ]
+    },
+    {
+     "module": "m06_fleet_correlation",
+     "kind": "cluster",
+     "statement": "5 open cases in 30d on 5520 / 32.5.1 / traffic_blackhole across 3 region(s) and 5 account(s) - possible field notice candidate",
+     "confidence": "high",
+     "sources": [
+      "CS-6100054",
+      "CS-6100090",
+      "CS-6100091",
+      "CS-6100092"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Escalation package incomplete - missing: topology diagram, timeline, reproduction steps",
+     "confidence": "high",
+     "sources": [
+      "CS-6100053"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Already on the case: show tech-support, sw_version",
+     "confidence": "high",
+     "sources": [
+      "CS-6100053"
+     ]
+    }
+   ],
+   "truth": {
+    "initial_hypothesis": "Suspected ACL misconfiguration",
+    "actual_root_cause": "ECMP hash imbalance after LAG member add (XIQ-43011)",
+    "cause_ids": [
+     "XIQ-43011"
+    ],
+    "closed_state": "Resolved",
+    "closure_comments": "Root cause confirmed: ECMP hash imbalance after LAG member add (XIQ-43011). Fix identified."
+   },
+   "verdict": "HIT",
+   "asserted": 2,
+   "n_eliminated": 7
+  },
+  {
+   "id": "CS-6100054",
+   "platform": "5520",
+   "sw_version": "32.5.1",
+   "symptom_class": "traffic_blackhole",
+   "symptom_text": "Traffic blackholed on a subset of flows",
+   "features": [
+    "vxlan",
+    "vlan",
+    "snmp",
+    "dhcp-snooping"
+   ],
+   "region": "EMEA",
+   "fields": [
+    {
+     "label": "Case Number",
+     "value": "CS-6100054",
+     "src": "id"
+    },
+    {
+     "label": "Type",
+     "value": "C3",
+     "src": "-"
+    },
+    {
+     "label": "Product Platform",
+     "value": "5520",
+     "src": "platform"
+    },
+    {
+     "label": "Firmware",
+     "value": "32.5.1",
+     "src": "sw_version"
+    },
+    {
+     "label": "Product Feature",
+     "value": "vxlan, vlan, snmp, dhcp-snooping",
+     "src": "features_enabled"
+    },
+    {
+     "label": "Symptom Reason",
+     "value": "traffic_blackhole",
+     "src": "symptom_class"
+    },
+    {
+     "label": "Case Region",
+     "value": "EMEA",
+     "src": "region"
+    }
+   ],
+   "created_at": "2026-06-12T09:00:00",
+   "cutoff": "2026-06-14T09:00:00",
+   "events": [
+    {
+     "at": "2026-06-12T09:00:00",
+     "kind": "note",
+     "text": "Customer reports vxlan tunnel blackhole after vlan prune."
+    },
+    {
+     "at": "2026-06-12T12:00:00",
+     "kind": "note",
+     "text": "Initial assessment: Suspected ACL misconfiguration."
+    },
+    {
+     "at": "2026-06-13T09:00:00",
+     "kind": "attachment",
+     "text": "show tech-support uploaded"
+    }
+   ],
+   "abstained": false,
+   "abstain_reason": null,
+   "findings": [
+    {
+     "module": "m01_defect_exposure",
+     "kind": "candidate",
+     "statement": "VXLAN tunnel blackhole after VLAN prune - affects 32.5.1 with vlan, vxlan enabled; fixed in 32.5.10",
+     "confidence": "medium",
+     "sources": [
+      "XIQ-44102"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "MLAG peer link flap under high MAC churn - not exposed: requires mlag, mac-learning, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-41220"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "ECMP hash imbalance after LAG member add - not exposed: requires ecmp, lag, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-43011"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "Memory leak in policy manager with dynamic ACLs - not exposed: requires acl, policy, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-42540"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "OSPF adjacency drop on MTU mismatch in fabric - not exposed: requires ospf, mtu, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-43788"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "Control-plane starvation under sFlow sampling - not exposed: requires sflow, telemetry, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44510"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "PoE negotiation failure with LLDP-MED endpoints - not exposed: requires poe, lldp, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44890"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "BPDU flood under MAC table churn - not exposed: requires stp, mac-learning, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-45021"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "candidate",
+     "statement": "Upgrading to 32.5.10 clears 1 of 1 exposed defects",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44102"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "4 prior case(s) presented this way with the hypothesis \"Suspected ACL misconfiguration\". Actual cause was: ECMP hash imbalance after LAG member add (XIQ-43011)",
+     "confidence": "high",
+     "sources": [
+      "CS-6100010",
+      "CS-6100012",
+      "CS-6100011",
+      "CS-6100013"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "3 prior case(s) presented this way with the hypothesis \"Suspected ACL misconfiguration\". Actual cause was: VXLAN tunnel blackhole after VLAN prune (XIQ-44102)",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100014",
+      "CS-6100016",
+      "CS-6100015"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "2 prior case(s) presented this way with the hypothesis \"Suspected forwarding table corruption\". Actual cause was: Upstream provider withdrew the BGP prefix",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100017",
+      "CS-6100018"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "On this symptom class the first hypothesis was wrong in 9 of 9 prior closed cases (100%)",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100010",
+      "CS-6100012",
+      "CS-6100014",
+      "CS-6100016",
+      "CS-6100011",
+      "CS-6100013",
+      "CS-6100015",
+      "CS-6100017"
+     ]
+    },
+    {
+     "module": "m06_fleet_correlation",
+     "kind": "cluster",
+     "statement": "5 open cases in 30d on 5520 / 32.5.1 / traffic_blackhole across 3 region(s) and 5 account(s) - possible field notice candidate",
+     "confidence": "high",
+     "sources": [
+      "CS-6100053",
+      "CS-6100090",
+      "CS-6100091",
+      "CS-6100092"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Escalation package incomplete - missing: topology diagram, timeline, reproduction steps",
+     "confidence": "high",
+     "sources": [
+      "CS-6100054"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Already on the case: show tech-support, sw_version",
+     "confidence": "high",
+     "sources": [
+      "CS-6100054"
+     ]
+    }
+   ],
+   "truth": {
+    "initial_hypothesis": "Suspected ACL misconfiguration",
+    "actual_root_cause": "VXLAN tunnel blackhole after VLAN prune (XIQ-44102)",
+    "cause_ids": [
+     "XIQ-44102"
+    ],
+    "closed_state": "Resolved",
+    "closure_comments": "Root cause confirmed: VXLAN tunnel blackhole after VLAN prune (XIQ-44102). Fix identified."
+   },
+   "verdict": "HIT",
+   "asserted": 2,
+   "n_eliminated": 7
+  },
+  {
+   "id": "CS-6100055",
+   "platform": "7520",
+   "sw_version": "32.5.1",
+   "symptom_class": "device_unresponsive",
+   "symptom_text": "Device stops responding to management",
+   "features": [
+    "sflow",
+    "telemetry"
+   ],
+   "region": "AMER",
+   "fields": [
+    {
+     "label": "Case Number",
+     "value": "CS-6100055",
+     "src": "id"
+    },
+    {
+     "label": "Type",
+     "value": "C3",
+     "src": "-"
+    },
+    {
+     "label": "Product Platform",
+     "value": "7520",
+     "src": "platform"
+    },
+    {
+     "label": "Firmware",
+     "value": "32.5.1",
+     "src": "sw_version"
+    },
+    {
+     "label": "Product Feature",
+     "value": "sflow, telemetry",
+     "src": "features_enabled"
+    },
+    {
+     "label": "Symptom Reason",
+     "value": "device_unresponsive",
+     "src": "symptom_class"
+    },
+    {
+     "label": "Case Region",
+     "value": "AMER",
+     "src": "region"
+    }
+   ],
+   "created_at": "2026-06-13T09:00:00",
+   "cutoff": "2026-06-15T09:00:00",
+   "events": [
+    {
+     "at": "2026-06-13T09:00:00",
+     "kind": "note",
+     "text": "Customer reports control-plane starvation under sflow sam."
+    },
+    {
+     "at": "2026-06-13T12:00:00",
+     "kind": "note",
+     "text": "Initial assessment: Suspected hardware failure."
+    },
+    {
+     "at": "2026-06-14T09:00:00",
+     "kind": "attachment",
+     "text": "show tech-support uploaded"
+    }
+   ],
+   "abstained": false,
+   "abstain_reason": null,
+   "findings": [
+    {
+     "module": "m01_defect_exposure",
+     "kind": "candidate",
+     "statement": "Control-plane starvation under sFlow sampling - affects 32.5.1 with sflow, telemetry enabled; fixed in 32.5.2",
+     "confidence": "medium",
+     "sources": [
+      "XIQ-44510"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "MLAG peer link flap under high MAC churn - not exposed: requires mlag, mac-learning, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-41220"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "ECMP hash imbalance after LAG member add - not exposed: requires ecmp, lag, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-43011"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "Memory leak in policy manager with dynamic ACLs - not exposed: requires acl, policy, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-42540"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "OSPF adjacency drop on MTU mismatch in fabric - not exposed: requires ospf, mtu, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-43788"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "VXLAN tunnel blackhole after VLAN prune - not exposed: requires vxlan, vlan, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44102"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "PoE negotiation failure with LLDP-MED endpoints - not exposed: requires poe, lldp, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44890"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "BPDU flood under MAC table churn - not exposed: requires stp, mac-learning, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-45021"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "candidate",
+     "statement": "Upgrading to 32.5.2 clears 1 of 1 exposed defects",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44510"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "4 prior case(s) presented this way with the hypothesis \"Suspected hardware failure\". Actual cause was: Policy manager memory leak with dynamic ACLs (XIQ-42540)",
+     "confidence": "high",
+     "sources": [
+      "CS-6100020",
+      "CS-6100022",
+      "CS-6100021",
+      "CS-6100019"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "3 prior case(s) presented this way with the hypothesis \"Suspected hardware failure\". Actual cause was: Control-plane starvation under sFlow sampling (XIQ-44510)",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100024",
+      "CS-6100023",
+      "CS-6100025"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "2 prior case(s) presented this way with the hypothesis \"Suspected memory leak in the platform image\". Actual cause was: Thermal shutdown from a blocked air intake",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100027",
+      "CS-6100026"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "On this symptom class the first hypothesis was wrong in 9 of 9 prior closed cases (100%)",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100020",
+      "CS-6100022",
+      "CS-6100027",
+      "CS-6100026",
+      "CS-6100021",
+      "CS-6100024",
+      "CS-6100019",
+      "CS-6100023"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Escalation package incomplete - missing: topology diagram, timeline, reproduction steps",
+     "confidence": "high",
+     "sources": [
+      "CS-6100055"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Already on the case: show tech-support, sw_version",
+     "confidence": "high",
+     "sources": [
+      "CS-6100055"
+     ]
+    }
+   ],
+   "truth": {
+    "initial_hypothesis": "Suspected hardware failure",
+    "actual_root_cause": "Control-plane starvation under sFlow sampling (XIQ-44510)",
+    "cause_ids": [
+     "XIQ-44510"
+    ],
+    "closed_state": "Resolved",
+    "closure_comments": "Root cause confirmed: Control-plane starvation under sFlow sampling (XIQ-44510). Fix identified."
+   },
+   "verdict": "HIT",
+   "asserted": 2,
+   "n_eliminated": 7
+  },
+  {
+   "id": "CS-6100056",
+   "platform": "7520",
+   "sw_version": "32.4.1",
+   "symptom_class": "poe_devices_dropping",
+   "symptom_text": "PoE endpoints dropping and re-powering",
+   "features": [
+    "poe"
+   ],
+   "region": "EMEA",
+   "fields": [
+    {
+     "label": "Case Number",
+     "value": "CS-6100056",
+     "src": "id"
+    },
+    {
+     "label": "Type",
+     "value": "C3",
+     "src": "-"
+    },
+    {
+     "label": "Product Platform",
+     "value": "7520",
+     "src": "platform"
+    },
+    {
+     "label": "Firmware",
+     "value": "32.4.1",
+     "src": "sw_version"
+    },
+    {
+     "label": "Product Feature",
+     "value": "poe",
+     "src": "features_enabled"
+    },
+    {
+     "label": "Symptom Reason",
+     "value": "poe_devices_dropping",
+     "src": "symptom_class"
+    },
+    {
+     "label": "Case Region",
+     "value": "EMEA",
+     "src": "region"
+    }
+   ],
+   "created_at": "2026-06-14T09:00:00",
+   "cutoff": "2026-06-16T09:00:00",
+   "events": [
+    {
+     "at": "2026-06-14T09:00:00",
+     "kind": "note",
+     "text": "Customer reports partial psu failure miscounting budget."
+    },
+    {
+     "at": "2026-06-14T12:00:00",
+     "kind": "note",
+     "text": "Initial assessment: Suspected PoE budget exceeded."
+    },
+    {
+     "at": "2026-06-15T09:00:00",
+     "kind": "attachment",
+     "text": "show tech-support uploaded"
+    }
+   ],
+   "abstained": false,
+   "abstain_reason": null,
+   "findings": [
+    {
+     "module": "m01_defect_exposure",
+     "kind": "candidate",
+     "statement": "PoE budget miscalculation on partial PSU failure - affects 32.4.1 with poe enabled; fixed in 32.4.2",
+     "confidence": "medium",
+     "sources": [
+      "XIQ-39905"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "MLAG peer link flap under high MAC churn - not exposed: requires mlag, mac-learning, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-41220"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "STP root change on port bounce with loop protect - not exposed: requires stp, loop-protect, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-40877"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "candidate",
+     "statement": "Upgrading to 32.4.2 clears 1 of 1 exposed defects",
+     "confidence": "high",
+     "sources": [
+      "XIQ-39905"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "4 prior case(s) presented this way with the hypothesis \"Suspected PoE budget exceeded\". Actual cause was: Partial PSU failure miscounting budget (XIQ-39905)",
+     "confidence": "high",
+     "sources": [
+      "CS-6100028",
+      "CS-6100029",
+      "CS-6100031",
+      "CS-6100030"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "3 prior case(s) presented this way with the hypothesis \"Suspected PoE budget exceeded\". Actual cause was: PoE negotiation failure with LLDP-MED endpoints (XIQ-44890)",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100032",
+      "CS-6100033",
+      "CS-6100034"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "2 prior case(s) presented this way with the hypothesis \"Suspected PoE controller defect\". Actual cause was: Third-party camera firmware renegotiating power on a loop",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100036",
+      "CS-6100035"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "On this symptom class the first hypothesis was wrong in 9 of 9 prior closed cases (100%)",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100036",
+      "CS-6100035",
+      "CS-6100032",
+      "CS-6100028",
+      "CS-6100033",
+      "CS-6100034",
+      "CS-6100029",
+      "CS-6100031"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Escalation package incomplete - missing: topology diagram, timeline, reproduction steps",
+     "confidence": "high",
+     "sources": [
+      "CS-6100056"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Already on the case: show tech-support, sw_version",
+     "confidence": "high",
+     "sources": [
+      "CS-6100056"
+     ]
+    }
+   ],
+   "truth": {
+    "initial_hypothesis": "Suspected PoE budget exceeded",
+    "actual_root_cause": "Partial PSU failure miscounting budget (XIQ-39905)",
+    "cause_ids": [
+     "XIQ-39905"
+    ],
+    "closed_state": "Resolved",
+    "closure_comments": "Root cause confirmed: Partial PSU failure miscounting budget (XIQ-39905). Fix identified."
+   },
+   "verdict": "HIT",
+   "asserted": 2,
+   "n_eliminated": 2
+  },
+  {
+   "id": "CS-6100057",
+   "platform": "5720",
+   "sw_version": "32.5.1",
+   "symptom_class": "stp_topology_churn",
+   "symptom_text": "Spanning-tree topology changes recurring",
+   "features": [
+    "stp",
+    "mac-learning",
+    "radius",
+    "syslog"
+   ],
+   "region": "APAC",
+   "fields": [
+    {
+     "label": "Case Number",
+     "value": "CS-6100057",
+     "src": "id"
+    },
+    {
+     "label": "Type",
+     "value": "C3",
+     "src": "-"
+    },
+    {
+     "label": "Product Platform",
+     "value": "5720",
+     "src": "platform"
+    },
+    {
+     "label": "Firmware",
+     "value": "32.5.1",
+     "src": "sw_version"
+    },
+    {
+     "label": "Product Feature",
+     "value": "stp, mac-learning, radius, syslog",
+     "src": "features_enabled"
+    },
+    {
+     "label": "Symptom Reason",
+     "value": "stp_topology_churn",
+     "src": "symptom_class"
+    },
+    {
+     "label": "Case Region",
+     "value": "APAC",
+     "src": "region"
+    }
+   ],
+   "created_at": "2026-06-15T09:00:00",
+   "cutoff": "2026-06-17T09:00:00",
+   "events": [
+    {
+     "at": "2026-06-15T09:00:00",
+     "kind": "note",
+     "text": "Customer reports bpdu flood under mac table churn."
+    },
+    {
+     "at": "2026-06-15T12:00:00",
+     "kind": "note",
+     "text": "Initial assessment: Suspected duplicate root bridge priority."
+    },
+    {
+     "at": "2026-06-16T09:00:00",
+     "kind": "attachment",
+     "text": "show tech-support uploaded"
+    }
+   ],
+   "abstained": false,
+   "abstain_reason": null,
+   "findings": [
+    {
+     "module": "m01_defect_exposure",
+     "kind": "candidate",
+     "statement": "MLAG peer link flap under high MAC churn - affects 32.5.1 with mac-learning enabled; fixed in 32.5.2",
+     "confidence": "medium",
+     "sources": [
+      "XIQ-41220"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "candidate",
+     "statement": "BPDU flood under MAC table churn - affects 32.5.1 with mac-learning, stp enabled; no fix available",
+     "confidence": "low",
+     "sources": [
+      "XIQ-45021"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "ECMP hash imbalance after LAG member add - not exposed: requires ecmp, lag, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-43011"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "Memory leak in policy manager with dynamic ACLs - not exposed: requires acl, policy, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-42540"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "OSPF adjacency drop on MTU mismatch in fabric - not exposed: requires ospf, mtu, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-43788"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "VXLAN tunnel blackhole after VLAN prune - not exposed: requires vxlan, vlan, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44102"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "Control-plane starvation under sFlow sampling - not exposed: requires sflow, telemetry, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44510"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "PoE negotiation failure with LLDP-MED endpoints - not exposed: requires poe, lldp, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44890"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "candidate",
+     "statement": "Upgrading to 32.5.2 clears 1 of 2 exposed defects",
+     "confidence": "high",
+     "sources": [
+      "XIQ-41220"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "4 prior case(s) presented this way with the hypothesis \"Suspected duplicate root bridge priority\". Actual cause was: STP root change on port bounce with loop protect (XIQ-40877)",
+     "confidence": "high",
+     "sources": [
+      "CS-6100038",
+      "CS-6100040",
+      "CS-6100037",
+      "CS-6100039"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "3 prior case(s) presented this way with the hypothesis \"Suspected duplicate root bridge priority\". Actual cause was: BPDU flood under MAC table churn (XIQ-45021)",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100041",
+      "CS-6100043",
+      "CS-6100042"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "2 prior case(s) presented this way with the hypothesis \"Suspected BPDU processing defect\". Actual cause was: Customer attached an unmanaged switch creating a loop",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100044",
+      "CS-6100045"
+     ]
+    },
+    {
+     "module": "m05_known_traps",
+     "kind": "trap",
+     "statement": "On this symptom class the first hypothesis was wrong in 9 of 9 prior closed cases (100%)",
+     "confidence": "medium",
+     "sources": [
+      "CS-6100044",
+      "CS-6100038",
+      "CS-6100040",
+      "CS-6100041",
+      "CS-6100037",
+      "CS-6100039",
+      "CS-6100045",
+      "CS-6100043"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Escalation package incomplete - missing: topology diagram, timeline, reproduction steps",
+     "confidence": "high",
+     "sources": [
+      "CS-6100057"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Already on the case: show tech-support, sw_version",
+     "confidence": "high",
+     "sources": [
+      "CS-6100057"
+     ]
+    }
+   ],
+   "truth": {
+    "initial_hypothesis": "Suspected duplicate root bridge priority",
+    "actual_root_cause": "BPDU flood under MAC table churn (XIQ-45021)",
+    "cause_ids": [
+     "XIQ-45021"
+    ],
+    "closed_state": "Resolved",
+    "closure_comments": "Root cause confirmed: BPDU flood under MAC table churn (XIQ-45021). Fix identified."
+   },
+   "verdict": "HIT",
+   "asserted": 3,
+   "n_eliminated": 6
+  },
+  {
+   "id": "CS-6200001",
+   "platform": "5520",
+   "sw_version": "32.5.1",
+   "symptom_class": "multicast_replication_loss",
+   "symptom_text": "Multicast replication loss downstream",
+   "features": [
+    "pim",
+    "igmp",
+    "syslog",
+    "sntp-client"
+   ],
+   "region": "AMER",
+   "fields": [
+    {
+     "label": "Case Number",
+     "value": "CS-6200001",
+     "src": "id"
+    },
+    {
+     "label": "Type",
+     "value": "C4",
+     "src": "-"
+    },
+    {
+     "label": "Product Platform",
+     "value": "5520",
+     "src": "platform"
+    },
+    {
+     "label": "Firmware",
+     "value": "32.5.1",
+     "src": "sw_version"
+    },
+    {
+     "label": "Product Feature",
+     "value": "pim, igmp, syslog, sntp-client",
+     "src": "features_enabled"
+    },
+    {
+     "label": "Symptom Reason",
+     "value": "multicast_replication_loss",
+     "src": "symptom_class"
+    },
+    {
+     "label": "Case Region",
+     "value": "AMER",
+     "src": "region"
+    }
+   ],
+   "created_at": "2026-06-18T09:00:00",
+   "cutoff": "2026-06-20T09:00:00",
+   "events": [
+    {
+     "at": "2026-06-18T09:00:00",
+     "kind": "note",
+     "text": "Customer reports third-party igmp snooping bug on a downs."
+    },
+    {
+     "at": "2026-06-18T12:00:00",
+     "kind": "note",
+     "text": "Initial assessment: Suspected platform software defect."
+    },
+    {
+     "at": "2026-06-19T09:00:00",
+     "kind": "attachment",
+     "text": "show tech-support uploaded"
+    }
+   ],
+   "abstained": true,
+   "abstain_reason": "No candidate at medium confidence or above. 8 possibilit(ies) eliminated - see RULED OUT. Treat this as an open case, not a solved one.",
+   "findings": [
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "MLAG peer link flap under high MAC churn - not exposed: requires mlag, mac-learning, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-41220"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "ECMP hash imbalance after LAG member add - not exposed: requires ecmp, lag, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-43011"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "Memory leak in policy manager with dynamic ACLs - not exposed: requires acl, policy, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-42540"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "OSPF adjacency drop on MTU mismatch in fabric - not exposed: requires ospf, mtu, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-43788"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "VXLAN tunnel blackhole after VLAN prune - not exposed: requires vxlan, vlan, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44102"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "Control-plane starvation under sFlow sampling - not exposed: requires sflow, telemetry, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44510"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "PoE negotiation failure with LLDP-MED endpoints - not exposed: requires poe, lldp, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44890"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "BPDU flood under MAC table churn - not exposed: requires stp, mac-learning, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-45021"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Escalation package incomplete - missing: topology diagram, timeline, reproduction steps",
+     "confidence": "high",
+     "sources": [
+      "CS-6200001"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Already on the case: show tech-support, sw_version",
+     "confidence": "high",
+     "sources": [
+      "CS-6200001"
+     ]
+    }
+   ],
+   "truth": {
+    "initial_hypothesis": "Suspected platform software defect",
+    "actual_root_cause": "Third-party IGMP snooping bug on a downstream vendor switch",
+    "cause_ids": [],
+    "closed_state": "Resolved",
+    "closure_comments": "Root cause confirmed: Third-party IGMP snooping bug on a downstream vendor switch. Fix identified."
+   },
+   "verdict": "ABSTAIN",
+   "asserted": 0,
+   "n_eliminated": 8
+  },
+  {
+   "id": "CS-6200002",
+   "platform": "5520",
+   "sw_version": "32.5.1",
+   "symptom_class": "clock_drift_alarms",
+   "symptom_text": "Clock drift alarms across the fabric",
+   "features": [
+    "ntp"
+   ],
+   "region": "AMER",
+   "fields": [
+    {
+     "label": "Case Number",
+     "value": "CS-6200002",
+     "src": "id"
+    },
+    {
+     "label": "Type",
+     "value": "C2",
+     "src": "-"
+    },
+    {
+     "label": "Product Platform",
+     "value": "5520",
+     "src": "platform"
+    },
+    {
+     "label": "Firmware",
+     "value": "32.5.1",
+     "src": "sw_version"
+    },
+    {
+     "label": "Product Feature",
+     "value": "ntp",
+     "src": "features_enabled"
+    },
+    {
+     "label": "Symptom Reason",
+     "value": "clock_drift_alarms",
+     "src": "symptom_class"
+    },
+    {
+     "label": "Case Region",
+     "value": "AMER",
+     "src": "region"
+    }
+   ],
+   "created_at": "2026-06-19T09:00:00",
+   "cutoff": "2026-06-21T09:00:00",
+   "events": [
+    {
+     "at": "2026-06-19T09:00:00",
+     "kind": "note",
+     "text": "Customer reports customer ntp server pool misconfigured u."
+    },
+    {
+     "at": "2026-06-19T12:00:00",
+     "kind": "note",
+     "text": "Initial assessment: Suspected platform software defect."
+    },
+    {
+     "at": "2026-06-20T09:00:00",
+     "kind": "attachment",
+     "text": "show tech-support uploaded"
+    }
+   ],
+   "abstained": true,
+   "abstain_reason": "No candidate at medium confidence or above. 8 possibilit(ies) eliminated - see RULED OUT. Treat this as an open case, not a solved one.",
+   "findings": [
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "MLAG peer link flap under high MAC churn - not exposed: requires mlag, mac-learning, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-41220"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "ECMP hash imbalance after LAG member add - not exposed: requires ecmp, lag, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-43011"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "Memory leak in policy manager with dynamic ACLs - not exposed: requires acl, policy, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-42540"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "OSPF adjacency drop on MTU mismatch in fabric - not exposed: requires ospf, mtu, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-43788"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "VXLAN tunnel blackhole after VLAN prune - not exposed: requires vxlan, vlan, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44102"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "Control-plane starvation under sFlow sampling - not exposed: requires sflow, telemetry, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44510"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "PoE negotiation failure with LLDP-MED endpoints - not exposed: requires poe, lldp, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-44890"
+     ]
+    },
+    {
+     "module": "m01_defect_exposure",
+     "kind": "eliminated",
+     "statement": "BPDU flood under MAC table churn - not exposed: requires stp, mac-learning, none enabled on this device",
+     "confidence": "high",
+     "sources": [
+      "XIQ-45021"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Escalation package incomplete - missing: topology diagram, timeline, reproduction steps",
+     "confidence": "high",
+     "sources": [
+      "CS-6200002"
+     ]
+    },
+    {
+     "module": "m07_escalation_package",
+     "kind": "gap",
+     "statement": "Already on the case: show tech-support, sw_version",
+     "confidence": "high",
+     "sources": [
+      "CS-6200002"
+     ]
+    }
+   ],
+   "truth": {
+    "initial_hypothesis": "Suspected platform software defect",
+    "actual_root_cause": "Customer NTP server pool misconfigured upstream of the fabric",
+    "cause_ids": [],
+    "closed_state": "Resolved",
+    "closure_comments": "Root cause confirmed: Customer NTP server pool misconfigured upstream of the fabric. Fix identified."
+   },
+   "verdict": "ABSTAIN",
+   "asserted": 0,
+   "n_eliminated": 8
+  }
+ ],
+ "defects": [
+  {
+   "id": "XIQ-41220",
+   "title": "MLAG peer link flap under high MAC churn",
+   "affected_versions": [
+    "32.4.1",
+    "32.4.2",
+    "32.5.1"
+   ],
+   "fixed_in": "32.5.2",
+   "feature_tags": [
+    "mlag",
+    "mac-learning"
+   ],
+   "status": "Fixed"
+  },
+  {
+   "id": "XIQ-40877",
+   "title": "STP root change on port bounce with loop protect",
+   "affected_versions": [
+    "32.4.1",
+    "32.4.2"
+   ],
+   "fixed_in": "32.5.1",
+   "feature_tags": [
+    "stp",
+    "loop-protect"
+   ],
+   "status": "Fixed"
+  },
+  {
+   "id": "XIQ-43011",
+   "title": "ECMP hash imbalance after LAG member add",
+   "affected_versions": [
+    "32.5.1",
+    "32.5.2"
+   ],
+   "fixed_in": null,
+   "feature_tags": [
+    "ecmp",
+    "lag"
+   ],
+   "status": "Open"
+  },
+  {
+   "id": "XIQ-42540",
+   "title": "Memory leak in policy manager with dynamic ACLs",
+   "affected_versions": [
+    "32.4.2",
+    "32.5.1"
+   ],
+   "fixed_in": "32.5.2",
+   "feature_tags": [
+    "acl",
+    "policy"
+   ],
+   "status": "Fixed"
+  },
+  {
+   "id": "XIQ-43788",
+   "title": "OSPF adjacency drop on MTU mismatch in fabric",
+   "affected_versions": [
+    "32.5.1"
+   ],
+   "fixed_in": null,
+   "feature_tags": [
+    "ospf",
+    "mtu"
+   ],
+   "status": "Open"
+  },
+  {
+   "id": "XIQ-39905",
+   "title": "PoE budget miscalculation on partial PSU failure",
+   "affected_versions": [
+    "32.3.4",
+    "32.4.1"
+   ],
+   "fixed_in": "32.4.2",
+   "feature_tags": [
+    "poe"
+   ],
+   "status": "Fixed"
+  },
+  {
+   "id": "XIQ-44102",
+   "title": "VXLAN tunnel blackhole after VLAN prune",
+   "affected_versions": [
+    "32.5.1",
+    "32.5.2"
+   ],
+   "fixed_in": "32.5.10",
+   "feature_tags": [
+    "vxlan",
+    "vlan"
+   ],
+   "status": "Fixed"
+  },
+  {
+   "id": "XIQ-44510",
+   "title": "Control-plane starvation under sFlow sampling",
+   "affected_versions": [
+    "32.5.1"
+   ],
+   "fixed_in": "32.5.2",
+   "feature_tags": [
+    "sflow",
+    "telemetry"
+   ],
+   "status": "Fixed"
+  },
+  {
+   "id": "XIQ-44890",
+   "title": "PoE negotiation failure with LLDP-MED endpoints",
+   "affected_versions": [
+    "32.4.2",
+    "32.5.1"
+   ],
+   "fixed_in": "32.5.2",
+   "feature_tags": [
+    "poe",
+    "lldp"
+   ],
+   "status": "Fixed"
+  },
+  {
+   "id": "XIQ-45021",
+   "title": "BPDU flood under MAC table churn",
+   "affected_versions": [
+    "32.5.1",
+    "32.5.2"
+   ],
+   "fixed_in": null,
+   "feature_tags": [
+    "stp",
+    "mac-learning"
+   ],
+   "status": "Open"
+  }
+ ],
+ "ablation": [
+  {
+   "label": "all four",
+   "HIT": 7,
+   "PARTIAL": 1,
+   "ABSTAIN": 2,
+   "MISS": 0,
+   "asserted": 18
+  },
+  {
+   "label": "m05 only",
+   "HIT": 7,
+   "PARTIAL": 1,
+   "ABSTAIN": 2,
+   "MISS": 0,
+   "asserted": 16
+  },
+  {
+   "label": "m01 only",
+   "HIT": 7,
+   "PARTIAL": 0,
+   "ABSTAIN": 3,
+   "MISS": 0,
+   "asserted": 9
+  },
+  {
+   "label": "m01 + m07",
+   "HIT": 7,
+   "PARTIAL": 0,
+   "ABSTAIN": 3,
+   "MISS": 0,
+   "asserted": 9
+  }
+ ],
+ "counts": {
+  "HIT": 7,
+  "PARTIAL": 1,
+  "ABSTAIN": 2,
+  "MISS": 0,
+  "RULED-OUT": 0
+ },
+ "total_asserted": 18,
+ "unscoreable": [
+  "CS-6100052",
+  "CS-6200001",
+  "CS-6200002"
+ ],
+ "excluded": [
+  {
+   "id": "CS-6300001",
+   "why": "closed without diagnosis ('No response from customer. Hence closing this case.')",
+   "closed_state": "Resolved",
+   "symptom_text": "Traffic blackholed on a subset of flows"
+  }
+ ],
+ "analyzer": {
+  "source_excerpt": "[SLX-OS 20.7.3a] \"OS is not ready. Please login later\" seen while trying to log in\n\nProblem Description\n===================\nWe are experiencing an SLX9740/8720 login issue across a newly deployed fabric.\nOur software is a fresh installation rather than an upgrade from an older",
+  "sf_fields": [
+   {
+    "label": "Product Platform",
+    "value": "SLX",
+    "note": ""
+   },
+   {
+    "label": "Firmware",
+    "value": "",
+    "note": "blank on all 3 live cases"
+   },
+   {
+    "label": "Product Feature",
+    "value": "",
+    "note": "blank on all 3 live cases"
+   },
+   {
+    "label": "Symptom Reason",
+    "value": "Platform or Console not Responding",
+    "note": "picklist; miscoded on 1 of 3"
+   },
+   {
+    "label": "Serial Number",
+    "value": "",
+    "note": "blank"
+   },
+   {
+    "label": "Technology",
+    "value": "",
+    "note": "blank"
+   }
+  ],
+  "running_version": {
+   "kind": "version",
+   "value": "20.7.3a",
+   "source": "sample_case.txt",
+   "evidence": "[SLX-OS 20.7.3a] \"OS is not ready. Please login later\" seen while trying to log in",
+   "confidence": "high"
+  },
+  "defects": [
+   {
+    "kind": "defect",
+    "value": "SLXOS-11111",
+    "source": "sample_case.txt",
+    "evidence": "- Parent Defect ID: SLXOS-11111",
+    "confidence": "high"
+   },
+   {
+    "kind": "defect",
+    "value": "SLXOS-22222",
+    "source": "sample_case.txt",
+    "evidence": "Also referenced: SLXOS-22222",
+    "confidence": "medium"
+   }
+  ],
+  "platforms": [
+   {
+    "kind": "platform",
+    "value": "SLX9740",
+    "source": "sample_case.txt",
+    "evidence": "We are experiencing an SLX9740/8720 login issue across a newly deployed fabric.",
+    "confidence": "medium"
+   },
+   {
+    "kind": "platform",
+    "value": "8720",
+    "source": "sample_case.txt",
+    "evidence": "We are experiencing an SLX9740/8720 login issue across a newly deployed fabric.",
+    "confidence": "medium"
+   }
+  ],
+  "errors": [
+   {
+    "kind": "error",
+    "value": "OS is not ready. Please login later",
+    "source": "sample_case.txt",
+    "evidence": "[SLX-OS 20.7.3a] \"OS is not ready. Please login later\" seen while trying to log in",
+    "confidence": "medium"
+   }
+  ],
+  "gaps": [
+   {
+    "kind": "gap",
+    "value": "console/session logs were not retained",
+    "source": "sample_case.txt",
+    "evidence": "Project team did not keep console session logs during the fresh installation.",
+    "confidence": "high"
+   },
+   {
+    "kind": "gap",
+    "value": "supportsave did not complete",
+    "source": "sample_case.txt",
+    "evidence": "devices are showing cfg-in-sync. We have tried to collect a support save from the fabric manager, but it was not happening.",
+    "confidence": "high"
+   },
+   {
+    "kind": "gap",
+    "value": "device unreachable for log collection",
+    "source": "sample_case.txt",
+    "evidence": "We tried to collect logs but the tool is complaining \"not reachable. Please retry after verifying the inputs and connectivity issues\"",
+    "confidence": "high"
+   },
+   {
+    "kind": "gap",
+    "value": "CLI collection returned failed",
+    "source": "sample_case.txt",
+    "evidence": "device execute-cli --ip 10.0.0.27 --command=\"show version\" Execute CLI[failed]",
+    "confidence": "high"
+   }
+  ],
+  "devices": [
+   {
+    "ip": "10.0.0.23",
+    "hostname": "LAB-SPINE-01",
+    "role": "spine",
+    "state": "provisioned",
+    "app_state": "cfg in-sync"
+   },
+   {
+    "ip": "10.0.0.24",
+    "hostname": "LAB-SPINE-02",
+    "role": "spine",
+    "state": "provisioned",
+    "app_state": "cfg in-sync"
+   },
+   {
+    "ip": "10.0.0.11",
+    "hostname": "LAB-LEAF-01",
+    "role": "leaf",
+    "state": "provisioned",
+    "app_state": "cfg in-sync"
+   },
+   {
+    "ip": "10.0.0.12",
+    "hostname": "LAB-LEAF-02",
+    "role": "leaf",
+    "state": "provisioned",
+    "app_state": "cfg in-sync"
+   },
+   {
+    "ip": "10.0.0.13",
+    "hostname": "LAB-LEAF-03",
+    "role": "leaf",
+    "state": "provisioned",
+    "app_state": "cfg in-sync"
+   },
+   {
+    "ip": "10.0.0.14",
+    "hostname": "LAB-BORDER-01",
+    "role": "borderleaf",
+    "state": "provisioned",
+    "app_state": "cfg in-sync"
+   },
+   {
+    "ip": "10.0.0.27",
+    "hostname": "LAB-BORDER-02",
+    "role": "borderleaf",
+    "state": "provisioned",
+    "app_state": "cfg in-sync"
+   }
+  ],
+  "missing": [
+   "features_enabled (needs running-config; not recoverable from case prose)"
+  ],
+  "log": {
+   "lines": 14,
+   "worst": "CRITICAL",
+   "severities": {
+    "INFO": 2,
+    "WARNING": 8,
+    "ERROR": 1,
+    "CRITICAL": 3
+   },
+   "first_timestamp": "2024/06/19-09:58:11",
+   "last_timestamp": "2024/06/19-10:03:30",
+   "top_messages": [
+    {
+     "message": "<ts>, [SEC-<n>], <n>, M1 | Active, WARNING, sw0, Login failed for user admin from <ip>",
+     "count": 8
+    },
+    {
+     "message": "<ts>, [SSMD-<n>], <n>, M1 | Active, CRITICAL, sw0, Process confd terminated unexpectedly",
+     "count": 3
+    }
+   ],
+   "raslog_codes": [
+    {
+     "code": "[SEC-3020]",
+     "count": 8
+    },
+    {
+     "code": "[SSMD-1005]",
+     "count": 3
+    },
+    {
+     "code": "[SEC-1203]",
+     "count": 1
+    },
+    {
+     "code": "[NSM-1004]",
+     "count": 1
+    },
+    {
+     "code": "[RAS-1001]",
+     "count": 1
+    }
+   ]
+  }
+ }
+}

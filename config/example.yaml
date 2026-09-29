@@ -1,0 +1,15 @@
+# Copy to config/local.yaml (gitignored) and fill in per-environment values.
+adapter: mock            # mock | salesforce
+
+confidence_threshold: medium   # candidate must reach this to avoid abstaining
+
+reverse_test:
+  at_days: 2             # evidence cutoff, days after case creation
+  product_family: null   # scope the pilot to one family before going live
+
+fleet_correlation:
+  window_days: 30
+  cluster_min: 3
+
+# Real adapters read credentials from the environment, never from this file.
+# salesforce: { instance_env: SF_INSTANCE, token_env: SF_TOKEN }

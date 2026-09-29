@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GTAC Analyzer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --ground:#F6F7F9; --surface:#FFFFFF; --surface-2:#EFF1F5; --line:#DDE1E8;
+    --ink:#15171C; --ink-2:#3A4050; --muted:#5B6274; --faint:#868DA0;
+    --accent:#4338CA; --accent-soft:#EEEDFB;
+    --clear:#0F766E; --clear-soft:#E2F1EF;
+    --trap:#B45309; --trap-soft:#FBF0E2;
+    --critical:#B42318; --critical-soft:#FBE9E7;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#0F1116; --surface:#171A22; --surface-2:#1E222C; --line:#2B303C;
+      --ink:#E9EBF1; --ink-2:#C3C8D6; --muted:#969DB0; --faint:#6E7688;
+      --accent:#9A94FF; --accent-soft:#232238;
+      --clear:#4FD1C5; --clear-soft:#14282A;
+      --trap:#E8A44C; --trap-soft:#2B2114;
+      --critical:#F27A6E; --critical-soft:#2E1917;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0F1116; --surface:#171A22; --surface-2:#1E222C; --line:#2B303C;
+    --ink:#E9EBF1; --ink-2:#C3C8D6; --muted:#969DB0; --faint:#6E7688;
+    --accent:#9A94FF; --accent-soft:#232238;
+    --clear:#4FD1C5; --clear-soft:#14282A;
+    --trap:#E8A44C; --trap-soft:#2B2114;
+    --critical:#F27A6E; --critical-soft:#2E1917;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0; background:var(--ground); color:var(--ink);
+       font-family:var(--sans); font-size:14.5px; line-height:1.55}
+  h1,h2,h3{margin:0; text-wrap:balance}
+  code,.mono{font-family:var(--mono)}
+
+  header{border-bottom:1px solid var(--line); background:var(--surface);
+         padding:16px 22px; display:flex; flex-wrap:wrap; gap:14px;
+         align-items:baseline; justify-content:space-between}
+  h1{font-size:19px; font-weight:700; letter-spacing:-.01em}
+  .sub{font-size:12.5px; color:var(--muted)}
+  .privacy{font-family:var(--mono); font-size:11px; color:var(--clear);
+           background:var(--clear-soft); border-radius:4px; padding:4px 9px}
+
+  main{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr);
+       gap:18px; padding:18px 22px 40px; align-items:start}
+  @media (max-width:940px){ main{grid-template-columns:1fr} }
+
+  .panel{background:var(--surface); border:1px solid var(--line);
+         border-radius:8px; overflow:hidden}
+  .ph{padding:11px 15px; border-bottom:1px solid var(--line);
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+  .ph h2{font-size:11px; font-weight:700; letter-spacing:.11em;
+         text-transform:uppercase; color:var(--faint); margin-right:auto}
+  .pb{padding:14px 15px}
+
+  textarea{
+    width:100%; min-height:340px; resize:vertical; padding:11px 12px;
+    font-family:var(--mono); font-size:12.5px; line-height:1.5;
+    color:var(--ink); background:var(--surface-2);
+    border:1px solid var(--line); border-radius:6px;
+  }
+  textarea:focus{outline:2px solid var(--accent); outline-offset:1px}
+
+  button{font:inherit; font-size:12.5px; font-weight:600; cursor:pointer;
+         border-radius:5px; padding:7px 13px; border:1px solid var(--line);
+         background:var(--surface); color:var(--ink)}
+  button:hover{border-color:var(--accent); color:var(--accent)}
+  button:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  button.primary{background:var(--accent); border-color:var(--accent); color:#fff}
+  button.primary:hover{filter:brightness(1.08); color:#fff}
+  button[disabled]{opacity:.5; cursor:default}
+  button.link{border:0; background:none; color:var(--muted); padding:4px 6px}
+  button.link:hover{color:var(--accent)}
+
+  .modes{display:flex; gap:0; border:1px solid var(--line); border-radius:5px;
+         overflow:hidden}
+  .modes button{border:0; border-radius:0; font-size:12px; padding:6px 11px;
+                background:var(--surface); color:var(--muted)}
+  .modes button[aria-pressed="true"]{background:var(--accent-soft);
+                                     color:var(--accent)}
+  .row{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:11px}
+  .hint{font-size:12px; color:var(--faint); margin-left:auto}
+
+  .empty{padding:40px 20px; text-align:center; color:var(--faint); font-size:13px}
+  .err{margin:14px 15px; padding:11px 13px; background:var(--critical-soft);
+       border-left:3px solid var(--critical); border-radius:0 5px 5px 0;
+       color:var(--critical); font-size:13px}
+
+  section.res{border-top:1px solid var(--line); padding:14px 15px}
+  section.res:first-of-type{border-top:0}
+  .rh{display:flex; align-items:baseline; gap:8px; margin-bottom:10px}
+  .rh h3{font-size:11px; font-weight:700; letter-spacing:.11em;
+         text-transform:uppercase}
+  .rh .n{font-family:var(--mono); font-size:11.5px; color:var(--faint)}
+  .rh.gaps h3{color:var(--trap)}
+  .rh.missing h3{color:var(--critical)}
+  .rh.ver h3{color:var(--clear)}
+
+  .item{padding:7px 0; border-top:1px solid var(--line)}
+  .item:first-of-type{border-top:0}
+  .item .top{display:flex; gap:9px; align-items:baseline; flex-wrap:wrap}
+  .item .lbl{font-size:9.5px; font-weight:700; letter-spacing:.07em;
+             text-transform:uppercase; color:var(--faint); min-width:56px}
+  .item .val{font-family:var(--mono); font-size:12.5px; overflow-wrap:anywhere}
+  .item .conf{font-family:var(--mono); font-size:9.5px; text-transform:uppercase;
+              color:var(--faint); border:1px solid var(--line);
+              border-radius:3px; padding:0 4px}
+  .item .ev{display:block; font-size:11.5px; color:var(--muted); margin-top:3px;
+            padding-left:65px; overflow-wrap:anywhere}
+  @media (max-width:560px){ .item .ev{padding-left:0} }
+
+  .big{font-family:var(--mono); font-size:20px; font-weight:600; color:var(--clear)}
+  .none{font-size:13px; color:var(--muted); font-style:italic}
+
+  ul.plain{margin:0; padding-left:17px; display:flex; flex-direction:column; gap:5px}
+  ul.plain li{font-size:12.5px; color:var(--ink-2)}
+  ul.plain li .ev{display:block; font-size:11.5px; color:var(--muted); margin-top:2px}
+
+  table{border-collapse:collapse; width:100%; font-size:12.5px}
+  th,td{text-align:left; padding:5px 9px; border-bottom:1px solid var(--line)}
+  th{font-size:9.5px; letter-spacing:.08em; text-transform:uppercase;
+     color:var(--faint)}
+  td{font-family:var(--mono); font-size:11.5px}
+  tbody tr:last-child td{border-bottom:0}
+
+  .sevrow{display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px}
+  .sev{font-family:var(--mono); font-size:10.5px; padding:2px 6px;
+       border-radius:3px; border:1px solid var(--line);
+       background:var(--surface-2); color:var(--muted)}
+  .sev.crit{background:var(--critical-soft); color:var(--critical);
+            border-color:transparent}
+  .logline{display:flex; justify-content:space-between; gap:12px; padding:5px 0;
+           border-top:1px solid var(--line)}
+  .logline:first-of-type{border-top:0}
+  .logline .m{font-family:var(--mono); font-size:11.5px; color:var(--ink-2);
+              overflow-wrap:anywhere}
+  .logline .c{font-family:var(--mono); font-weight:600; color:var(--trap);
+              font-variant-numeric:tabular-nums; white-space:nowrap}
+
+  footer{padding:0 22px 30px; color:var(--faint); font-size:11.5px; max-width:90ch}
+  @media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>GTAC Analyzer</h1>
+    <div class="sub">Paste case text or a device log. Runs the real extractor
+      &mdash; <code>src/extract.py</code>, same code as <code>python -m src.analyze</code>.</div>
+  </div>
+  <span class="privacy">127.0.0.1 only &middot; nothing stored &middot; no outbound calls</span>
+</header>
+
+<main>
+  <div class="panel">
+    <div class="ph">
+      <h2>Input</h2>
+      <button type="button" class="link" data-sample="sample_case.txt">load sample case</button>
+      <button type="button" class="link" data-sample="sample_raslog.txt">load sample log</button>
+      <button type="button" class="link" id="clear">clear</button>
+    </div>
+    <div class="pb">
+      <label for="text" class="sub">Case description, subject line, pasted CLI
+        output, or a raslog/syslog file.</label>
+      <textarea id="text" spellcheck="false" placeholder="Paste here…"></textarea>
+      <div class="row">
+        <div class="modes" role="group" aria-label="Analysis mode">
+          <button type="button" data-mode="both" aria-pressed="true">Both</button>
+          <button type="button" data-mode="case" aria-pressed="false">Case text</button>
+          <button type="button" data-mode="log" aria-pressed="false">Log only</button>
+        </div>
+        <button type="button" class="primary" id="run">Analyze</button>
+        <span class="hint" id="size"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="ph"><h2>Result</h2><span class="sub" id="stamp"></span></div>
+    <div id="out"><div class="empty">Paste something and hit Analyze.</div></div>
+  </div>
+</main>
+
+<footer>
+  Read-only. The extractor is pure regex over the text you supplied &mdash; it
+  contacts no system of record and writes nothing to disk. Text submitted here
+  stays in this machine's memory for the duration of one request and is never
+  logged. Nothing this tool produces is customer-facing.
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var mode = "both";
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  function section(title, count, cls) {
+    var s = el("section", "res");
+    var h = el("div", "rh" + (cls ? " " + cls : ""));
+    h.appendChild(el("h3", null, title));
+    if (count != null) h.appendChild(el("span", "n", String(count)));
+    s.appendChild(h);
+    return s;
+  }
+
+  function item(label, value, evidence, conf) {
+    var it = el("div", "item");
+    var top = el("div", "top");
+    top.appendChild(el("span", "lbl", label));
+    top.appendChild(el("span", "val", value));
+    if (conf) top.appendChild(el("span", "conf", conf));
+    it.appendChild(top);
+    if (evidence) it.appendChild(el("span", "ev", "“" + evidence + "”"));
+    return it;
+  }
+
+  /* ------------------------------------------------------------- render */
+  function render(data) {
+    var out = $("out");
+    out.textContent = "";
+    var ev = data.evidence, log = data.log;
+    var any = false;
+
+    if (ev) {
+      var s = section("Running version", null, "ver");
+      if (ev.running_version) {
+        s.appendChild(el("div", "big", ev.running_version.value));
+        s.appendChild(el("span", "ev", "“" + ev.running_version.evidence + "”"));
+      } else {
+        s.appendChild(el("p", "none",
+          "Not established — no line states the running release. A fix version "
+          + "in a release note is not a running version, so nothing was assumed."));
+      }
+      out.appendChild(s); any = true;
+
+      [["Platforms", ev.platforms, "Platform"],
+       ["Defect IDs", ev.defects, "Defect"],
+       ["Error signatures", ev.errors, "Symptom"]].forEach(function (g) {
+        if (!g[1].length) return;
+        var sec = section(g[0], g[1].length);
+        g[1].forEach(function (e) {
+          sec.appendChild(item(g[2], e.value, e.evidence, e.confidence));
+        });
+        out.appendChild(sec);
+      });
+
+      var others = ev.versions.filter(function (v) {
+        return !ev.running_version || v.value !== ev.running_version.value;
+      });
+      if (others.length) {
+        var os = section("Other release strings", others.length);
+        others.forEach(function (v) {
+          os.appendChild(item("Version", v.value, v.evidence, v.confidence));
+        });
+        out.appendChild(os);
+      }
+
+      if (ev.devices.length) {
+        var ds = section("Device inventory", ev.devices.length);
+        var t = el("table");
+        var thead = el("thead"), trh = el("tr");
+        ["IP", "Host", "Role", "State", "App state"].forEach(function (h) {
+          trh.appendChild(el("th", null, h));
+        });
+        thead.appendChild(trh); t.appendChild(thead);
+        var tb = el("tbody");
+        ev.devices.forEach(function (d) {
+          var tr = el("tr");
+          [d.ip, d.hostname, d.role, d.state, d.app_state].forEach(function (c) {
+            tr.appendChild(el("td", null, c || "—"));
+          });
+          tb.appendChild(tr);
+        });
+        t.appendChild(tb); ds.appendChild(t); out.appendChild(ds);
+      }
+
+      if (ev.gaps.length) {
+        var gs = section("Evidence gaps", ev.gaps.length, "gaps");
+        var ul = el("ul", "plain");
+        ev.gaps.forEach(function (g) {
+          var li = el("li", null, g.value);
+          li.appendChild(el("span", "ev", "“" + g.evidence + "”"));
+          ul.appendChild(li);
+        });
+        gs.appendChild(ul); out.appendChild(gs);
+      }
+
+      if (ev.missing.length) {
+        var ms = section("Still missing", ev.missing.length, "missing");
+        var mu = el("ul", "plain");
+        ev.missing.forEach(function (m) { mu.appendChild(el("li", null, m)); });
+        ms.appendChild(mu);
+        out.appendChild(ms);
+      }
+    }
+
+    if (log) {
+      var ls = section("Log summary", log.lines + " lines");
+      if (log.first_timestamp) {
+        ls.appendChild(el("div", "sub",
+          log.first_timestamp + "  →  " + log.last_timestamp));
+      }
+      var keys = Object.keys(log.severities);
+      if (keys.length) {
+        var sr = el("div", "sevrow");
+        keys.sort(function (a, b) { return log.severities[b] - log.severities[a]; })
+            .forEach(function (k) {
+              var bad = (k === "CRITICAL" || k === "ERROR" || k === "CRIT"
+                         || k === "EMERG" || k === "ALERT");
+              sr.appendChild(el("span", "sev" + (bad ? " crit" : ""),
+                                k + " " + log.severities[k]));
+            });
+        ls.appendChild(sr);
+      }
+      if (log.top_messages.length) {
+        log.top_messages.forEach(function (m) {
+          var r = el("div", "logline");
+          r.appendChild(el("span", "m", m.message));
+          r.appendChild(el("span", "c", m.count + "x"));
+          ls.appendChild(r);
+        });
+      } else {
+        ls.appendChild(el("p", "none", "No message repeats."));
+      }
+      log.raslog_codes.slice(0, 5).forEach(function (c) {
+        var r = el("div", "logline");
+        r.appendChild(el("span", "m", c.code));
+        r.appendChild(el("span", "c", c.count + "x"));
+        ls.appendChild(r);
+      });
+      out.appendChild(ls); any = true;
+    }
+
+    if (!any) {
+      out.appendChild(el("div", "empty", "Nothing recognised in that input."));
+    }
+  }
+
+  function fail(msg) {
+    var out = $("out");
+    out.textContent = "";
+    out.appendChild(el("div", "err", msg));
+  }
+
+  /* ------------------------------------------------------------- wiring */
+  function run() {
+    var text = $("text").value;
+    if (!text.trim()) { fail("Nothing to analyze — paste some text first."); return; }
+    var btn = $("run");
+    btn.disabled = true; btn.textContent = "Analyzing…";
+    fetch("/api/analyze", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: text, mode: mode })
+    }).then(function (r) {
+      return r.json().then(function (j) {
+        if (!r.ok) throw new Error(j.error || ("HTTP " + r.status));
+        return j;
+      });
+    }).then(function (data) {
+      render(data);
+      $("stamp").textContent = "analyzed " + new Date().toLocaleTimeString();
+    }).catch(function (e) {
+      fail(e.message === "Failed to fetch"
+        ? "Cannot reach the local server. Is `python -m src.server` still running?"
+        : e.message);
+    }).finally(function () {
+      btn.disabled = false; btn.textContent = "Analyze";
+    });
+  }
+
+  $("run").addEventListener("click", run);
+  $("text").addEventListener("keydown", function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") run();
+  });
+  $("text").addEventListener("input", function () {
+    var n = $("text").value.length;
+    $("size").textContent = n ? n.toLocaleString() + " chars · Ctrl+Enter" : "";
+  });
+  $("clear").addEventListener("click", function () {
+    $("text").value = "";
+    $("size").textContent = "";
+    $("out").textContent = "";
+    $("out").appendChild(el("div", "empty", "Paste something and hit Analyze."));
+    $("stamp").textContent = "";
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll(".modes button"),
+    function (b) {
+      b.addEventListener("click", function () {
+        mode = b.dataset.mode;
+        Array.prototype.forEach.call(document.querySelectorAll(".modes button"),
+          function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+      });
+    });
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-sample]"),
+    function (b) {
+      b.addEventListener("click", function () {
+        fetch("/api/samples").then(function (r) { return r.json(); })
+          .then(function (s) {
+            $("text").value = s[b.dataset.sample] || "";
+            $("text").dispatchEvent(new Event("input"));
+            run();
+          }).catch(function () { fail("Could not load the sample."); });
+      });
+    });
+})();
+</script>
+</body>
+</html>

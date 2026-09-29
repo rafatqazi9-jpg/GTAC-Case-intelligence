@@ -1,0 +1,24 @@
+{
+ "eval_case_ids": [
+  "CS-6100050",
+  "CS-6100051",
+  "CS-6100052",
+  "CS-6100053",
+  "CS-6100054",
+  "CS-6100055",
+  "CS-6100056",
+  "CS-6100057",
+  "CS-6300001",
+  "CS-6200001",
+  "CS-6200002"
+ ],
+ "required_escalation_fields": {
+  "_default": [
+   "show tech-support",
+   "topology diagram",
+   "timeline",
+   "sw_version",
+   "reproduction steps"
+  ]
+ }
+}

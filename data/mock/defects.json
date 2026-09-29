@@ -1,0 +1,140 @@
+[
+ {
+  "id": "XIQ-41220",
+  "title": "MLAG peer link flap under high MAC churn",
+  "affected_versions": [
+   "32.4.1",
+   "32.4.2",
+   "32.5.1"
+  ],
+  "fixed_in": "32.5.2",
+  "feature_tags": [
+   "mlag",
+   "mac-learning"
+  ],
+  "status": "Fixed"
+ },
+ {
+  "id": "XIQ-40877",
+  "title": "STP root change on port bounce with loop protect",
+  "affected_versions": [
+   "32.4.1",
+   "32.4.2"
+  ],
+  "fixed_in": "32.5.1",
+  "feature_tags": [
+   "stp",
+   "loop-protect"
+  ],
+  "status": "Fixed"
+ },
+ {
+  "id": "XIQ-43011",
+  "title": "ECMP hash imbalance after LAG member add",
+  "affected_versions": [
+   "32.5.1",
+   "32.5.2"
+  ],
+  "fixed_in": null,
+  "feature_tags": [
+   "ecmp",
+   "lag"
+  ],
+  "status": "Open"
+ },
+ {
+  "id": "XIQ-42540",
+  "title": "Memory leak in policy manager with dynamic ACLs",
+  "affected_versions": [
+   "32.4.2",
+   "32.5.1"
+  ],
+  "fixed_in": "32.5.2",
+  "feature_tags": [
+   "acl",
+   "policy"
+  ],
+  "status": "Fixed"
+ },
+ {
+  "id": "XIQ-43788",
+  "title": "OSPF adjacency drop on MTU mismatch in fabric",
+  "affected_versions": [
+   "32.5.1"
+  ],
+  "fixed_in": null,
+  "feature_tags": [
+   "ospf",
+   "mtu"
+  ],
+  "status": "Open"
+ },
+ {
+  "id": "XIQ-39905",
+  "title": "PoE budget miscalculation on partial PSU failure",
+  "affected_versions": [
+   "32.3.4",
+   "32.4.1"
+  ],
+  "fixed_in": "32.4.2",
+  "feature_tags": [
+   "poe"
+  ],
+  "status": "Fixed"
+ },
+ {
+  "id": "XIQ-44102",
+  "title": "VXLAN tunnel blackhole after VLAN prune",
+  "affected_versions": [
+   "32.5.1",
+   "32.5.2"
+  ],
+  "fixed_in": "32.5.10",
+  "feature_tags": [
+   "vxlan",
+   "vlan"
+  ],
+  "status": "Fixed"
+ },
+ {
+  "id": "XIQ-44510",
+  "title": "Control-plane starvation under sFlow sampling",
+  "affected_versions": [
+   "32.5.1"
+  ],
+  "fixed_in": "32.5.2",
+  "feature_tags": [
+   "sflow",
+   "telemetry"
+  ],
+  "status": "Fixed"
+ },
+ {
+  "id": "XIQ-44890",
+  "title": "PoE negotiation failure with LLDP-MED endpoints",
+  "affected_versions": [
+   "32.4.2",
+   "32.5.1"
+  ],
+  "fixed_in": "32.5.2",
+  "feature_tags": [
+   "poe",
+   "lldp"
+  ],
+  "status": "Fixed"
+ },
+ {
+  "id": "XIQ-45021",
+  "title": "BPDU flood under MAC table churn",
+  "affected_versions": [
+   "32.5.1",
+   "32.5.2"
+  ],
+  "fixed_in": null,
+  "feature_tags": [
+   "stp",
+   "mac-learning"
+  ],
+  "status": "Open"
+ }
+]

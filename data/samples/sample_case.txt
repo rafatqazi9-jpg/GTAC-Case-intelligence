@@ -1,0 +1,52 @@
+[SLX-OS 20.7.3a] "OS is not ready. Please login later" seen while trying to log in
+
+Problem Description
+===================
+We are experiencing an SLX9740/8720 login issue across a newly deployed fabric.
+Our software is a fresh installation rather than an upgrade from an older
+release. According to the release notes this should be resolved in 20.7.1a and
+20.7.2a, and a power cycle temporarily clears it. We still need an RCA.
+
+History of the activity:
+Data fabric was installed on 6/12
+Fabric manager configuration was applied on 6/15
+Login issue "OS is not ready" first occurred on 6/19
+
+Project team did not keep console session logs during the fresh installation.
+
+We can see from the fabric manager that all devices are showing cfg-in-sync.
+We have tried to collect a support save from the fabric manager, but it was not
+happening.
+
+We tried to collect logs but the tool is complaining "not reachable. Please
+retry after verifying the inputs and connectivity issues"
+
+Referenced defects
+==================
+- Parent Defect ID: SLXOS-11111
+- Issue ID: SLXOS-11111
+- Severity: S3 - Moderate
+- Product: SLX-OS
+- Reported in Release: SLXOS 20.6.3a
+- Technology Group: Management
+- Symptom: Unable to log in, throwing error "OS is not ready. Please login later."
+- Condition: box made to run with multiple CLI/NETCONF sessions.
+Also referenced: SLXOS-22222
+
+inventory device execute-cli --ip 10.0.0.27 --command="show version"
+Execute CLI[failed]
+
+Fabric Name: LAB-FABRIC, Fabric Stage: 3, Fabric Type: clos, Fabric Health: Green
+| IP ADDRESS | POD | HOST NAME | ASN | ROLE | DEVICE STATE | APP STATE |
+|------------|-----|-----------|-----|------|--------------|-----------|
+| 10.0.0.23 | 1 | LAB-SPINE-01 | 65001 | spine | provisioned | cfg in-sync |
+| 10.0.0.24 | 1 | LAB-SPINE-02 | 65001 | spine | provisioned | cfg in-sync |
+| 10.0.0.11 | 1 | LAB-LEAF-01 | 65005 | leaf | provisioned | cfg in-sync |
+| 10.0.0.12 | 1 | LAB-LEAF-02 | 65006 | leaf | provisioned | cfg in-sync |
+| 10.0.0.13 | 1 | LAB-LEAF-03 | 65006 | leaf | provisioned | cfg in-sync |
+| 10.0.0.14 | 1 | LAB-BORDER-01 | 65155 | borderleaf | provisioned | cfg in-sync |
+| 10.0.0.27 | 1 | LAB-BORDER-02 | 65155 | borderleaf | provisioned | cfg in-sync |
+
+Version stack on the affected nodes:
+SLX: 20.7.3a
+Fabric manager version : 3.8.7

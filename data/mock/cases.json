@@ -1,0 +1,2856 @@
+[
+ {
+  "id": "CS-6100001",
+  "account": "Account-37",
+  "platform": "7520",
+  "sw_version": "32.5.1",
+  "symptom_class": "intermittent_uplink_loss",
+  "symptom_text": "Intermittent uplink loss",
+  "features_enabled": [
+   "mlag",
+   "mac-learning"
+  ],
+  "region": "EMEA",
+  "case_type": "C2",
+  "created_at": "2026-04-19T18:00:00",
+  "events": [
+   {
+    "at": "2026-04-19T18:00:00",
+    "kind": "note",
+    "text": "Customer reports mlag peer link flap under mac churn."
+   },
+   {
+    "at": "2026-04-19T21:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected bad optic / cable."
+   },
+   {
+    "at": "2026-04-20T18:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-04-22T00:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-04-23T18:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: MLAG peer link flap under MAC churn (XIQ-41220)."
+   }
+  ],
+  "initial_hypothesis": "Suspected bad optic / cable",
+  "actual_root_cause": "MLAG peer link flap under MAC churn (XIQ-41220)",
+  "closed_at": "2026-04-24T18:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: MLAG peer link flap under MAC churn (XIQ-41220). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100002",
+  "account": "Account-30",
+  "platform": "5720",
+  "sw_version": "32.4.1",
+  "symptom_class": "intermittent_uplink_loss",
+  "symptom_text": "Intermittent uplink loss",
+  "features_enabled": [
+   "mlag",
+   "mac-learning",
+   "syslog",
+   "sntp-client"
+  ],
+  "region": "APAC",
+  "case_type": "C4",
+  "created_at": "2026-04-21T22:00:00",
+  "events": [
+   {
+    "at": "2026-04-21T22:00:00",
+    "kind": "note",
+    "text": "Customer reports mlag peer link flap under mac churn."
+   },
+   {
+    "at": "2026-04-22T01:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected bad optic / cable."
+   },
+   {
+    "at": "2026-04-22T22:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-04-24T04:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-04-25T22:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: MLAG peer link flap under MAC churn (XIQ-41220)."
+   }
+  ],
+  "initial_hypothesis": "Suspected bad optic / cable",
+  "actual_root_cause": "MLAG peer link flap under MAC churn (XIQ-41220)",
+  "closed_at": "2026-04-26T22:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: MLAG peer link flap under MAC churn (XIQ-41220). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100003",
+  "account": "Account-34",
+  "platform": "7520",
+  "sw_version": "32.4.1",
+  "symptom_class": "intermittent_uplink_loss",
+  "symptom_text": "Intermittent uplink loss",
+  "features_enabled": [
+   "mlag",
+   "mac-learning",
+   "sntp-client",
+   "dhcp-snooping"
+  ],
+  "region": "EMEA",
+  "case_type": "C2",
+  "created_at": "2026-04-23T18:00:00",
+  "events": [
+   {
+    "at": "2026-04-23T18:00:00",
+    "kind": "note",
+    "text": "Customer reports mlag peer link flap under mac churn."
+   },
+   {
+    "at": "2026-04-23T21:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected bad optic / cable."
+   },
+   {
+    "at": "2026-04-24T18:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-04-26T00:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-04-27T18:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: MLAG peer link flap under MAC churn (XIQ-41220)."
+   }
+  ],
+  "initial_hypothesis": "Suspected bad optic / cable",
+  "actual_root_cause": "MLAG peer link flap under MAC churn (XIQ-41220)",
+  "closed_at": "2026-04-28T18:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: MLAG peer link flap under MAC churn (XIQ-41220). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100004",
+  "account": "Account-31",
+  "platform": "5520",
+  "sw_version": "32.4.2",
+  "symptom_class": "intermittent_uplink_loss",
+  "symptom_text": "Intermittent uplink loss",
+  "features_enabled": [
+   "mlag",
+   "mac-learning",
+   "syslog"
+  ],
+  "region": "EMEA",
+  "case_type": "C3",
+  "created_at": "2026-01-13T14:00:00",
+  "events": [
+   {
+    "at": "2026-01-13T14:00:00",
+    "kind": "note",
+    "text": "Customer reports mlag peer link flap under mac churn."
+   },
+   {
+    "at": "2026-01-13T17:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected bad optic / cable."
+   },
+   {
+    "at": "2026-01-14T14:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-01-15T20:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-01-17T14:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: MLAG peer link flap under MAC churn (XIQ-41220)."
+   }
+  ],
+  "initial_hypothesis": "Suspected bad optic / cable",
+  "actual_root_cause": "MLAG peer link flap under MAC churn (XIQ-41220)",
+  "closed_at": "2026-01-18T14:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: MLAG peer link flap under MAC churn (XIQ-41220). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100005",
+  "account": "Account-24",
+  "platform": "5720",
+  "sw_version": "32.5.1",
+  "symptom_class": "intermittent_uplink_loss",
+  "symptom_text": "Intermittent uplink loss",
+  "features_enabled": [
+   "ospf",
+   "mtu",
+   "snmp"
+  ],
+  "region": "EMEA",
+  "case_type": "C2",
+  "created_at": "2026-02-14T20:00:00",
+  "events": [
+   {
+    "at": "2026-02-14T20:00:00",
+    "kind": "note",
+    "text": "Customer reports mtu mismatch causing ospf adjacency drop."
+   },
+   {
+    "at": "2026-02-14T23:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected bad optic / cable."
+   },
+   {
+    "at": "2026-02-15T20:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-02-17T02:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-02-18T20:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: MTU mismatch causing OSPF adjacency drop (XIQ-43788)."
+   }
+  ],
+  "initial_hypothesis": "Suspected bad optic / cable",
+  "actual_root_cause": "MTU mismatch causing OSPF adjacency drop (XIQ-43788)",
+  "closed_at": "2026-02-19T20:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: MTU mismatch causing OSPF adjacency drop (XIQ-43788). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100006",
+  "account": "Account-26",
+  "platform": "5720",
+  "sw_version": "32.5.1",
+  "symptom_class": "intermittent_uplink_loss",
+  "symptom_text": "Intermittent uplink loss",
+  "features_enabled": [
+   "ospf",
+   "mtu"
+  ],
+  "region": "APAC",
+  "case_type": "C3",
+  "created_at": "2026-03-09T16:00:00",
+  "events": [
+   {
+    "at": "2026-03-09T16:00:00",
+    "kind": "note",
+    "text": "Customer reports mtu mismatch causing ospf adjacency drop."
+   },
+   {
+    "at": "2026-03-09T19:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected bad optic / cable."
+   },
+   {
+    "at": "2026-03-10T16:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-03-11T22:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-03-13T16:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: MTU mismatch causing OSPF adjacency drop (XIQ-43788)."
+   }
+  ],
+  "initial_hypothesis": "Suspected bad optic / cable",
+  "actual_root_cause": "MTU mismatch causing OSPF adjacency drop (XIQ-43788)",
+  "closed_at": "2026-03-14T16:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: MTU mismatch causing OSPF adjacency drop (XIQ-43788). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100007",
+  "account": "Account-04",
+  "platform": "5520",
+  "sw_version": "32.5.1",
+  "symptom_class": "intermittent_uplink_loss",
+  "symptom_text": "Intermittent uplink loss",
+  "features_enabled": [
+   "ospf",
+   "mtu",
+   "dhcp-snooping"
+  ],
+  "region": "AMER",
+  "case_type": "C3",
+  "created_at": "2026-04-02T14:00:00",
+  "events": [
+   {
+    "at": "2026-04-02T14:00:00",
+    "kind": "note",
+    "text": "Customer reports mtu mismatch causing ospf adjacency drop."
+   },
+   {
+    "at": "2026-04-02T17:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected bad optic / cable."
+   },
+   {
+    "at": "2026-04-03T14:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-04-04T20:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-04-06T14:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: MTU mismatch causing OSPF adjacency drop (XIQ-43788)."
+   }
+  ],
+  "initial_hypothesis": "Suspected bad optic / cable",
+  "actual_root_cause": "MTU mismatch causing OSPF adjacency drop (XIQ-43788)",
+  "closed_at": "2026-04-07T14:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: MTU mismatch causing OSPF adjacency drop (XIQ-43788). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100008",
+  "account": "Account-37",
+  "platform": "5520",
+  "sw_version": "32.5.2",
+  "symptom_class": "intermittent_uplink_loss",
+  "symptom_text": "Intermittent uplink loss",
+  "features_enabled": [
+   "lldp",
+   "syslog",
+   "radius"
+  ],
+  "region": "APAC",
+  "case_type": "C3",
+  "created_at": "2026-03-23T17:00:00",
+  "events": [
+   {
+    "at": "2026-03-23T17:00:00",
+    "kind": "note",
+    "text": "Customer reports failed sfp+ optic on the customer patch ."
+   },
+   {
+    "at": "2026-03-23T20:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected software defect in the link layer."
+   },
+   {
+    "at": "2026-03-24T17:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-03-25T23:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-03-27T17:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Failed SFP+ optic on the customer patch panel."
+   }
+  ],
+  "initial_hypothesis": "Suspected software defect in the link layer",
+  "actual_root_cause": "Failed SFP+ optic on the customer patch panel",
+  "closed_at": "2026-03-28T17:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Failed SFP+ optic on the customer patch panel. Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100009",
+  "account": "Account-27",
+  "platform": "7520",
+  "sw_version": "32.5.1",
+  "symptom_class": "intermittent_uplink_loss",
+  "symptom_text": "Intermittent uplink loss",
+  "features_enabled": [
+   "lldp"
+  ],
+  "region": "EMEA",
+  "case_type": "C3",
+  "created_at": "2026-01-25T16:00:00",
+  "events": [
+   {
+    "at": "2026-01-25T16:00:00",
+    "kind": "note",
+    "text": "Customer reports failed sfp+ optic on the customer patch ."
+   },
+   {
+    "at": "2026-01-25T19:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected software defect in the link layer."
+   },
+   {
+    "at": "2026-01-26T16:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-01-27T22:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-01-29T16:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Failed SFP+ optic on the customer patch panel."
+   }
+  ],
+  "initial_hypothesis": "Suspected software defect in the link layer",
+  "actual_root_cause": "Failed SFP+ optic on the customer patch panel",
+  "closed_at": "2026-01-30T16:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Failed SFP+ optic on the customer patch panel. Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100010",
+  "account": "Account-05",
+  "platform": "5520",
+  "sw_version": "32.5.1",
+  "symptom_class": "traffic_blackhole",
+  "symptom_text": "Traffic blackholed on a subset of flows",
+  "features_enabled": [
+   "ecmp",
+   "lag"
+  ],
+  "region": "EMEA",
+  "case_type": "C3",
+  "created_at": "2026-04-19T20:00:00",
+  "events": [
+   {
+    "at": "2026-04-19T20:00:00",
+    "kind": "note",
+    "text": "Customer reports ecmp hash imbalance after lag member add."
+   },
+   {
+    "at": "2026-04-19T23:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected ACL misconfiguration."
+   },
+   {
+    "at": "2026-04-20T20:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-04-22T02:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-04-23T20:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: ECMP hash imbalance after LAG member add (XIQ-43011)."
+   }
+  ],
+  "initial_hypothesis": "Suspected ACL misconfiguration",
+  "actual_root_cause": "ECMP hash imbalance after LAG member add (XIQ-43011)",
+  "closed_at": "2026-04-24T20:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: ECMP hash imbalance after LAG member add (XIQ-43011). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100011",
+  "account": "Account-21",
+  "platform": "7520",
+  "sw_version": "32.5.2",
+  "symptom_class": "traffic_blackhole",
+  "symptom_text": "Traffic blackholed on a subset of flows",
+  "features_enabled": [
+   "ecmp",
+   "lag",
+   "sntp-client",
+   "syslog"
+  ],
+  "region": "APAC",
+  "case_type": "C4",
+  "created_at": "2026-03-24T21:00:00",
+  "events": [
+   {
+    "at": "2026-03-24T21:00:00",
+    "kind": "note",
+    "text": "Customer reports ecmp hash imbalance after lag member add."
+   },
+   {
+    "at": "2026-03-25T00:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected ACL misconfiguration."
+   },
+   {
+    "at": "2026-03-25T21:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-03-27T03:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-03-28T21:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: ECMP hash imbalance after LAG member add (XIQ-43011)."
+   }
+  ],
+  "initial_hypothesis": "Suspected ACL misconfiguration",
+  "actual_root_cause": "ECMP hash imbalance after LAG member add (XIQ-43011)",
+  "closed_at": "2026-03-29T21:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: ECMP hash imbalance after LAG member add (XIQ-43011). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100012",
+  "account": "Account-26",
+  "platform": "7520",
+  "sw_version": "32.5.1",
+  "symptom_class": "traffic_blackhole",
+  "symptom_text": "Traffic blackholed on a subset of flows",
+  "features_enabled": [
+   "ecmp",
+   "lag",
+   "snmp",
+   "syslog"
+  ],
+  "region": "AMER",
+  "case_type": "C4",
+  "created_at": "2026-04-14T17:00:00",
+  "events": [
+   {
+    "at": "2026-04-14T17:00:00",
+    "kind": "note",
+    "text": "Customer reports ecmp hash imbalance after lag member add."
+   },
+   {
+    "at": "2026-04-14T20:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected ACL misconfiguration."
+   },
+   {
+    "at": "2026-04-15T17:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-04-16T23:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-04-18T17:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: ECMP hash imbalance after LAG member add (XIQ-43011)."
+   }
+  ],
+  "initial_hypothesis": "Suspected ACL misconfiguration",
+  "actual_root_cause": "ECMP hash imbalance after LAG member add (XIQ-43011)",
+  "closed_at": "2026-04-19T17:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: ECMP hash imbalance after LAG member add (XIQ-43011). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100013",
+  "account": "Account-08",
+  "platform": "5520",
+  "sw_version": "32.5.2",
+  "symptom_class": "traffic_blackhole",
+  "symptom_text": "Traffic blackholed on a subset of flows",
+  "features_enabled": [
+   "ecmp",
+   "lag",
+   "sntp-client"
+  ],
+  "region": "APAC",
+  "case_type": "C3",
+  "created_at": "2026-02-03T14:00:00",
+  "events": [
+   {
+    "at": "2026-02-03T14:00:00",
+    "kind": "note",
+    "text": "Customer reports ecmp hash imbalance after lag member add."
+   },
+   {
+    "at": "2026-02-03T17:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected ACL misconfiguration."
+   },
+   {
+    "at": "2026-02-04T14:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-02-05T20:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-02-07T14:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: ECMP hash imbalance after LAG member add (XIQ-43011)."
+   }
+  ],
+  "initial_hypothesis": "Suspected ACL misconfiguration",
+  "actual_root_cause": "ECMP hash imbalance after LAG member add (XIQ-43011)",
+  "closed_at": "2026-02-08T14:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: ECMP hash imbalance after LAG member add (XIQ-43011). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100014",
+  "account": "Account-34",
+  "platform": "5520",
+  "sw_version": "32.5.2",
+  "symptom_class": "traffic_blackhole",
+  "symptom_text": "Traffic blackholed on a subset of flows",
+  "features_enabled": [
+   "vxlan",
+   "vlan",
+   "snmp"
+  ],
+  "region": "AMER",
+  "case_type": "C2",
+  "created_at": "2026-04-05T14:00:00",
+  "events": [
+   {
+    "at": "2026-04-05T14:00:00",
+    "kind": "note",
+    "text": "Customer reports vxlan tunnel blackhole after vlan prune."
+   },
+   {
+    "at": "2026-04-05T17:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected ACL misconfiguration."
+   },
+   {
+    "at": "2026-04-06T14:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-04-07T20:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-04-09T14:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: VXLAN tunnel blackhole after VLAN prune (XIQ-44102)."
+   }
+  ],
+  "initial_hypothesis": "Suspected ACL misconfiguration",
+  "actual_root_cause": "VXLAN tunnel blackhole after VLAN prune (XIQ-44102)",
+  "closed_at": "2026-04-10T14:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: VXLAN tunnel blackhole after VLAN prune (XIQ-44102). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100015",
+  "account": "Account-21",
+  "platform": "5520",
+  "sw_version": "32.5.2",
+  "symptom_class": "traffic_blackhole",
+  "symptom_text": "Traffic blackholed on a subset of flows",
+  "features_enabled": [
+   "vxlan",
+   "vlan"
+  ],
+  "region": "APAC",
+  "case_type": "C2",
+  "created_at": "2026-01-19T18:00:00",
+  "events": [
+   {
+    "at": "2026-01-19T18:00:00",
+    "kind": "note",
+    "text": "Customer reports vxlan tunnel blackhole after vlan prune."
+   },
+   {
+    "at": "2026-01-19T21:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected ACL misconfiguration."
+   },
+   {
+    "at": "2026-01-20T18:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-01-22T00:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-01-23T18:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: VXLAN tunnel blackhole after VLAN prune (XIQ-44102)."
+   }
+  ],
+  "initial_hypothesis": "Suspected ACL misconfiguration",
+  "actual_root_cause": "VXLAN tunnel blackhole after VLAN prune (XIQ-44102)",
+  "closed_at": "2026-01-24T18:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: VXLAN tunnel blackhole after VLAN prune (XIQ-44102). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100016",
+  "account": "Account-37",
+  "platform": "5720",
+  "sw_version": "32.5.2",
+  "symptom_class": "traffic_blackhole",
+  "symptom_text": "Traffic blackholed on a subset of flows",
+  "features_enabled": [
+   "vxlan",
+   "vlan",
+   "sntp-client"
+  ],
+  "region": "EMEA",
+  "case_type": "C3",
+  "created_at": "2026-03-29T20:00:00",
+  "events": [
+   {
+    "at": "2026-03-29T20:00:00",
+    "kind": "note",
+    "text": "Customer reports vxlan tunnel blackhole after vlan prune."
+   },
+   {
+    "at": "2026-03-29T23:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected ACL misconfiguration."
+   },
+   {
+    "at": "2026-03-30T20:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-04-01T02:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-04-02T20:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: VXLAN tunnel blackhole after VLAN prune (XIQ-44102)."
+   }
+  ],
+  "initial_hypothesis": "Suspected ACL misconfiguration",
+  "actual_root_cause": "VXLAN tunnel blackhole after VLAN prune (XIQ-44102)",
+  "closed_at": "2026-04-03T20:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: VXLAN tunnel blackhole after VLAN prune (XIQ-44102). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100017",
+  "account": "Account-09",
+  "platform": "5720",
+  "sw_version": "32.5.1",
+  "symptom_class": "traffic_blackhole",
+  "symptom_text": "Traffic blackholed on a subset of flows",
+  "features_enabled": [
+   "bgp",
+   "radius",
+   "syslog"
+  ],
+  "region": "EMEA",
+  "case_type": "C3",
+  "created_at": "2026-01-08T21:00:00",
+  "events": [
+   {
+    "at": "2026-01-08T21:00:00",
+    "kind": "note",
+    "text": "Customer reports upstream provider withdrew the bgp prefi."
+   },
+   {
+    "at": "2026-01-09T00:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected forwarding table corruption."
+   },
+   {
+    "at": "2026-01-09T21:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-01-11T03:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-01-12T21:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Upstream provider withdrew the BGP prefix."
+   }
+  ],
+  "initial_hypothesis": "Suspected forwarding table corruption",
+  "actual_root_cause": "Upstream provider withdrew the BGP prefix",
+  "closed_at": "2026-01-13T21:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Upstream provider withdrew the BGP prefix. Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100018",
+  "account": "Account-05",
+  "platform": "5720",
+  "sw_version": "32.4.2",
+  "symptom_class": "traffic_blackhole",
+  "symptom_text": "Traffic blackholed on a subset of flows",
+  "features_enabled": [
+   "bgp",
+   "radius"
+  ],
+  "region": "EMEA",
+  "case_type": "C3",
+  "created_at": "2026-01-06T19:00:00",
+  "events": [
+   {
+    "at": "2026-01-06T19:00:00",
+    "kind": "note",
+    "text": "Customer reports upstream provider withdrew the bgp prefi."
+   },
+   {
+    "at": "2026-01-06T22:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected forwarding table corruption."
+   },
+   {
+    "at": "2026-01-07T19:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-01-09T01:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-01-10T19:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Upstream provider withdrew the BGP prefix."
+   }
+  ],
+  "initial_hypothesis": "Suspected forwarding table corruption",
+  "actual_root_cause": "Upstream provider withdrew the BGP prefix",
+  "closed_at": "2026-01-11T19:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Upstream provider withdrew the BGP prefix. Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100019",
+  "account": "Account-30",
+  "platform": "7520",
+  "sw_version": "32.5.1",
+  "symptom_class": "device_unresponsive",
+  "symptom_text": "Device stops responding to management",
+  "features_enabled": [
+   "acl",
+   "policy"
+  ],
+  "region": "EMEA",
+  "case_type": "C4",
+  "created_at": "2026-01-27T22:00:00",
+  "events": [
+   {
+    "at": "2026-01-27T22:00:00",
+    "kind": "note",
+    "text": "Customer reports policy manager memory leak with dynamic ."
+   },
+   {
+    "at": "2026-01-28T01:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected hardware failure."
+   },
+   {
+    "at": "2026-01-28T22:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-01-30T04:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-01-31T22:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Policy manager memory leak with dynamic ACLs (XIQ-42540)."
+   }
+  ],
+  "initial_hypothesis": "Suspected hardware failure",
+  "actual_root_cause": "Policy manager memory leak with dynamic ACLs (XIQ-42540)",
+  "closed_at": "2026-02-01T22:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Policy manager memory leak with dynamic ACLs (XIQ-42540). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100020",
+  "account": "Account-06",
+  "platform": "7520",
+  "sw_version": "32.5.1",
+  "symptom_class": "device_unresponsive",
+  "symptom_text": "Device stops responding to management",
+  "features_enabled": [
+   "acl",
+   "policy",
+   "dhcp-snooping"
+  ],
+  "region": "APAC",
+  "case_type": "C3",
+  "created_at": "2026-04-07T14:00:00",
+  "events": [
+   {
+    "at": "2026-04-07T14:00:00",
+    "kind": "note",
+    "text": "Customer reports policy manager memory leak with dynamic ."
+   },
+   {
+    "at": "2026-04-07T17:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected hardware failure."
+   },
+   {
+    "at": "2026-04-08T14:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-04-09T20:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-04-11T14:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Policy manager memory leak with dynamic ACLs (XIQ-42540)."
+   }
+  ],
+  "initial_hypothesis": "Suspected hardware failure",
+  "actual_root_cause": "Policy manager memory leak with dynamic ACLs (XIQ-42540)",
+  "closed_at": "2026-04-12T14:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Policy manager memory leak with dynamic ACLs (XIQ-42540). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100021",
+  "account": "Account-32",
+  "platform": "7520",
+  "sw_version": "32.5.1",
+  "symptom_class": "device_unresponsive",
+  "symptom_text": "Device stops responding to management",
+  "features_enabled": [
+   "acl",
+   "policy",
+   "radius"
+  ],
+  "region": "APAC",
+  "case_type": "C3",
+  "created_at": "2026-03-04T17:00:00",
+  "events": [
+   {
+    "at": "2026-03-04T17:00:00",
+    "kind": "note",
+    "text": "Customer reports policy manager memory leak with dynamic ."
+   },
+   {
+    "at": "2026-03-04T20:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected hardware failure."
+   },
+   {
+    "at": "2026-03-05T17:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-03-06T23:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-03-08T17:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Policy manager memory leak with dynamic ACLs (XIQ-42540)."
+   }
+  ],
+  "initial_hypothesis": "Suspected hardware failure",
+  "actual_root_cause": "Policy manager memory leak with dynamic ACLs (XIQ-42540)",
+  "closed_at": "2026-03-09T17:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Policy manager memory leak with dynamic ACLs (XIQ-42540). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100022",
+  "account": "Account-27",
+  "platform": "5720",
+  "sw_version": "32.4.2",
+  "symptom_class": "device_unresponsive",
+  "symptom_text": "Device stops responding to management",
+  "features_enabled": [
+   "acl",
+   "policy"
+  ],
+  "region": "APAC",
+  "case_type": "C4",
+  "created_at": "2026-04-06T19:00:00",
+  "events": [
+   {
+    "at": "2026-04-06T19:00:00",
+    "kind": "note",
+    "text": "Customer reports policy manager memory leak with dynamic ."
+   },
+   {
+    "at": "2026-04-06T22:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected hardware failure."
+   },
+   {
+    "at": "2026-04-07T19:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-04-09T01:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-04-10T19:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Policy manager memory leak with dynamic ACLs (XIQ-42540)."
+   }
+  ],
+  "initial_hypothesis": "Suspected hardware failure",
+  "actual_root_cause": "Policy manager memory leak with dynamic ACLs (XIQ-42540)",
+  "closed_at": "2026-04-11T19:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Policy manager memory leak with dynamic ACLs (XIQ-42540). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100023",
+  "account": "Account-11",
+  "platform": "5520",
+  "sw_version": "32.5.1",
+  "symptom_class": "device_unresponsive",
+  "symptom_text": "Device stops responding to management",
+  "features_enabled": [
+   "sflow",
+   "telemetry"
+  ],
+  "region": "APAC",
+  "case_type": "C4",
+  "created_at": "2026-01-25T16:00:00",
+  "events": [
+   {
+    "at": "2026-01-25T16:00:00",
+    "kind": "note",
+    "text": "Customer reports control-plane starvation under sflow sam."
+   },
+   {
+    "at": "2026-01-25T19:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected hardware failure."
+   },
+   {
+    "at": "2026-01-26T16:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-01-27T22:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-01-29T16:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Control-plane starvation under sFlow sampling (XIQ-44510)."
+   }
+  ],
+  "initial_hypothesis": "Suspected hardware failure",
+  "actual_root_cause": "Control-plane starvation under sFlow sampling (XIQ-44510)",
+  "closed_at": "2026-01-30T16:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Control-plane starvation under sFlow sampling (XIQ-44510). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100024",
+  "account": "Account-09",
+  "platform": "7520",
+  "sw_version": "32.5.1",
+  "symptom_class": "device_unresponsive",
+  "symptom_text": "Device stops responding to management",
+  "features_enabled": [
+   "sflow",
+   "telemetry",
+   "dhcp-snooping"
+  ],
+  "region": "EMEA",
+  "case_type": "C4",
+  "created_at": "2026-02-01T21:00:00",
+  "events": [
+   {
+    "at": "2026-02-01T21:00:00",
+    "kind": "note",
+    "text": "Customer reports control-plane starvation under sflow sam."
+   },
+   {
+    "at": "2026-02-02T00:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected hardware failure."
+   },
+   {
+    "at": "2026-02-02T21:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-02-04T03:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-02-05T21:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Control-plane starvation under sFlow sampling (XIQ-44510)."
+   }
+  ],
+  "initial_hypothesis": "Suspected hardware failure",
+  "actual_root_cause": "Control-plane starvation under sFlow sampling (XIQ-44510)",
+  "closed_at": "2026-02-06T21:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Control-plane starvation under sFlow sampling (XIQ-44510). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100025",
+  "account": "Account-32",
+  "platform": "5520",
+  "sw_version": "32.5.1",
+  "symptom_class": "device_unresponsive",
+  "symptom_text": "Device stops responding to management",
+  "features_enabled": [
+   "sflow",
+   "telemetry",
+   "snmp",
+   "dhcp-snooping"
+  ],
+  "region": "AMER",
+  "case_type": "C4",
+  "created_at": "2026-01-20T22:00:00",
+  "events": [
+   {
+    "at": "2026-01-20T22:00:00",
+    "kind": "note",
+    "text": "Customer reports control-plane starvation under sflow sam."
+   },
+   {
+    "at": "2026-01-21T01:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected hardware failure."
+   },
+   {
+    "at": "2026-01-21T22:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-01-23T04:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-01-24T22:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Control-plane starvation under sFlow sampling (XIQ-44510)."
+   }
+  ],
+  "initial_hypothesis": "Suspected hardware failure",
+  "actual_root_cause": "Control-plane starvation under sFlow sampling (XIQ-44510)",
+  "closed_at": "2026-01-25T22:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Control-plane starvation under sFlow sampling (XIQ-44510). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100026",
+  "account": "Account-25",
+  "platform": "5520",
+  "sw_version": "32.5.2",
+  "symptom_class": "device_unresponsive",
+  "symptom_text": "Device stops responding to management",
+  "features_enabled": [
+   "poe",
+   "syslog"
+  ],
+  "region": "APAC",
+  "case_type": "C3",
+  "created_at": "2026-03-10T14:00:00",
+  "events": [
+   {
+    "at": "2026-03-10T14:00:00",
+    "kind": "note",
+    "text": "Customer reports thermal shutdown from a blocked air inta."
+   },
+   {
+    "at": "2026-03-10T17:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected memory leak in the platform image."
+   },
+   {
+    "at": "2026-03-11T14:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-03-12T20:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-03-14T14:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Thermal shutdown from a blocked air intake."
+   }
+  ],
+  "initial_hypothesis": "Suspected memory leak in the platform image",
+  "actual_root_cause": "Thermal shutdown from a blocked air intake",
+  "closed_at": "2026-03-15T14:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Thermal shutdown from a blocked air intake. Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100027",
+  "account": "Account-24",
+  "platform": "5720",
+  "sw_version": "32.4.1",
+  "symptom_class": "device_unresponsive",
+  "symptom_text": "Device stops responding to management",
+  "features_enabled": [
+   "poe",
+   "radius",
+   "syslog"
+  ],
+  "region": "AMER",
+  "case_type": "C3",
+  "created_at": "2026-03-24T14:00:00",
+  "events": [
+   {
+    "at": "2026-03-24T14:00:00",
+    "kind": "note",
+    "text": "Customer reports thermal shutdown from a blocked air inta."
+   },
+   {
+    "at": "2026-03-24T17:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected memory leak in the platform image."
+   },
+   {
+    "at": "2026-03-25T14:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-03-26T20:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-03-28T14:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Thermal shutdown from a blocked air intake."
+   }
+  ],
+  "initial_hypothesis": "Suspected memory leak in the platform image",
+  "actual_root_cause": "Thermal shutdown from a blocked air intake",
+  "closed_at": "2026-03-29T14:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Thermal shutdown from a blocked air intake. Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100028",
+  "account": "Account-30",
+  "platform": "7520",
+  "sw_version": "32.3.4",
+  "symptom_class": "poe_devices_dropping",
+  "symptom_text": "PoE endpoints dropping and re-powering",
+  "features_enabled": [
+   "poe"
+  ],
+  "region": "EMEA",
+  "case_type": "C3",
+  "created_at": "2026-03-10T17:00:00",
+  "events": [
+   {
+    "at": "2026-03-10T17:00:00",
+    "kind": "note",
+    "text": "Customer reports partial psu failure miscounting budget."
+   },
+   {
+    "at": "2026-03-10T20:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected PoE budget exceeded."
+   },
+   {
+    "at": "2026-03-11T17:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-03-12T23:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-03-14T17:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Partial PSU failure miscounting budget (XIQ-39905)."
+   }
+  ],
+  "initial_hypothesis": "Suspected PoE budget exceeded",
+  "actual_root_cause": "Partial PSU failure miscounting budget (XIQ-39905)",
+  "closed_at": "2026-03-15T17:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Partial PSU failure miscounting budget (XIQ-39905). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100029",
+  "account": "Account-03",
+  "platform": "5720",
+  "sw_version": "32.4.1",
+  "symptom_class": "poe_devices_dropping",
+  "symptom_text": "PoE endpoints dropping and re-powering",
+  "features_enabled": [
+   "poe"
+  ],
+  "region": "AMER",
+  "case_type": "C3",
+  "created_at": "2026-02-05T20:00:00",
+  "events": [
+   {
+    "at": "2026-02-05T20:00:00",
+    "kind": "note",
+    "text": "Customer reports partial psu failure miscounting budget."
+   },
+   {
+    "at": "2026-02-05T23:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected PoE budget exceeded."
+   },
+   {
+    "at": "2026-02-06T20:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-02-08T02:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-02-09T20:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Partial PSU failure miscounting budget (XIQ-39905)."
+   }
+  ],
+  "initial_hypothesis": "Suspected PoE budget exceeded",
+  "actual_root_cause": "Partial PSU failure miscounting budget (XIQ-39905)",
+  "closed_at": "2026-02-10T20:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Partial PSU failure miscounting budget (XIQ-39905). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100030",
+  "account": "Account-16",
+  "platform": "5520",
+  "sw_version": "32.4.1",
+  "symptom_class": "poe_devices_dropping",
+  "symptom_text": "PoE endpoints dropping and re-powering",
+  "features_enabled": [
+   "poe"
+  ],
+  "region": "APAC",
+  "case_type": "C4",
+  "created_at": "2026-01-17T15:00:00",
+  "events": [
+   {
+    "at": "2026-01-17T15:00:00",
+    "kind": "note",
+    "text": "Customer reports partial psu failure miscounting budget."
+   },
+   {
+    "at": "2026-01-17T18:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected PoE budget exceeded."
+   },
+   {
+    "at": "2026-01-18T15:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-01-19T21:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-01-21T15:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Partial PSU failure miscounting budget (XIQ-39905)."
+   }
+  ],
+  "initial_hypothesis": "Suspected PoE budget exceeded",
+  "actual_root_cause": "Partial PSU failure miscounting budget (XIQ-39905)",
+  "closed_at": "2026-01-22T15:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Partial PSU failure miscounting budget (XIQ-39905). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100031",
+  "account": "Account-28",
+  "platform": "5520",
+  "sw_version": "32.3.4",
+  "symptom_class": "poe_devices_dropping",
+  "symptom_text": "PoE endpoints dropping and re-powering",
+  "features_enabled": [
+   "poe",
+   "radius",
+   "syslog"
+  ],
+  "region": "APAC",
+  "case_type": "C3",
+  "created_at": "2026-01-24T22:00:00",
+  "events": [
+   {
+    "at": "2026-01-24T22:00:00",
+    "kind": "note",
+    "text": "Customer reports partial psu failure miscounting budget."
+   },
+   {
+    "at": "2026-01-25T01:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected PoE budget exceeded."
+   },
+   {
+    "at": "2026-01-25T22:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-01-27T04:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-01-28T22:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Partial PSU failure miscounting budget (XIQ-39905)."
+   }
+  ],
+  "initial_hypothesis": "Suspected PoE budget exceeded",
+  "actual_root_cause": "Partial PSU failure miscounting budget (XIQ-39905)",
+  "closed_at": "2026-01-29T22:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Partial PSU failure miscounting budget (XIQ-39905). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100032",
+  "account": "Account-13",
+  "platform": "7520",
+  "sw_version": "32.4.2",
+  "symptom_class": "poe_devices_dropping",
+  "symptom_text": "PoE endpoints dropping and re-powering",
+  "features_enabled": [
+   "poe",
+   "lldp"
+  ],
+  "region": "APAC",
+  "case_type": "C3",
+  "created_at": "2026-03-11T15:00:00",
+  "events": [
+   {
+    "at": "2026-03-11T15:00:00",
+    "kind": "note",
+    "text": "Customer reports poe negotiation failure with lldp-med en."
+   },
+   {
+    "at": "2026-03-11T18:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected PoE budget exceeded."
+   },
+   {
+    "at": "2026-03-12T15:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-03-13T21:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-03-15T15:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: PoE negotiation failure with LLDP-MED endpoints (XIQ-44890)."
+   }
+  ],
+  "initial_hypothesis": "Suspected PoE budget exceeded",
+  "actual_root_cause": "PoE negotiation failure with LLDP-MED endpoints (XIQ-44890)",
+  "closed_at": "2026-03-16T15:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: PoE negotiation failure with LLDP-MED endpoints (XIQ-44890). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100033",
+  "account": "Account-03",
+  "platform": "5520",
+  "sw_version": "32.4.2",
+  "symptom_class": "poe_devices_dropping",
+  "symptom_text": "PoE endpoints dropping and re-powering",
+  "features_enabled": [
+   "poe",
+   "lldp",
+   "dhcp-snooping"
+  ],
+  "region": "AMER",
+  "case_type": "C3",
+  "created_at": "2026-03-08T17:00:00",
+  "events": [
+   {
+    "at": "2026-03-08T17:00:00",
+    "kind": "note",
+    "text": "Customer reports poe negotiation failure with lldp-med en."
+   },
+   {
+    "at": "2026-03-08T20:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected PoE budget exceeded."
+   },
+   {
+    "at": "2026-03-09T17:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-03-10T23:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-03-12T17:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: PoE negotiation failure with LLDP-MED endpoints (XIQ-44890)."
+   }
+  ],
+  "initial_hypothesis": "Suspected PoE budget exceeded",
+  "actual_root_cause": "PoE negotiation failure with LLDP-MED endpoints (XIQ-44890)",
+  "closed_at": "2026-03-13T17:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: PoE negotiation failure with LLDP-MED endpoints (XIQ-44890). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100034",
+  "account": "Account-05",
+  "platform": "7520",
+  "sw_version": "32.4.2",
+  "symptom_class": "poe_devices_dropping",
+  "symptom_text": "PoE endpoints dropping and re-powering",
+  "features_enabled": [
+   "poe",
+   "lldp",
+   "snmp"
+  ],
+  "region": "APAC",
+  "case_type": "C3",
+  "created_at": "2026-02-21T19:00:00",
+  "events": [
+   {
+    "at": "2026-02-21T19:00:00",
+    "kind": "note",
+    "text": "Customer reports poe negotiation failure with lldp-med en."
+   },
+   {
+    "at": "2026-02-21T22:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected PoE budget exceeded."
+   },
+   {
+    "at": "2026-02-22T19:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-02-24T01:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-02-25T19:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: PoE negotiation failure with LLDP-MED endpoints (XIQ-44890)."
+   }
+  ],
+  "initial_hypothesis": "Suspected PoE budget exceeded",
+  "actual_root_cause": "PoE negotiation failure with LLDP-MED endpoints (XIQ-44890)",
+  "closed_at": "2026-02-26T19:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: PoE negotiation failure with LLDP-MED endpoints (XIQ-44890). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100035",
+  "account": "Account-17",
+  "platform": "7520",
+  "sw_version": "32.5.2",
+  "symptom_class": "poe_devices_dropping",
+  "symptom_text": "PoE endpoints dropping and re-powering",
+  "features_enabled": [
+   "poe",
+   "syslog"
+  ],
+  "region": "EMEA",
+  "case_type": "C2",
+  "created_at": "2026-03-30T15:00:00",
+  "events": [
+   {
+    "at": "2026-03-30T15:00:00",
+    "kind": "note",
+    "text": "Customer reports third-party camera firmware renegotiatin."
+   },
+   {
+    "at": "2026-03-30T18:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected PoE controller defect."
+   },
+   {
+    "at": "2026-03-31T15:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-04-01T21:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-04-03T15:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Third-party camera firmware renegotiating power on a loop."
+   }
+  ],
+  "initial_hypothesis": "Suspected PoE controller defect",
+  "actual_root_cause": "Third-party camera firmware renegotiating power on a loop",
+  "closed_at": "2026-04-04T15:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Third-party camera firmware renegotiating power on a loop. Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100036",
+  "account": "Account-25",
+  "platform": "5520",
+  "sw_version": "32.5.2",
+  "symptom_class": "poe_devices_dropping",
+  "symptom_text": "PoE endpoints dropping and re-powering",
+  "features_enabled": [
+   "poe",
+   "dhcp-snooping",
+   "syslog"
+  ],
+  "region": "APAC",
+  "case_type": "C4",
+  "created_at": "2026-04-12T17:00:00",
+  "events": [
+   {
+    "at": "2026-04-12T17:00:00",
+    "kind": "note",
+    "text": "Customer reports third-party camera firmware renegotiatin."
+   },
+   {
+    "at": "2026-04-12T20:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected PoE controller defect."
+   },
+   {
+    "at": "2026-04-13T17:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-04-14T23:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-04-16T17:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Third-party camera firmware renegotiating power on a loop."
+   }
+  ],
+  "initial_hypothesis": "Suspected PoE controller defect",
+  "actual_root_cause": "Third-party camera firmware renegotiating power on a loop",
+  "closed_at": "2026-04-17T17:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Third-party camera firmware renegotiating power on a loop. Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100037",
+  "account": "Account-15",
+  "platform": "5520",
+  "sw_version": "32.4.1",
+  "symptom_class": "stp_topology_churn",
+  "symptom_text": "Spanning-tree topology changes recurring",
+  "features_enabled": [
+   "stp",
+   "loop-protect",
+   "radius"
+  ],
+  "region": "AMER",
+  "case_type": "C3",
+  "created_at": "2026-03-14T18:00:00",
+  "events": [
+   {
+    "at": "2026-03-14T18:00:00",
+    "kind": "note",
+    "text": "Customer reports stp root change on port bounce with loop."
+   },
+   {
+    "at": "2026-03-14T21:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected duplicate root bridge priority."
+   },
+   {
+    "at": "2026-03-15T18:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-03-17T00:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-03-18T18:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: STP root change on port bounce with loop protect (XIQ-40877)."
+   }
+  ],
+  "initial_hypothesis": "Suspected duplicate root bridge priority",
+  "actual_root_cause": "STP root change on port bounce with loop protect (XIQ-40877)",
+  "closed_at": "2026-03-19T18:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: STP root change on port bounce with loop protect (XIQ-40877). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100038",
+  "account": "Account-16",
+  "platform": "5520",
+  "sw_version": "32.4.1",
+  "symptom_class": "stp_topology_churn",
+  "symptom_text": "Spanning-tree topology changes recurring",
+  "features_enabled": [
+   "stp",
+   "loop-protect",
+   "radius"
+  ],
+  "region": "EMEA",
+  "case_type": "C4",
+  "created_at": "2026-04-07T20:00:00",
+  "events": [
+   {
+    "at": "2026-04-07T20:00:00",
+    "kind": "note",
+    "text": "Customer reports stp root change on port bounce with loop."
+   },
+   {
+    "at": "2026-04-07T23:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected duplicate root bridge priority."
+   },
+   {
+    "at": "2026-04-08T20:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-04-10T02:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-04-11T20:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: STP root change on port bounce with loop protect (XIQ-40877)."
+   }
+  ],
+  "initial_hypothesis": "Suspected duplicate root bridge priority",
+  "actual_root_cause": "STP root change on port bounce with loop protect (XIQ-40877)",
+  "closed_at": "2026-04-12T20:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: STP root change on port bounce with loop protect (XIQ-40877). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100039",
+  "account": "Account-27",
+  "platform": "5520",
+  "sw_version": "32.4.1",
+  "symptom_class": "stp_topology_churn",
+  "symptom_text": "Spanning-tree topology changes recurring",
+  "features_enabled": [
+   "stp",
+   "loop-protect",
+   "sntp-client",
+   "snmp"
+  ],
+  "region": "APAC",
+  "case_type": "C3",
+  "created_at": "2026-02-23T19:00:00",
+  "events": [
+   {
+    "at": "2026-02-23T19:00:00",
+    "kind": "note",
+    "text": "Customer reports stp root change on port bounce with loop."
+   },
+   {
+    "at": "2026-02-23T22:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected duplicate root bridge priority."
+   },
+   {
+    "at": "2026-02-24T19:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-02-26T01:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-02-27T19:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: STP root change on port bounce with loop protect (XIQ-40877)."
+   }
+  ],
+  "initial_hypothesis": "Suspected duplicate root bridge priority",
+  "actual_root_cause": "STP root change on port bounce with loop protect (XIQ-40877)",
+  "closed_at": "2026-02-28T19:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: STP root change on port bounce with loop protect (XIQ-40877). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100040",
+  "account": "Account-07",
+  "platform": "5720",
+  "sw_version": "32.4.2",
+  "symptom_class": "stp_topology_churn",
+  "symptom_text": "Spanning-tree topology changes recurring",
+  "features_enabled": [
+   "stp",
+   "loop-protect",
+   "syslog",
+   "dhcp-snooping"
+  ],
+  "region": "EMEA",
+  "case_type": "C3",
+  "created_at": "2026-04-01T14:00:00",
+  "events": [
+   {
+    "at": "2026-04-01T14:00:00",
+    "kind": "note",
+    "text": "Customer reports stp root change on port bounce with loop."
+   },
+   {
+    "at": "2026-04-01T17:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected duplicate root bridge priority."
+   },
+   {
+    "at": "2026-04-02T14:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-04-03T20:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-04-05T14:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: STP root change on port bounce with loop protect (XIQ-40877)."
+   }
+  ],
+  "initial_hypothesis": "Suspected duplicate root bridge priority",
+  "actual_root_cause": "STP root change on port bounce with loop protect (XIQ-40877)",
+  "closed_at": "2026-04-06T14:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: STP root change on port bounce with loop protect (XIQ-40877). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100041",
+  "account": "Account-24",
+  "platform": "5720",
+  "sw_version": "32.5.1",
+  "symptom_class": "stp_topology_churn",
+  "symptom_text": "Spanning-tree topology changes recurring",
+  "features_enabled": [
+   "stp",
+   "mac-learning",
+   "syslog"
+  ],
+  "region": "AMER",
+  "case_type": "C4",
+  "created_at": "2026-03-15T20:00:00",
+  "events": [
+   {
+    "at": "2026-03-15T20:00:00",
+    "kind": "note",
+    "text": "Customer reports bpdu flood under mac table churn."
+   },
+   {
+    "at": "2026-03-15T23:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected duplicate root bridge priority."
+   },
+   {
+    "at": "2026-03-16T20:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-03-18T02:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-03-19T20:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: BPDU flood under MAC table churn (XIQ-45021)."
+   }
+  ],
+  "initial_hypothesis": "Suspected duplicate root bridge priority",
+  "actual_root_cause": "BPDU flood under MAC table churn (XIQ-45021)",
+  "closed_at": "2026-03-20T20:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: BPDU flood under MAC table churn (XIQ-45021). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100042",
+  "account": "Account-34",
+  "platform": "5720",
+  "sw_version": "32.5.1",
+  "symptom_class": "stp_topology_churn",
+  "symptom_text": "Spanning-tree topology changes recurring",
+  "features_enabled": [
+   "stp",
+   "mac-learning",
+   "snmp"
+  ],
+  "region": "AMER",
+  "case_type": "C3",
+  "created_at": "2026-01-30T18:00:00",
+  "events": [
+   {
+    "at": "2026-01-30T18:00:00",
+    "kind": "note",
+    "text": "Customer reports bpdu flood under mac table churn."
+   },
+   {
+    "at": "2026-01-30T21:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected duplicate root bridge priority."
+   },
+   {
+    "at": "2026-01-31T18:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-02-02T00:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-02-03T18:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: BPDU flood under MAC table churn (XIQ-45021)."
+   }
+  ],
+  "initial_hypothesis": "Suspected duplicate root bridge priority",
+  "actual_root_cause": "BPDU flood under MAC table churn (XIQ-45021)",
+  "closed_at": "2026-02-04T18:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: BPDU flood under MAC table churn (XIQ-45021). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100043",
+  "account": "Account-21",
+  "platform": "5720",
+  "sw_version": "32.5.2",
+  "symptom_class": "stp_topology_churn",
+  "symptom_text": "Spanning-tree topology changes recurring",
+  "features_enabled": [
+   "stp",
+   "mac-learning",
+   "sntp-client",
+   "dhcp-snooping"
+  ],
+  "region": "APAC",
+  "case_type": "C3",
+  "created_at": "2026-02-04T20:00:00",
+  "events": [
+   {
+    "at": "2026-02-04T20:00:00",
+    "kind": "note",
+    "text": "Customer reports bpdu flood under mac table churn."
+   },
+   {
+    "at": "2026-02-04T23:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected duplicate root bridge priority."
+   },
+   {
+    "at": "2026-02-05T20:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-02-07T02:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-02-08T20:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: BPDU flood under MAC table churn (XIQ-45021)."
+   }
+  ],
+  "initial_hypothesis": "Suspected duplicate root bridge priority",
+  "actual_root_cause": "BPDU flood under MAC table churn (XIQ-45021)",
+  "closed_at": "2026-02-09T20:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: BPDU flood under MAC table churn (XIQ-45021). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100044",
+  "account": "Account-39",
+  "platform": "7520",
+  "sw_version": "32.4.2",
+  "symptom_class": "stp_topology_churn",
+  "symptom_text": "Spanning-tree topology changes recurring",
+  "features_enabled": [
+   "stp",
+   "dhcp-snooping"
+  ],
+  "region": "AMER",
+  "case_type": "C3",
+  "created_at": "2026-04-10T14:00:00",
+  "events": [
+   {
+    "at": "2026-04-10T14:00:00",
+    "kind": "note",
+    "text": "Customer reports customer attached an unmanaged switch cr."
+   },
+   {
+    "at": "2026-04-10T17:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected BPDU processing defect."
+   },
+   {
+    "at": "2026-04-11T14:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-04-12T20:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-04-14T14:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Customer attached an unmanaged switch creating a loop."
+   }
+  ],
+  "initial_hypothesis": "Suspected BPDU processing defect",
+  "actual_root_cause": "Customer attached an unmanaged switch creating a loop",
+  "closed_at": "2026-04-15T14:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Customer attached an unmanaged switch creating a loop. Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100045",
+  "account": "Account-17",
+  "platform": "5720",
+  "sw_version": "32.4.2",
+  "symptom_class": "stp_topology_churn",
+  "symptom_text": "Spanning-tree topology changes recurring",
+  "features_enabled": [
+   "stp"
+  ],
+  "region": "APAC",
+  "case_type": "C4",
+  "created_at": "2026-02-15T22:00:00",
+  "events": [
+   {
+    "at": "2026-02-15T22:00:00",
+    "kind": "note",
+    "text": "Customer reports customer attached an unmanaged switch cr."
+   },
+   {
+    "at": "2026-02-16T01:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected BPDU processing defect."
+   },
+   {
+    "at": "2026-02-16T22:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-02-18T04:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-02-19T22:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Customer attached an unmanaged switch creating a loop."
+   }
+  ],
+  "initial_hypothesis": "Suspected BPDU processing defect",
+  "actual_root_cause": "Customer attached an unmanaged switch creating a loop",
+  "closed_at": "2026-02-20T22:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Customer attached an unmanaged switch creating a loop. Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100050",
+  "account": "Account-35",
+  "platform": "5720",
+  "sw_version": "32.5.1",
+  "symptom_class": "intermittent_uplink_loss",
+  "symptom_text": "Intermittent uplink loss",
+  "features_enabled": [
+   "mlag",
+   "mac-learning",
+   "dhcp-snooping"
+  ],
+  "region": "AMER",
+  "case_type": "C2",
+  "created_at": "2026-06-08T09:00:00",
+  "events": [
+   {
+    "at": "2026-06-08T09:00:00",
+    "kind": "note",
+    "text": "Customer reports mlag peer link flap under mac churn."
+   },
+   {
+    "at": "2026-06-08T12:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected bad optic / cable."
+   },
+   {
+    "at": "2026-06-09T09:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-06-10T15:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-06-12T09:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: MLAG peer link flap under MAC churn (XIQ-41220)."
+   }
+  ],
+  "initial_hypothesis": "Suspected bad optic / cable",
+  "actual_root_cause": "MLAG peer link flap under MAC churn (XIQ-41220)",
+  "closed_at": "2026-06-13T09:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: MLAG peer link flap under MAC churn (XIQ-41220). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100051",
+  "account": "Account-07",
+  "platform": "7520",
+  "sw_version": "32.5.1",
+  "symptom_class": "intermittent_uplink_loss",
+  "symptom_text": "Intermittent uplink loss",
+  "features_enabled": [
+   "ospf",
+   "mtu",
+   "sntp-client"
+  ],
+  "region": "EMEA",
+  "case_type": "C4",
+  "created_at": "2026-06-09T09:00:00",
+  "events": [
+   {
+    "at": "2026-06-09T09:00:00",
+    "kind": "note",
+    "text": "Customer reports mtu mismatch causing ospf adjacency drop."
+   },
+   {
+    "at": "2026-06-09T12:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected bad optic / cable."
+   },
+   {
+    "at": "2026-06-10T09:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-06-11T15:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-06-13T09:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: MTU mismatch causing OSPF adjacency drop (XIQ-43788)."
+   }
+  ],
+  "initial_hypothesis": "Suspected bad optic / cable",
+  "actual_root_cause": "MTU mismatch causing OSPF adjacency drop (XIQ-43788)",
+  "closed_at": "2026-06-14T09:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: MTU mismatch causing OSPF adjacency drop (XIQ-43788). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100052",
+  "account": "Account-24",
+  "platform": "5520",
+  "sw_version": "32.5.2",
+  "symptom_class": "intermittent_uplink_loss",
+  "symptom_text": "Intermittent uplink loss",
+  "features_enabled": [
+   "lldp",
+   "sntp-client"
+  ],
+  "region": "APAC",
+  "case_type": "C4",
+  "created_at": "2026-06-10T09:00:00",
+  "events": [
+   {
+    "at": "2026-06-10T09:00:00",
+    "kind": "note",
+    "text": "Customer reports failed sfp+ optic on the customer patch ."
+   },
+   {
+    "at": "2026-06-10T12:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected software defect in the link layer."
+   },
+   {
+    "at": "2026-06-11T09:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-06-12T15:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-06-14T09:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Failed SFP+ optic on the customer patch panel."
+   }
+  ],
+  "initial_hypothesis": "Suspected software defect in the link layer",
+  "actual_root_cause": "Failed SFP+ optic on the customer patch panel",
+  "closed_at": "2026-06-15T09:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Failed SFP+ optic on the customer patch panel. Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100053",
+  "account": "Account-12",
+  "platform": "5520",
+  "sw_version": "32.5.1",
+  "symptom_class": "traffic_blackhole",
+  "symptom_text": "Traffic blackholed on a subset of flows",
+  "features_enabled": [
+   "ecmp",
+   "lag",
+   "radius"
+  ],
+  "region": "AMER",
+  "case_type": "C2",
+  "created_at": "2026-06-11T09:00:00",
+  "events": [
+   {
+    "at": "2026-06-11T09:00:00",
+    "kind": "note",
+    "text": "Customer reports ecmp hash imbalance after lag member add."
+   },
+   {
+    "at": "2026-06-11T12:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected ACL misconfiguration."
+   },
+   {
+    "at": "2026-06-12T09:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-06-13T15:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-06-15T09:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: ECMP hash imbalance after LAG member add (XIQ-43011)."
+   }
+  ],
+  "initial_hypothesis": "Suspected ACL misconfiguration",
+  "actual_root_cause": "ECMP hash imbalance after LAG member add (XIQ-43011)",
+  "closed_at": "2026-06-16T09:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: ECMP hash imbalance after LAG member add (XIQ-43011). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100054",
+  "account": "Account-15",
+  "platform": "5520",
+  "sw_version": "32.5.1",
+  "symptom_class": "traffic_blackhole",
+  "symptom_text": "Traffic blackholed on a subset of flows",
+  "features_enabled": [
+   "vxlan",
+   "vlan",
+   "snmp",
+   "dhcp-snooping"
+  ],
+  "region": "EMEA",
+  "case_type": "C3",
+  "created_at": "2026-06-12T09:00:00",
+  "events": [
+   {
+    "at": "2026-06-12T09:00:00",
+    "kind": "note",
+    "text": "Customer reports vxlan tunnel blackhole after vlan prune."
+   },
+   {
+    "at": "2026-06-12T12:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected ACL misconfiguration."
+   },
+   {
+    "at": "2026-06-13T09:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-06-14T15:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-06-16T09:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: VXLAN tunnel blackhole after VLAN prune (XIQ-44102)."
+   }
+  ],
+  "initial_hypothesis": "Suspected ACL misconfiguration",
+  "actual_root_cause": "VXLAN tunnel blackhole after VLAN prune (XIQ-44102)",
+  "closed_at": "2026-06-17T09:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: VXLAN tunnel blackhole after VLAN prune (XIQ-44102). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100055",
+  "account": "Account-06",
+  "platform": "7520",
+  "sw_version": "32.5.1",
+  "symptom_class": "device_unresponsive",
+  "symptom_text": "Device stops responding to management",
+  "features_enabled": [
+   "sflow",
+   "telemetry"
+  ],
+  "region": "AMER",
+  "case_type": "C3",
+  "created_at": "2026-06-13T09:00:00",
+  "events": [
+   {
+    "at": "2026-06-13T09:00:00",
+    "kind": "note",
+    "text": "Customer reports control-plane starvation under sflow sam."
+   },
+   {
+    "at": "2026-06-13T12:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected hardware failure."
+   },
+   {
+    "at": "2026-06-14T09:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-06-15T15:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-06-17T09:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Control-plane starvation under sFlow sampling (XIQ-44510)."
+   }
+  ],
+  "initial_hypothesis": "Suspected hardware failure",
+  "actual_root_cause": "Control-plane starvation under sFlow sampling (XIQ-44510)",
+  "closed_at": "2026-06-18T09:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Control-plane starvation under sFlow sampling (XIQ-44510). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100056",
+  "account": "Account-03",
+  "platform": "7520",
+  "sw_version": "32.4.1",
+  "symptom_class": "poe_devices_dropping",
+  "symptom_text": "PoE endpoints dropping and re-powering",
+  "features_enabled": [
+   "poe"
+  ],
+  "region": "EMEA",
+  "case_type": "C3",
+  "created_at": "2026-06-14T09:00:00",
+  "events": [
+   {
+    "at": "2026-06-14T09:00:00",
+    "kind": "note",
+    "text": "Customer reports partial psu failure miscounting budget."
+   },
+   {
+    "at": "2026-06-14T12:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected PoE budget exceeded."
+   },
+   {
+    "at": "2026-06-15T09:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-06-16T15:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-06-18T09:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Partial PSU failure miscounting budget (XIQ-39905)."
+   }
+  ],
+  "initial_hypothesis": "Suspected PoE budget exceeded",
+  "actual_root_cause": "Partial PSU failure miscounting budget (XIQ-39905)",
+  "closed_at": "2026-06-19T09:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Partial PSU failure miscounting budget (XIQ-39905). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100057",
+  "account": "Account-16",
+  "platform": "5720",
+  "sw_version": "32.5.1",
+  "symptom_class": "stp_topology_churn",
+  "symptom_text": "Spanning-tree topology changes recurring",
+  "features_enabled": [
+   "stp",
+   "mac-learning",
+   "radius",
+   "syslog"
+  ],
+  "region": "APAC",
+  "case_type": "C3",
+  "created_at": "2026-06-15T09:00:00",
+  "events": [
+   {
+    "at": "2026-06-15T09:00:00",
+    "kind": "note",
+    "text": "Customer reports bpdu flood under mac table churn."
+   },
+   {
+    "at": "2026-06-15T12:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected duplicate root bridge priority."
+   },
+   {
+    "at": "2026-06-16T09:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-06-17T15:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-06-19T09:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: BPDU flood under MAC table churn (XIQ-45021)."
+   }
+  ],
+  "initial_hypothesis": "Suspected duplicate root bridge priority",
+  "actual_root_cause": "BPDU flood under MAC table churn (XIQ-45021)",
+  "closed_at": "2026-06-20T09:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: BPDU flood under MAC table churn (XIQ-45021). Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6100090",
+  "account": "Account-26",
+  "platform": "5520",
+  "sw_version": "32.5.1",
+  "symptom_class": "traffic_blackhole",
+  "symptom_text": "Traffic blackholed on a subset of flows",
+  "features_enabled": [
+   "ecmp",
+   "lag",
+   "dhcp-snooping"
+  ],
+  "region": "AMER",
+  "case_type": "C4",
+  "created_at": "2026-06-11T10:00:00",
+  "events": [
+   {
+    "at": "2026-06-11T10:00:00",
+    "kind": "note",
+    "text": "Customer reports ecmp hash imbalance after lag member add."
+   },
+   {
+    "at": "2026-06-11T13:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected ACL misconfiguration."
+   },
+   {
+    "at": "2026-06-12T10:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-06-13T16:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   }
+  ],
+  "initial_hypothesis": "Suspected ACL misconfiguration",
+  "actual_root_cause": "ECMP hash imbalance after LAG member add (XIQ-43011)",
+  "closed_at": null,
+  "closed_state": null,
+  "closure_comments": null,
+  "escalated": true
+ },
+ {
+  "id": "CS-6100091",
+  "account": "Account-37",
+  "platform": "5520",
+  "sw_version": "32.5.1",
+  "symptom_class": "traffic_blackhole",
+  "symptom_text": "Traffic blackholed on a subset of flows",
+  "features_enabled": [
+   "ecmp",
+   "lag",
+   "sntp-client",
+   "dhcp-snooping"
+  ],
+  "region": "EMEA",
+  "case_type": "C2",
+  "created_at": "2026-06-11T11:00:00",
+  "events": [
+   {
+    "at": "2026-06-11T11:00:00",
+    "kind": "note",
+    "text": "Customer reports ecmp hash imbalance after lag member add."
+   },
+   {
+    "at": "2026-06-11T14:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected ACL misconfiguration."
+   },
+   {
+    "at": "2026-06-12T11:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-06-13T17:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   }
+  ],
+  "initial_hypothesis": "Suspected ACL misconfiguration",
+  "actual_root_cause": "ECMP hash imbalance after LAG member add (XIQ-43011)",
+  "closed_at": null,
+  "closed_state": null,
+  "closure_comments": null,
+  "escalated": true
+ },
+ {
+  "id": "CS-6100092",
+  "account": "Account-39",
+  "platform": "5520",
+  "sw_version": "32.5.1",
+  "symptom_class": "traffic_blackhole",
+  "symptom_text": "Traffic blackholed on a subset of flows",
+  "features_enabled": [
+   "ecmp",
+   "lag",
+   "sntp-client"
+  ],
+  "region": "APAC",
+  "case_type": "C2",
+  "created_at": "2026-06-11T12:00:00",
+  "events": [
+   {
+    "at": "2026-06-11T12:00:00",
+    "kind": "note",
+    "text": "Customer reports ecmp hash imbalance after lag member add."
+   },
+   {
+    "at": "2026-06-11T15:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected ACL misconfiguration."
+   },
+   {
+    "at": "2026-06-12T12:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-06-13T18:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   }
+  ],
+  "initial_hypothesis": "Suspected ACL misconfiguration",
+  "actual_root_cause": "ECMP hash imbalance after LAG member add (XIQ-43011)",
+  "closed_at": null,
+  "closed_state": null,
+  "closure_comments": null,
+  "escalated": true
+ },
+ {
+  "id": "CS-6300001",
+  "account": "Account-34",
+  "platform": "7520",
+  "sw_version": "32.5.1",
+  "symptom_class": "traffic_blackhole",
+  "symptom_text": "Traffic blackholed on a subset of flows",
+  "features_enabled": [
+   "bgp",
+   "syslog"
+  ],
+  "region": "EMEA",
+  "case_type": "C2",
+  "created_at": "2026-06-16T09:00:00",
+  "events": [
+   {
+    "at": "2026-06-16T09:00:00",
+    "kind": "note",
+    "text": "Customer reports upstream provider withdrew the bgp prefi."
+   },
+   {
+    "at": "2026-06-16T12:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected forwarding table corruption."
+   },
+   {
+    "at": "2026-06-17T09:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-06-18T15:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   }
+  ],
+  "initial_hypothesis": "Suspected forwarding table corruption",
+  "actual_root_cause": null,
+  "closed_at": "2026-06-21T09:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "No response from customer. Hence closing this case.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6200001",
+  "account": "Account-18",
+  "platform": "5520",
+  "sw_version": "32.5.1",
+  "symptom_class": "multicast_replication_loss",
+  "symptom_text": "Multicast replication loss downstream",
+  "features_enabled": [
+   "pim",
+   "igmp",
+   "syslog",
+   "sntp-client"
+  ],
+  "region": "AMER",
+  "case_type": "C4",
+  "created_at": "2026-06-18T09:00:00",
+  "events": [
+   {
+    "at": "2026-06-18T09:00:00",
+    "kind": "note",
+    "text": "Customer reports third-party igmp snooping bug on a downs."
+   },
+   {
+    "at": "2026-06-18T12:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected platform software defect."
+   },
+   {
+    "at": "2026-06-19T09:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-06-20T15:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-06-22T09:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Third-party IGMP snooping bug on a downstream vendor switch."
+   }
+  ],
+  "initial_hypothesis": "Suspected platform software defect",
+  "actual_root_cause": "Third-party IGMP snooping bug on a downstream vendor switch",
+  "closed_at": "2026-06-23T09:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Third-party IGMP snooping bug on a downstream vendor switch. Fix identified.",
+  "escalated": true
+ },
+ {
+  "id": "CS-6200002",
+  "account": "Account-38",
+  "platform": "5520",
+  "sw_version": "32.5.1",
+  "symptom_class": "clock_drift_alarms",
+  "symptom_text": "Clock drift alarms across the fabric",
+  "features_enabled": [
+   "ntp"
+  ],
+  "region": "AMER",
+  "case_type": "C2",
+  "created_at": "2026-06-19T09:00:00",
+  "events": [
+   {
+    "at": "2026-06-19T09:00:00",
+    "kind": "note",
+    "text": "Customer reports customer ntp server pool misconfigured u."
+   },
+   {
+    "at": "2026-06-19T12:00:00",
+    "kind": "note",
+    "text": "Initial assessment: Suspected platform software defect."
+   },
+   {
+    "at": "2026-06-20T09:00:00",
+    "kind": "attachment",
+    "text": "show tech-support uploaded"
+   },
+   {
+    "at": "2026-06-21T15:00:00",
+    "kind": "escalation",
+    "text": "Escalated: initial line of investigation exhausted."
+   },
+   {
+    "at": "2026-06-23T09:00:00",
+    "kind": "note",
+    "text": "Root cause confirmed: Customer NTP server pool misconfigured upstream of the fabric."
+   }
+  ],
+  "initial_hypothesis": "Suspected platform software defect",
+  "actual_root_cause": "Customer NTP server pool misconfigured upstream of the fabric",
+  "closed_at": "2026-06-24T09:00:00",
+  "closed_state": "Resolved",
+  "closure_comments": "Root cause confirmed: Customer NTP server pool misconfigured upstream of the fabric. Fix identified.",
+  "escalated": true
+ }
+]

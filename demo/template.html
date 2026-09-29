@@ -1,0 +1,856 @@
+<title>GTAC Case Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  /* Light palette is the complete set. Dark redefines tokens only. */
+  :root {
+    --ground:#F6F7F9;
+    --surface:#FFFFFF;
+    --surface-2:#EFF1F5;
+    --line:#DDE1E8;
+    --ink:#15171C;
+    --ink-2:#3A4050;
+    --muted:#5B6274;
+    --faint:#868DA0;
+    --accent:#4338CA;
+    --accent-soft:#EEEDFB;
+    --clear:#0F766E;
+    --clear-soft:#E2F1EF;
+    --trap:#B45309;
+    --trap-soft:#FBF0E2;
+    --critical:#B42318;
+    --critical-soft:#FBE9E7;
+    --shadow:0 1px 2px rgba(20,24,36,.05), 0 8px 24px -12px rgba(20,24,36,.14);
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#0F1116;
+      --surface:#171A22;
+      --surface-2:#1E222C;
+      --line:#2B303C;
+      --ink:#E9EBF1;
+      --ink-2:#C3C8D6;
+      --muted:#969DB0;
+      --faint:#6E7688;
+      --accent:#9A94FF;
+      --accent-soft:#232238;
+      --clear:#4FD1C5;
+      --clear-soft:#14282A;
+      --trap:#E8A44C;
+      --trap-soft:#2B2114;
+      --critical:#F27A6E;
+      --critical-soft:#2E1917;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0F1116;
+    --surface:#171A22;
+    --surface-2:#1E222C;
+    --line:#2B303C;
+    --ink:#E9EBF1;
+    --ink-2:#C3C8D6;
+    --muted:#969DB0;
+    --faint:#6E7688;
+    --accent:#9A94FF;
+    --accent-soft:#232238;
+    --clear:#4FD1C5;
+    --clear-soft:#14282A;
+    --trap:#E8A44C;
+    --trap-soft:#2B2114;
+    --critical:#F27A6E;
+    --critical-soft:#2E1917;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:var(--sans); font-size:15px; line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:0 24px}
+  h1,h2,h3{text-wrap:balance; margin:0}
+  code,.mono{font-family:var(--mono); font-variant-ligatures:none}
+
+  .eyebrow{
+    font-size:11px; font-weight:600; letter-spacing:.13em; text-transform:uppercase;
+    color:var(--faint);
+  }
+
+  /* ---------------------------------------------------------- masthead */
+  header.top{border-bottom:1px solid var(--line); background:var(--surface)}
+  .masthead{display:flex; flex-wrap:wrap; gap:28px; align-items:flex-end;
+            justify-content:space-between; padding:34px 0 26px}
+  .title-block{max-width:60ch; display:flex; flex-direction:column; gap:10px}
+  h1{font-size:29px; font-weight:700; letter-spacing:-.02em; line-height:1.15}
+  .dek{color:var(--muted); font-size:15px; max-width:62ch}
+  .dek strong{color:var(--ink-2); font-weight:600}
+  .runmeta{display:flex; flex-wrap:wrap; gap:6px}
+  .tag{
+    font-family:var(--mono); font-size:11.5px; color:var(--muted);
+    background:var(--surface-2); border:1px solid var(--line);
+    padding:3px 8px; border-radius:4px; white-space:nowrap;
+  }
+
+  /* ------------------------------------------------------- gate strip */
+  .gate{display:grid; grid-template-columns:repeat(6,1fr); gap:1px;
+        background:var(--line); border:1px solid var(--line);
+        border-radius:8px; overflow:hidden; margin:22px 0 30px}
+  .cell{background:var(--surface); padding:13px 15px; display:flex;
+        flex-direction:column; gap:3px}
+  .cell .n{font-family:var(--mono); font-size:25px; font-weight:600;
+           line-height:1; font-variant-numeric:tabular-nums}
+  .cell .k{font-size:10.5px; font-weight:600; letter-spacing:.1em;
+           text-transform:uppercase; color:var(--faint)}
+  .cell .note{font-size:11.5px; color:var(--muted); line-height:1.35}
+  .cell.hit .n{color:var(--clear)}
+  .cell.partial .n{color:var(--accent)}
+  .cell.abstain .n{color:var(--ink-2)}
+  .cell.miss .n{color:var(--critical)}
+  .cell.ruled .n{color:var(--critical)}
+  .cell.asserted{background:var(--surface-2)}
+  .cell.asserted .n{color:var(--ink)}
+
+  /* Corpus exclusions. Sits under the gate because it qualifies every number
+     above it: these cases were removed before any scoring happened. */
+  .excluded{
+    margin:-16px 0 30px; padding:13px 16px; border:1px solid var(--line);
+    border-left:3px solid var(--trap); border-radius:0 6px 6px 0;
+    background:var(--trap-soft); display:flex; flex-direction:column; gap:6px;
+  }
+  .excluded .h{font-size:11px; font-weight:700; letter-spacing:.11em;
+               text-transform:uppercase; color:var(--trap)}
+  .excluded .row{font-size:13px; color:var(--ink-2)}
+  .excluded .row b{font-family:var(--mono); font-size:12.5px; font-weight:600}
+  .excluded .row .state{
+    font-family:var(--mono); font-size:10.5px; padding:1px 5px; border-radius:3px;
+    border:1px solid var(--line); background:var(--surface); color:var(--muted);
+  }
+  .excluded .note{font-size:12.5px; color:var(--muted); max-width:78ch}
+
+  /* ------------------------------------------------------------ console */
+  .console{display:grid; grid-template-columns:268px 1fr; gap:20px;
+           align-items:start; padding-bottom:44px}
+  @media (max-width:900px){
+    .console{grid-template-columns:1fr}
+    .gate{grid-template-columns:repeat(2,1fr)}
+    /* Stacked, the rail is a full-width header: pinning it and giving it its
+       own scrollbar would trap the case list inside the page scroll. */
+    .rail{position:static}
+    .caselist{max-height:none}
+  }
+
+  .rail{
+    background:var(--surface); border:1px solid var(--line);
+    border-radius:8px; overflow:hidden; position:sticky; top:16px;
+  }
+  .rail-head{padding:11px 14px; border-bottom:1px solid var(--line);
+             display:flex; justify-content:space-between; align-items:baseline}
+  .caselist{list-style:none; margin:0; padding:0; max-height:70vh; overflow-y:auto}
+  .caselist li{border-bottom:1px solid var(--line)}
+  .caselist li:last-child{border-bottom:0}
+  .case-btn{
+    width:100%; text-align:left; background:none; border:0; cursor:pointer;
+    padding:11px 14px; display:flex; flex-direction:column; gap:5px;
+    font:inherit; color:inherit; border-left:3px solid transparent;
+  }
+  .case-btn:hover{background:var(--surface-2)}
+  .case-btn:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+  .case-btn[aria-current="true"]{background:var(--accent-soft);
+                                 border-left-color:var(--accent)}
+  .case-row{display:flex; justify-content:space-between; align-items:center; gap:8px}
+  .case-id{font-family:var(--mono); font-size:12.5px; font-weight:500}
+  .case-sym{font-size:12px; color:var(--muted); line-height:1.3}
+  .case-plat{font-family:var(--mono); font-size:11px; color:var(--faint)}
+
+  .chip{
+    font-size:9.5px; font-weight:700; letter-spacing:.07em; text-transform:uppercase;
+    padding:2.5px 6px; border-radius:3px; white-space:nowrap; border:1px solid transparent;
+  }
+  .chip.hit{background:var(--clear-soft); color:var(--clear)}
+  .chip.partial{background:var(--accent-soft); color:var(--accent)}
+  /* Neutral on purpose. Abstaining is correct behaviour, not a failure. */
+  .chip.abstain{background:var(--surface-2); color:var(--muted); border-color:var(--line)}
+  .chip.miss,.chip.ruled{background:var(--critical-soft); color:var(--critical)}
+
+  /* ------------------------------------------------------------- brief */
+  .brief{background:var(--surface); border:1px solid var(--line);
+         border-radius:8px; box-shadow:var(--shadow); overflow:hidden}
+  .brief-head{padding:18px 22px; border-bottom:1px solid var(--line);
+              display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between}
+  .brief-head h2{font-family:var(--mono); font-size:17px; font-weight:600;
+                 letter-spacing:-.01em}
+  .brief-sub{color:var(--muted); font-size:13.5px; margin-top:3px}
+
+  /* Case header in the shape Salesforce presents it: real field names, two
+     columns of label/value, so a TAC engineer can see at a glance which
+     fields a live adapter would have to read. */
+  .fields{
+    width:100%; margin-top:14px; display:grid; gap:1px 20px;
+    grid-template-columns:repeat(2, minmax(0,1fr));
+  }
+  @media (max-width:640px){ .fields{grid-template-columns:1fr} }
+  .field{display:grid; grid-template-columns:132px 1fr; gap:10px;
+         padding:5px 0; border-top:1px solid var(--line); align-items:baseline}
+  .field .fl{font-size:10.5px; font-weight:600; letter-spacing:.06em;
+             text-transform:uppercase; color:var(--faint)}
+  .field .fv{font-family:var(--mono); font-size:12.5px; color:var(--ink);
+             overflow-wrap:anywhere}
+  .field .fv.empty{color:var(--faint); font-style:italic;
+                   font-family:var(--sans); font-size:12px}
+  .field.wide{grid-column:1 / -1}
+
+  .abstain-banner{
+    margin:0; padding:15px 22px; background:var(--surface-2);
+    border-bottom:1px solid var(--line); border-left:3px solid var(--muted);
+    display:flex; flex-direction:column; gap:5px;
+  }
+  .abstain-banner .h{font-size:13px; font-weight:700; letter-spacing:.04em;
+                     text-transform:uppercase}
+  .abstain-banner p{margin:0; font-size:13.5px; color:var(--muted); max-width:70ch}
+
+  section.fset{border-bottom:1px solid var(--line); padding:17px 22px}
+  section.fset:last-of-type{border-bottom:0}
+  .fset-head{display:flex; align-items:baseline; gap:9px; margin-bottom:12px}
+  .fset-head h3{font-size:11.5px; font-weight:700; letter-spacing:.11em;
+                text-transform:uppercase}
+  .fset-head .count{font-family:var(--mono); font-size:11.5px; color:var(--faint);
+                    font-variant-numeric:tabular-nums}
+  .fset-head .why{font-size:11.5px; color:var(--faint); margin-left:auto;
+                  font-style:italic}
+  .fset.eliminated .fset-head h3{color:var(--clear)}
+  .fset.candidate  .fset-head h3{color:var(--ink)}
+  .fset.trap       .fset-head h3{color:var(--trap)}
+  .fset.cluster    .fset-head h3{color:var(--accent)}
+  .fset.gap        .fset-head h3{color:var(--muted)}
+
+  .findings{display:flex; flex-direction:column; gap:8px}
+  .finding{
+    display:grid; grid-template-columns:58px 1fr; gap:12px;
+    padding:9px 11px; border:1px solid var(--line); border-radius:6px;
+    background:var(--surface);
+  }
+  .fset.eliminated .finding{background:var(--clear-soft); border-color:transparent}
+  .fset.trap .finding{background:var(--trap-soft); border-color:transparent}
+  .conf{
+    font-family:var(--mono); font-size:10px; font-weight:600; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--faint); padding-top:2px;
+  }
+  .conf.high{color:var(--ink-2)}
+  .conf.medium{color:var(--muted)}
+  .stmt{font-size:13.5px; line-height:1.5; color:var(--ink)}
+  .srcs{margin-top:5px; display:flex; flex-wrap:wrap; gap:4px; align-items:center}
+  .srcs .lbl{font-size:10px; letter-spacing:.08em; text-transform:uppercase;
+             color:var(--faint); margin-right:2px}
+  .src{
+    font-family:var(--mono); font-size:10.5px; color:var(--ink-2);
+    background:var(--surface-2); border:1px solid var(--line);
+    padding:1px 5px; border-radius:3px;
+  }
+  .mod{font-family:var(--mono); font-size:10px; color:var(--faint); margin-left:6px}
+
+  /* --------------------------------------------------- evidence window */
+  .window{padding:17px 22px; border-bottom:1px solid var(--line);
+          background:var(--surface-2)}
+  .tl{list-style:none; margin:10px 0 0; padding:0; display:flex;
+      flex-direction:column; gap:0}
+  .tl li{display:grid; grid-template-columns:132px 74px 1fr; gap:10px;
+         padding:5px 0; border-top:1px dashed var(--line); font-size:12.5px}
+  .tl li:first-child{border-top:0}
+  .tl .at{font-family:var(--mono); font-size:11.5px; color:var(--muted)}
+  .tl .kind{font-size:10px; font-weight:600; letter-spacing:.07em;
+            text-transform:uppercase; color:var(--faint); padding-top:2px}
+  .cutline{display:flex; align-items:center; gap:10px; margin-top:9px;
+           padding-top:9px; border-top:2px solid var(--critical)}
+  .cutline .t{font-size:11.5px; color:var(--critical); font-weight:600;
+              letter-spacing:.04em}
+  .cutline .d{font-size:11.5px; color:var(--muted)}
+
+  /* -------------------------------------------------------- the reveal */
+  .reveal{padding:17px 22px; background:var(--surface-2);
+          border-top:1px solid var(--line)}
+  .reveal-btn{
+    font:inherit; font-size:12.5px; font-weight:600; cursor:pointer;
+    background:var(--surface); color:var(--ink); border:1px solid var(--line);
+    padding:7px 13px; border-radius:5px; display:inline-flex; align-items:center; gap:7px;
+  }
+  .reveal-btn:hover{border-color:var(--accent); color:var(--accent)}
+  .reveal-btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  .truth{margin-top:13px; display:flex; flex-direction:column; gap:9px}
+  /* display:flex would otherwise beat the UA rule for [hidden] and give the
+     answer away before the reveal is clicked. */
+  .truth[hidden]{display:none}
+  .truth-row{display:grid; grid-template-columns:150px 1fr; gap:12px; font-size:13.5px}
+  .truth-row .k{font-size:10.5px; font-weight:600; letter-spacing:.09em;
+                text-transform:uppercase; color:var(--faint); padding-top:3px}
+  .truth-row .v{color:var(--ink)}
+  .verdict-line{display:flex; align-items:center; gap:9px; flex-wrap:wrap;
+                margin-top:3px}
+  .verdict-note{font-size:12.5px; color:var(--muted)}
+
+  /* ------------------------------------------------------------ ablation */
+  .lower{border-top:1px solid var(--line); background:var(--surface);
+         padding:40px 0 52px}
+  .lower h2{font-size:19px; font-weight:700; letter-spacing:-.01em}
+  .lower .dek{margin-top:8px}
+  .tablewrap{overflow-x:auto; margin-top:18px; border:1px solid var(--line);
+             border-radius:8px}
+  table{border-collapse:collapse; width:100%; min-width:520px}
+  th,td{text-align:left; padding:10px 15px; border-bottom:1px solid var(--line);
+        font-size:13.5px}
+  th{font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+     color:var(--faint); background:var(--surface-2)}
+  tbody tr:last-child td{border-bottom:0}
+  td.num{font-family:var(--mono); font-variant-numeric:tabular-nums; text-align:right}
+  td.lbl{font-family:var(--mono); font-size:12.5px}
+  tr.best{background:var(--clear-soft)}
+  tr.best td.lbl{font-weight:600; color:var(--clear)}
+  td.asserted{font-weight:600}
+
+  /* ------------------------------------------------------- extraction */
+  .lower.alt{background:var(--ground)}
+  .xcols{display:grid; grid-template-columns:minmax(0,4fr) minmax(0,6fr);
+         gap:18px; margin-top:20px; align-items:start}
+  @media (max-width:820px){ .xcols{grid-template-columns:1fr} }
+  .xcol{background:var(--surface); border:1px solid var(--line);
+        border-radius:8px; padding:14px 16px}
+  .xh{display:block; font-size:10.5px; font-weight:700; letter-spacing:.11em;
+      text-transform:uppercase; color:var(--faint); margin-bottom:10px}
+
+  .sfrow{display:grid; grid-template-columns:126px 1fr; gap:10px; padding:6px 0;
+         border-top:1px solid var(--line); align-items:baseline}
+  .sfrow:first-of-type{border-top:0}
+  .sfrow .k{font-size:10.5px; letter-spacing:.05em; text-transform:uppercase;
+            color:var(--faint)}
+  .sfrow .v{font-family:var(--mono); font-size:12px; color:var(--ink)}
+  .sfrow .v.blank{font-family:var(--sans); font-style:italic; color:var(--critical)}
+  .sfrow .n{display:block; font-family:var(--sans); font-style:normal;
+            font-size:11px; color:var(--muted); margin-top:1px}
+
+  .xitem{padding:7px 0; border-top:1px solid var(--line)}
+  .xitem:first-of-type{border-top:0}
+  .xitem .top{display:flex; gap:8px; align-items:baseline; flex-wrap:wrap}
+  .xitem .lbl{font-size:10px; font-weight:700; letter-spacing:.07em;
+              text-transform:uppercase; color:var(--faint); min-width:62px}
+  .xitem .val{font-family:var(--mono); font-size:12.5px; color:var(--ink);
+              overflow-wrap:anywhere}
+  .xitem .ev{display:block; font-size:11.5px; color:var(--muted); margin-top:3px;
+             padding-left:70px; overflow-wrap:anywhere}
+  @media (max-width:520px){ .xitem .ev{padding-left:0} }
+
+  .xgrid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px;
+         margin-top:18px}
+  @media (max-width:820px){ .xgrid{grid-template-columns:1fr} }
+  .xbox{background:var(--surface); border:1px solid var(--line);
+        border-radius:8px; padding:14px 16px}
+  .xbox.wide{margin-top:18px}
+  .xbox ul{margin:0; padding-left:17px; display:flex; flex-direction:column; gap:5px}
+  .xbox li{font-size:12.5px; color:var(--ink-2)}
+  .xbox li .ev{display:block; font-size:11.5px; color:var(--muted); margin-top:2px}
+  .logline{display:flex; justify-content:space-between; gap:12px; padding:5px 0;
+           border-top:1px solid var(--line); font-size:12.5px}
+  .logline:first-of-type{border-top:0}
+  .logline .m{font-family:var(--mono); font-size:11.5px; color:var(--ink-2);
+              overflow-wrap:anywhere}
+  .logline .c{font-family:var(--mono); font-weight:600; color:var(--trap);
+              font-variant-numeric:tabular-nums; white-space:nowrap}
+  .sevrow{display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px}
+  .sev{font-family:var(--mono); font-size:10.5px; padding:2px 6px; border-radius:3px;
+       border:1px solid var(--line); background:var(--surface-2); color:var(--muted)}
+  .sev.crit{background:var(--critical-soft); color:var(--critical);
+            border-color:transparent}
+  .srcnote{margin-top:16px; font-size:12px; color:var(--faint); max-width:80ch}
+
+  .callout{margin-top:20px; padding:15px 18px; border-left:3px solid var(--accent);
+           background:var(--accent-soft); border-radius:0 6px 6px 0;
+           font-size:13.5px; max-width:76ch; color:var(--ink-2)}
+  .callout b{color:var(--ink)}
+
+  footer{border-top:1px solid var(--line); padding:22px 0 34px;
+         color:var(--faint); font-size:12px}
+  footer p{margin:0 0 5px; max-width:76ch}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important; transition:none !important}
+  }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="masthead">
+      <div class="title-block">
+        <span class="eyebrow">Internal decision support &middot; GTAC</span>
+        <h1>Case Intelligence Brief</h1>
+        <p class="dek">Replays closed cases using <strong>only the evidence that
+        existed at the cutoff</strong>, and reports what it ruled out. Elimination
+        is the primary output; declining to guess is counted separately from
+        being wrong.</p>
+      </div>
+      <div class="runmeta" id="runmeta"></div>
+    </div>
+    <div class="gate" id="gate"></div>
+    <div id="excluded"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="console">
+    <nav class="rail" aria-label="Evaluation cases">
+      <div class="rail-head">
+        <span class="eyebrow">Eval cases</span>
+        <span class="eyebrow" id="railcount"></span>
+      </div>
+      <ul class="caselist" id="caselist"></ul>
+    </nav>
+    <article class="brief" id="brief" aria-live="polite"></article>
+  </div>
+</main>
+
+<section class="lower alt">
+  <div class="wrap">
+    <span class="eyebrow">Extraction</span>
+    <h2>The fields are empty. The answer is in the prose.</h2>
+    <p class="dek">Checked against three live GTAC cases: <strong>Firmware and
+    Product Feature were blank on all three</strong>, while the running release
+    sat in the subject line and the defect IDs, device inventory and symptom sat
+    in the description. A live adapter cannot be a field-mapper &mdash; it has to
+    read the text. <code>python -m src.analyze</code> is that reader.</p>
+
+    <div class="xcols">
+      <div class="xcol">
+        <span class="xh">Structured fields</span>
+        <div id="sf-fields"></div>
+      </div>
+      <div class="xcol">
+        <span class="xh">Recovered from the same case text</span>
+        <div id="xtracted"></div>
+      </div>
+    </div>
+
+    <div class="xgrid">
+      <div class="xbox" id="x-gaps"></div>
+      <div class="xbox" id="x-log"></div>
+    </div>
+    <div class="xbox wide" id="x-missing"></div>
+
+    <p class="srcnote"><b>Want to run it on your own case text?</b>
+    <code>python -m src.server --open</code> serves an interactive version that
+    calls the same extractor live. It binds to <code>127.0.0.1</code> only and
+    stores nothing &mdash; which is exactly why this hosted page cannot do it:
+    pasting case text into a page served from the internet would send it off your
+    machine. What you see above is recorded output, exported by
+    <code>tools/export_demo.py</code>. The regexes are deliberately not
+    reimplemented in this page either &mdash; two copies of a parser drift, and
+    the page would start showing results the tool would not produce.</p>
+  </div>
+</section>
+
+<section class="lower">
+  <div class="wrap">
+    <span class="eyebrow">Validation</span>
+    <h2>Why verdict counts alone are not enough</h2>
+    <p class="dek">Run the gate one module at a time. Three configurations reach
+    the same seven hits &mdash; but not by doing the same amount of work.
+    <strong>Asserted</strong> counts the distinct defect IDs the brief put in front
+    of the engineer.</p>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Modules</th><th style="text-align:right">Hit</th>
+            <th style="text-align:right">Partial</th><th style="text-align:right">Abstain</th>
+            <th style="text-align:right">Miss</th>
+            <th style="text-align:right">IDs asserted</th>
+          </tr>
+        </thead>
+        <tbody id="ablation"></tbody>
+      </table>
+    </div>
+    <p class="callout"><b>m05 alone matches the full brief on verdicts</b> by
+    quoting every known cause for the symptom class &mdash; the right answer is
+    always somewhere in the list. m01 reaches the same seven hits naming about one
+    defect per case, because it filters on features &times; version. Same score,
+    half the noise: a difference the verdict column cannot see.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>Synthetic fixtures, internal only.</b> Every case, account and defect ID
+    here is generated by <code>tools/generate_fixtures.py</code> &mdash; no real case
+    data, account names or credentials. Phase 1 is read-only against systems of
+    record and produces nothing customer-facing.</p>
+    <p id="genstamp"></p>
+  </div>
+</footer>
+
+<script id="demo-data" type="application/json">/*__DEMO_DATA__*/</script>
+<script>
+(function () {
+  "use strict";
+  var DATA = JSON.parse(document.getElementById("demo-data").textContent);
+
+  var KIND_META = {
+    eliminated: { title: "Ruled out",  why: "the primary output" },
+    candidate:  { title: "Candidates", why: "" },
+    trap:       { title: "Known traps", why: "where this went wrong before" },
+    cluster:    { title: "Fleet signal", why: "" },
+    gap:        { title: "Missing data / escalation gaps", why: "" }
+  };
+  // Elimination leads. That is the product rule, not a display preference.
+  var ORDER = ["eliminated", "candidate", "trap", "cluster", "gap"];
+
+  var VERDICT_NOTE = {
+    "HIT": "named the actual root cause",
+    "PARTIAL": "warned the first hypothesis is a known trap",
+    "ABSTAIN": "declined to guess — correct behaviour on a novel case",
+    "MISS": "confident and unhelpful",
+    "RULED-OUT": "eliminated the actual root cause — the worst outcome"
+  };
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function fmt(iso) {
+    return iso.replace("T", " ").slice(0, 16);
+  }
+  function vclass(v) {
+    return v === "RULED-OUT" ? "ruled" : v.toLowerCase();
+  }
+
+  /* ------------------------------------------------------------ masthead */
+  var meta = document.getElementById("runmeta");
+  [
+    DATA.n_cases_total + " synthetic cases",
+    DATA.n_defects + " defects",
+    "cutoff = creation + " + DATA.at_days + "d",
+    "threshold = " + DATA.threshold
+  ].forEach(function (t) { meta.appendChild(el("span", "tag", t)); });
+
+  document.getElementById("genstamp").textContent =
+    "Brief output exported from the running modules on " +
+    DATA.generated_at.replace("T", " ") + ".";
+
+  /* ---------------------------------------------------------- gate strip */
+  var gate = document.getElementById("gate");
+  [
+    ["hit", "Hit", DATA.counts.HIT, "named the cause"],
+    ["partial", "Partial", DATA.counts.PARTIAL, "flagged the trap"],
+    ["abstain", "Abstain", DATA.counts.ABSTAIN, "declined — not a failure"],
+    ["miss", "Miss", DATA.counts.MISS, "confident, wrong"],
+    ["ruled", "Ruled out", DATA.counts["RULED-OUT"], "eliminated the cause"],
+    ["asserted", "Asserted", DATA.total_asserted, "IDs put forward"]
+  ].forEach(function (r) {
+    var c = el("div", "cell " + r[0]);
+    c.appendChild(el("span", "n", String(r[2])));
+    c.appendChild(el("span", "k", r[1]));
+    c.appendChild(el("span", "note", r[3]));
+    gate.appendChild(c);
+  });
+
+  /* ---------------------------------------------- corpus exclusions */
+  if (DATA.excluded && DATA.excluded.length) {
+    var ex = document.getElementById("excluded");
+    var box = el("div", "excluded");
+    box.appendChild(el("span", "h",
+      "Excluded from the corpus before scoring — " + DATA.excluded.length +
+      " case(s)"));
+    DATA.excluded.forEach(function (x) {
+      var row = el("div", "row");
+      var b = el("b", null, x.id);
+      row.appendChild(b);
+      row.appendChild(document.createTextNode(" " + x.symptom_text + " — " + x.why + " "));
+      if (x.closed_state) {
+        row.appendChild(el("span", "state", "Closed State: " + x.closed_state));
+      }
+      box.appendChild(row);
+    });
+    box.appendChild(el("span", "note",
+      "No root cause was established, so there is nothing to grade against. " +
+      "The status field still reads Resolved — selecting the corpus on it " +
+      "would have scored these against ground truth that does not exist."));
+    ex.appendChild(box);
+  }
+
+  /* ---------------------------------------------------------------- rail */
+  var list = document.getElementById("caselist");
+  document.getElementById("railcount").textContent = DATA.cases.length + " held out";
+  var current = DATA.cases[0].id;
+
+  DATA.cases.forEach(function (c) {
+    var li = el("li");
+    var b = el("button", "case-btn");
+    b.type = "button";
+    b.setAttribute("aria-current", String(c.id === current));
+
+    var row = el("div", "case-row");
+    row.appendChild(el("span", "case-id", c.id));
+    row.appendChild(el("span", "chip " + vclass(c.verdict), c.verdict));
+    b.appendChild(row);
+    b.appendChild(el("span", "case-sym", c.symptom_text));
+    b.appendChild(el("span", "case-plat",
+      c.platform + " · " + c.sw_version + " · " + c.region));
+
+    b.addEventListener("click", function () {
+      current = c.id;
+      Array.prototype.forEach.call(list.querySelectorAll(".case-btn"), function (x) {
+        x.setAttribute("aria-current", "false");
+      });
+      b.setAttribute("aria-current", "true");
+      render(c);
+    });
+    li.appendChild(b);
+    list.appendChild(li);
+  });
+
+  /* --------------------------------------------------------------- brief */
+  function render(c) {
+    var root = document.getElementById("brief");
+    root.textContent = "";
+
+    /* head */
+    var head = el("div", "brief-head");
+    var left = el("div");
+    left.appendChild(el("h2", null, c.id));
+    left.appendChild(el("p", "brief-sub", c.symptom_text));
+    head.appendChild(left);
+    root.appendChild(head);
+
+    var fields = el("div", "fields");
+    (c.fields || []).forEach(function (f) {
+      var row = el("div", "field" + (f.label === "Closure Comments" ? " wide" : ""));
+      row.appendChild(el("span", "fl", f.label));
+      var v = el("span", "fv" + (f.value ? "" : " empty"), f.value || "not set");
+      row.appendChild(v);
+      fields.appendChild(row);
+    });
+    var fwrap = el("div", "window");
+    fwrap.appendChild(fields);
+    root.appendChild(fwrap);
+
+    /* abstention */
+    if (c.abstained) {
+      var ab = el("div", "abstain-banner");
+      ab.appendChild(el("span", "h", "No confident candidate"));
+      ab.appendChild(el("p", null, c.abstain_reason));
+      root.appendChild(ab);
+    }
+
+    /* evidence window */
+    var win = el("div", "window");
+    var wh = el("div", "fset-head");
+    wh.appendChild(el("h3", null, "Evidence visible at cutoff"));
+    wh.appendChild(el("span", "count", c.events.length + " event(s)"));
+    win.appendChild(wh);
+    var tl = el("ul", "tl");
+    c.events.forEach(function (e) {
+      var li = el("li");
+      li.appendChild(el("span", "at", fmt(e.at)));
+      li.appendChild(el("span", "kind", e.kind));
+      li.appendChild(el("span", null, e.text));
+      tl.appendChild(li);
+    });
+    win.appendChild(tl);
+    var cut = el("div", "cutline");
+    cut.appendChild(el("span", "t", "CUTOFF " + fmt(c.cutoff)));
+    cut.appendChild(el("span", "d",
+      "everything after this point is withheld by the adapter, including the " +
+      "root-cause note"));
+    win.appendChild(cut);
+    root.appendChild(win);
+
+    /* findings, elimination first */
+    var byKind = {};
+    c.findings.forEach(function (f) {
+      (byKind[f.kind] = byKind[f.kind] || []).push(f);
+    });
+
+    ORDER.forEach(function (kind) {
+      var items = byKind[kind];
+      if (!items || !items.length) return;
+      var m = KIND_META[kind];
+      var s = el("section", "fset " + kind);
+      var h = el("div", "fset-head");
+      h.appendChild(el("h3", null, m.title));
+      h.appendChild(el("span", "count", String(items.length)));
+      if (m.why) h.appendChild(el("span", "why", m.why));
+      s.appendChild(h);
+
+      var box = el("div", "findings");
+      items.forEach(function (f) {
+        var card = el("div", "finding");
+        card.appendChild(el("span", "conf " + f.confidence, f.confidence));
+        var body = el("div");
+        body.appendChild(el("span", "stmt", f.statement));
+        var sr = el("div", "srcs");
+        sr.appendChild(el("span", "lbl", "sources"));
+        f.sources.forEach(function (id) {
+          sr.appendChild(el("span", "src", id));
+        });
+        sr.appendChild(el("span", "mod", f.module));
+        body.appendChild(sr);
+        card.appendChild(body);
+        box.appendChild(card);
+      });
+      s.appendChild(box);
+      root.appendChild(s);
+    });
+
+    /* the reveal */
+    var rev = el("div", "reveal");
+    var btn = el("button", "reveal-btn");
+    btn.type = "button";
+    btn.textContent = "Reveal what it actually was";
+    var panel = el("div", "truth");
+    panel.hidden = true;
+
+    var rows = [
+      ["First hypothesis", c.truth.initial_hypothesis + "  — wrong"],
+      ["Actual root cause", c.truth.actual_root_cause],
+      ["Closed State", c.truth.closed_state],
+      ["Closure Comments", c.truth.closure_comments]
+    ].filter(function (r) { return r[1]; });
+    rows.forEach(function (r) {
+      var row = el("div", "truth-row");
+      row.appendChild(el("span", "k", r[0]));
+      row.appendChild(el("span", "v", r[1]));
+      panel.appendChild(row);
+    });
+
+    var vrow = el("div", "truth-row");
+    vrow.appendChild(el("span", "k", "Verdict"));
+    var vv = el("div");
+    var vline = el("div", "verdict-line");
+    vline.appendChild(el("span", "chip " + vclass(c.verdict), c.verdict));
+    vline.appendChild(el("span", "verdict-note", VERDICT_NOTE[c.verdict]));
+    vv.appendChild(vline);
+    var detail = c.asserted + " defect ID(s) asserted · " +
+                 c.n_eliminated + " possibilit(ies) eliminated";
+    if (!c.truth.cause_ids.length) {
+      detail += " · cause carries no defect ID, so ID matching cannot " +
+                "score this HIT — it tests the abstain direction only";
+    }
+    vv.appendChild(el("p", "verdict-note", detail));
+    vrow.appendChild(vv);
+    panel.appendChild(vrow);
+
+    btn.addEventListener("click", function () {
+      panel.hidden = !panel.hidden;
+      btn.textContent = panel.hidden
+        ? "Reveal what it actually was"
+        : "Hide the answer";
+    });
+    rev.appendChild(btn);
+    rev.appendChild(panel);
+    root.appendChild(rev);
+  }
+
+  /* ---------------------------------------------------------- extraction */
+  (function renderAnalyzer() {
+    var A = DATA.analyzer;
+    if (!A) return;
+
+    var sf = document.getElementById("sf-fields");
+    A.sf_fields.forEach(function (f) {
+      var row = el("div", "sfrow");
+      row.appendChild(el("span", "k", f.label));
+      var v = el("span", "v" + (f.value ? "" : " blank"), f.value || "blank");
+      if (f.note) v.appendChild(el("span", "n", f.note));
+      row.appendChild(v);
+      sf.appendChild(row);
+    });
+
+    var x = document.getElementById("xtracted");
+    function item(label, value, evidence) {
+      var it = el("div", "xitem");
+      var top = el("div", "top");
+      top.appendChild(el("span", "lbl", label));
+      top.appendChild(el("span", "val", value));
+      it.appendChild(top);
+      if (evidence) it.appendChild(el("span", "ev", "“" + evidence + "”"));
+      x.appendChild(it);
+    }
+    if (A.running_version) {
+      item("Version", A.running_version.value, A.running_version.evidence);
+    }
+    A.platforms.forEach(function (p) { item("Platform", p.value, ""); });
+    A.defects.forEach(function (d) { item("Defect", d.value, d.evidence); });
+    A.errors.forEach(function (e) { item("Symptom", e.value, ""); });
+    if (A.devices.length) {
+      var roles = {};
+      A.devices.forEach(function (d) { roles[d.role] = (roles[d.role] || 0) + 1; });
+      item("Devices", A.devices.length + " parsed from the fabric table",
+           Object.keys(roles).sort().map(function (r) {
+             return roles[r] + "x " + r;
+           }).join(", "));
+    }
+
+    var g = document.getElementById("x-gaps");
+    g.appendChild(el("span", "xh", "Evidence gaps — artefacts stated to be missing"));
+    var ul = el("ul");
+    A.gaps.forEach(function (gap) {
+      var li = el("li", null, gap.value);
+      li.appendChild(el("span", "ev", "“" + gap.evidence + "”"));
+      ul.appendChild(li);
+    });
+    g.appendChild(ul);
+
+    var lg = document.getElementById("x-log");
+    var L = A.log;
+    lg.appendChild(el("span", "xh",
+      "Device log — " + L.lines + " lines, " + (L.first_timestamp || "") +
+      " to " + (L.last_timestamp || "")));
+    var sr = el("div", "sevrow");
+    Object.keys(L.severities).sort(function (a, b) {
+      return L.severities[b] - L.severities[a];
+    }).forEach(function (k) {
+      var isBad = k === "CRITICAL" || k === "ERROR";
+      sr.appendChild(el("span", "sev" + (isBad ? " crit" : ""),
+                        k + " " + L.severities[k]));
+    });
+    lg.appendChild(sr);
+    L.top_messages.forEach(function (m) {
+      var row = el("div", "logline");
+      row.appendChild(el("span", "m", m.message));
+      row.appendChild(el("span", "c", m.count + "x"));
+      lg.appendChild(row);
+    });
+    L.raslog_codes.slice(0, 3).forEach(function (c) {
+      var row = el("div", "logline");
+      row.appendChild(el("span", "m", c.code));
+      row.appendChild(el("span", "c", c.count + "x"));
+      lg.appendChild(row);
+    });
+
+    var mi = document.getElementById("x-missing");
+    mi.appendChild(el("span", "xh", "Still missing after extraction"));
+    var mul = el("ul");
+    A.missing.forEach(function (m) { mul.appendChild(el("li", null, m)); });
+    mi.appendChild(mul);
+  })();
+
+  /* ------------------------------------------------------------ ablation */
+  var tb = document.getElementById("ablation");
+  var best = Math.min.apply(null, DATA.ablation.map(function (r) {
+    return r.asserted;
+  }));
+  DATA.ablation.forEach(function (r) {
+    var tr = el("tr", r.asserted === best ? "best" : null);
+    tr.appendChild(el("td", "lbl", r.label));
+    [r.HIT, r.PARTIAL, r.ABSTAIN, r.MISS].forEach(function (n) {
+      tr.appendChild(el("td", "num", String(n)));
+    });
+    tr.appendChild(el("td", "num asserted", String(r.asserted)));
+    tb.appendChild(tr);
+  });
+
+  render(DATA.cases[0]);
+})();
+</script>
