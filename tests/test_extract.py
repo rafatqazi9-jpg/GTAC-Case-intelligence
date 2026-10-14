@@ -211,3 +211,75 @@ def test_log_summary_reports_raslog_codes() -> None:
 def test_log_summary_survives_a_log_with_nothing_recognisable() -> None:
     s = summarise_log("qwerty\nasdf\n")
     assert s.lines == 2 and s.worst is None and s.first_timestamp is None
+
+# ------------------------------------------------------ unquoted symptoms
+def test_unquoted_packet_loss_keeps_exact_evidence_and_source() -> None:
+    line = "Traffic experienced 25-100% packet loss from 31 July to 6 August."
+    results = find_error_signatures(line, "case.description")
+    packet_loss = [e for e in results if "packet loss" in e.value.lower()]
+
+    assert len(packet_loss) == 1
+    assert packet_loss[0].evidence == line
+    assert packet_loss[0].source == "case.description"
+    assert packet_loss[0].confidence is Confidence.MEDIUM
+
+
+def test_unquoted_distinct_symptoms_are_extracted() -> None:
+    text = (
+        "We observed packet loss during peak traffic.\n"
+        "The interface is flapping repeatedly.\n"
+        "BGP neighbor resets were observed after failover.\n"
+        "High CPU utilization was reported on the switch.\n"
+        "Traffic drops occurred during congestion.\n"
+        "Queue discards increased on the uplink.\n"
+    )
+    values = [e.value.lower() for e in find_error_signatures(text, "case")]
+
+    assert any("packet loss" in value for value in values)
+    assert any("flapping" in value for value in values)
+    assert any("bgp" in value and "reset" in value for value in values)
+    assert any("high cpu" in value for value in values)
+    assert any("traffic drops" in value for value in values)
+    assert any("queue discard" in value for value in values)
+
+
+def test_unquoted_symptom_duplicates_are_removed() -> None:
+    text = (
+        "Packet loss was observed during the test.\n"
+        "Packet loss was observed during the test.\n"
+    )
+    results = find_error_signatures(text, "case")
+    packet_loss = [e for e in results if "packet loss" in e.value.lower()]
+    assert len(packet_loss) == 1
+
+
+def test_commands_and_hypothetical_symptoms_are_excluded() -> None:
+    text = (
+        "show packet loss\n"
+        "Could packet loss occur during failover?\n"
+        "Check for packet loss during the next test.\n"
+        "We observed packet loss during the incident.\n"
+    )
+    results = find_error_signatures(text, "case")
+    packet_loss = [e for e in results if "packet loss" in e.value.lower()]
+
+    assert len(packet_loss) == 1
+    assert packet_loss[0].evidence == (
+        "We observed packet loss during the incident."
+    )
+
+
+def test_missing_symptom_is_not_inferred() -> None:
+    evidence = extract_all("The switch was inspected yesterday.", "case")
+    assert "symptom signature" in evidence.missing()
+
+def test_hypothetical_sentence_does_not_hide_observed_symptom() -> None:
+    line = (
+        "Could packet loss occur? "
+        "We observed packet loss during the outage."
+    )
+    results = find_error_signatures(line, "case")
+    packet_loss = [e for e in results if "packet loss" in e.value.lower()]
+
+    assert len(packet_loss) == 1
+    assert packet_loss[0].evidence == line

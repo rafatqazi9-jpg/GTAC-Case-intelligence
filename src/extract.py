@@ -202,41 +202,102 @@ _QUOTED = re.compile(r"[\"“]([^\"”]{12,160})[\"”]")
 
 
 def find_error_signatures(text: str, source: str) -> list[Extraction]:
-    """Quoted operator-visible strings -- the thing a senior actually greps for.
+    """Extract quoted errors and explicitly reported network symptoms.
 
-    These make far better search keys than a `Symptom Reason` picklist, which
-    on real cases is often miscoded.
+    Unquoted symptom extraction is deliberately conservative: commands,
+    recommendations, and hypothetical statements are not treated as evidence.
+    Every result retains its original source line.
     """
-    found: list[Extraction] = []
-    seen: set[str] = set()
+    quoted: list[Extraction] = []
+    seen_quoted: set[str] = set()
+
     for line in text.splitlines():
         for m in _QUOTED.finditer(line):
             sig = m.group(1).strip()
-            # Skip quoted shell commands; they are procedure, not symptom.
-            if sig.startswith(("show ", "efa ", "sudo ")) or sig in seen:
+            if sig.startswith(("show ", "efa ", "sudo ")) or sig in seen_quoted:
                 continue
-            seen.add(sig)
-            found.append(Extraction(kind="error", value=sig, source=source,
-                                    evidence=line.strip()[:200],
-                                    confidence=Confidence.MEDIUM))
+            seen_quoted.add(sig)
+            quoted.append(Extraction(
+                kind="error", value=sig, source=source,
+                evidence=line.strip()[:200],
+                confidence=Confidence.MEDIUM,
+            ))
 
-    # A case quotes the same error at several lengths -- the full string in the
-    # subject, a clipped version in a status note, the same again with a
-    # trailing full stop. Listing all three reads as three symptoms when there
-    # is one. Keep the longest form of each, which is the most searchable.
-    def norm(s: str) -> str:
-        return s.rstrip(" .:;,").lower()
+    def norm(value: str) -> str:
+        return value.rstrip(" .:;,").lower()
 
-    # Longest real content first; among forms that differ only by trailing
-    # punctuation, prefer the clean one -- it is what a senior would grep for.
-    out: list[Extraction] = []
-    for e in sorted(found, key=lambda x: (-len(norm(x.value)), len(x.value))):
-        if any(norm(e.value) in norm(kept.value) for kept in out):
+    # Preserve existing quoted-error deduplication behaviour.
+    quoted_out: list[Extraction] = []
+    for item in sorted(
+        quoted, key=lambda e: (-len(norm(e.value)), len(e.value))
+    ):
+        if any(norm(item.value) in norm(kept.value) for kept in quoted_out):
             continue
-        out.append(e)
-    # Restore the order they appeared in, so the subject line leads.
-    order = {e.value: i for i, e in enumerate(found)}
-    return sorted(out, key=lambda e: order[e.value])
+        quoted_out.append(item)
+
+    original_order = {item.value: i for i, item in enumerate(quoted)}
+    quoted_out.sort(key=lambda e: original_order[e.value])
+
+    symptom_patterns = (
+        re.compile(r"\bpacket loss\b", re.I),
+        re.compile(r"\bintermittent (?:connectivity|connection)(?: loss)?\b", re.I),
+        re.compile(
+            r"\b(?:interface|link|port)(?:\s+\S+){0,2}\s+"
+            r"(?:is\s+)?flapp(?:ing|ed|ers)\b", re.I
+        ),
+        re.compile(
+            r"\bBGP\b.{0,40}\b(?:neighbor|peer|session)\b"
+            r".{0,30}\b(?:resets?|resetting|flaps?|flapping|drops?)\b", re.I
+        ),
+        re.compile(
+            r"\bhigh\s+(?:CPU|memory)(?:\s+(?:utilization|usage|consumption))?\b",
+            re.I
+        ),
+        re.compile(r"\btraffic\s+(?:drops?|dropping|loss)\b", re.I),
+        re.compile(r"\bqueue\s+discards?\b", re.I),
+    )
+
+    # These phrases indicate a command, investigation request, or hypothetical,
+    # rather than a statement that the symptom was observed.
+    excluded_context = re.compile(
+        r"\b(?:check(?:ing)? for|look(?:ing)? for|investigat(?:e|ing)|"
+        r"whether|if|could|might|may|possible|potential|recommend(?:ed|s)?|"
+        r"should|would|rule out|test for)\b", re.I
+    )
+    command_line = re.compile(
+        r"^\s*(?:[$>#]\s*)?(?:show|sh|ping|traceroute|trace|grep|egrep|"
+        r"awk|cat|sudo|efa|debug|monitor)\b", re.I
+    )
+
+    symptoms: list[Extraction] = []
+    seen_symptoms: set[str] = set()
+
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped or command_line.search(stripped):
+            continue
+
+        # Evaluate sentences independently. A hypothetical in one sentence
+        # must not suppress an observed symptom in another sentence.
+        sentences = re.split(r"(?<=[.!?])\s+", stripped)
+        for sentence in sentences:
+            if excluded_context.search(sentence):
+                continue
+
+            for pattern in symptom_patterns:
+                for match in pattern.finditer(sentence):
+                    value = match.group(0).strip().rstrip(" .,:;")
+                    key = value.casefold()
+                    if key in seen_symptoms:
+                        continue
+                    seen_symptoms.add(key)
+                    symptoms.append(Extraction(
+                        kind="error", value=value, source=source,
+                        evidence=stripped[:200],
+                        confidence=Confidence.MEDIUM,
+                    ))
+
+    return quoted_out + symptoms
 
 
 # ------------------------------------------------------------ device tables
