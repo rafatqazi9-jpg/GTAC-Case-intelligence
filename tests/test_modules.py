@@ -631,3 +631,50 @@ def test_high_threshold_abstains_on_medium_candidate() -> None:
     assert brief.abstained
     assert brief.abstain_reason is not None
     assert "No candidate at high confidence or above" in brief.abstain_reason
+
+def test_m07_does_not_treat_mentioned_but_uncollected_artifact_as_present() -> None:
+    from datetime import datetime
+
+    from src.adapters.base import EvidenceWindow
+    from src.models import Case, CaseEvent
+    from src.modules import m07_escalation_package as m07
+
+    case = Case(
+        id="CS-TEST-M07-MENTIONED",
+        account="Test account",
+        platform="SLX",
+        sw_version="20.7.2ab",
+        symptom_class="packet_loss",
+        symptom_text="Intermittent packet loss",
+        features_enabled=("MCT",),
+        region="test",
+        created_at=datetime(2026, 10, 14),
+        events=(
+            CaseEvent(
+                at=datetime(2026, 10, 14),
+                kind="note",
+                text="Requested show tech-support; output has not been collected.",
+            ),
+        ),
+    )
+
+    class AdapterWithRequiredArtifact:
+        def required_escalation_fields(self, platform):
+            return ("show tech-support",)
+
+    findings = m07.run(
+        case,
+        AdapterWithRequiredArtifact(),
+        EvidenceWindow(cutoff=datetime(2026, 10, 14)),
+    )
+
+    assert any(
+        f.kind == "gap" and "show tech-support" in f.statement
+        and "incomplete" in f.statement.lower()
+        for f in findings
+    )
+    assert not any(
+        f.statement.startswith("Already on the case:")
+        and "show tech-support" in f.statement
+        for f in findings
+    )
