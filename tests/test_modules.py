@@ -822,3 +822,116 @@ def test_m07_does_not_treat_positive_note_as_uploaded_artifact() -> None:
         and "show tech-support" in f.statement
         for f in findings
     )
+
+
+def test_m06_cluster_sources_include_all_counted_cases() -> None:
+    from datetime import datetime
+
+    from src.adapters.base import EvidenceWindow
+    from src.models import Case, Confidence
+    from src.modules import m06_fleet_correlation as m06
+
+    created = datetime(2026, 10, 14)
+    current = Case(
+        id="CS-FLEET-1",
+        account="Account A",
+        platform="SLX",
+        sw_version="20.7.2ab",
+        symptom_class="packet_loss",
+        symptom_text="Intermittent packet loss",
+        features_enabled=("MCT",),
+        region="East",
+        created_at=created,
+    )
+    peer_1 = Case(
+        id="CS-FLEET-2",
+        account="Account B",
+        platform="SLX",
+        sw_version="20.7.2ab",
+        symptom_class="packet_loss",
+        symptom_text="Intermittent packet loss",
+        features_enabled=("MCT",),
+        region="West",
+        created_at=created,
+    )
+    peer_2 = Case(
+        id="CS-FLEET-3",
+        account="Account C",
+        platform="SLX",
+        sw_version="20.7.2ab",
+        symptom_class="packet_loss",
+        symptom_text="Intermittent packet loss",
+        features_enabled=("MCT",),
+        region="Central",
+        created_at=created,
+    )
+
+    class AdapterWithFleet:
+        def open_cases_by_signature(
+            self, platform, sw_version, symptom_class, window, days=30
+        ):
+            return (current, peer_1, peer_2)
+
+    findings = m06.run(
+        current,
+        AdapterWithFleet(),
+        EvidenceWindow(cutoff=created),
+    )
+
+    assert len(findings) == 1
+    finding = findings[0]
+    assert "3 open cases" in finding.statement
+    assert "3 region(s)" in finding.statement
+    assert "3 account(s)" in finding.statement
+    assert finding.confidence == Confidence.HIGH
+    assert set(finding.sources) == {
+        "CS-FLEET-1",
+        "CS-FLEET-2",
+        "CS-FLEET-3",
+    }
+
+
+def test_m06_does_not_emit_cluster_below_minimum_size() -> None:
+    from datetime import datetime
+
+    from src.adapters.base import EvidenceWindow
+    from src.models import Case
+    from src.modules import m06_fleet_correlation as m06
+
+    created = datetime(2026, 10, 14)
+    current = Case(
+        id="CS-FLEET-SMALL-1",
+        account="Account A",
+        platform="SLX",
+        sw_version="20.7.2ab",
+        symptom_class="packet_loss",
+        symptom_text="Intermittent packet loss",
+        features_enabled=("MCT",),
+        region="East",
+        created_at=created,
+    )
+    peer = Case(
+        id="CS-FLEET-SMALL-2",
+        account="Account B",
+        platform="SLX",
+        sw_version="20.7.2ab",
+        symptom_class="packet_loss",
+        symptom_text="Intermittent packet loss",
+        features_enabled=("MCT",),
+        region="West",
+        created_at=created,
+    )
+
+    class AdapterWithSmallFleet:
+        def open_cases_by_signature(
+            self, platform, sw_version, symptom_class, window, days=30
+        ):
+            return (current, peer)
+
+    findings = m06.run(
+        current,
+        AdapterWithSmallFleet(),
+        EvidenceWindow(cutoff=created),
+    )
+
+    assert findings == []

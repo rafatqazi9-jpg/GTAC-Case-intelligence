@@ -26,5 +26,5 @@ def run(case: Case, adapter: Adapter, window: EvidenceWindow,
                    f"/ {case.sw_version} / {case.symptom_class} across "
                    f"{len(regions)} region(s) and {accounts} account(s) - "
                    f"possible field notice candidate"),
-        confidence=conf, sources=tuple(c.id for c in others),
+        confidence=conf, sources=tuple(c.id for c in (case, *others)),
     )]
