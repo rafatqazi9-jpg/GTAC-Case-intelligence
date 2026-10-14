@@ -132,6 +132,17 @@ def test_device_table_reordered_columns_still_map_correctly() -> None:
     assert devs[0].ip == "10.0.0.5" and devs[0].role == "leaf"
 
 
+def test_device_table_rejects_invalid_ipv4_octets() -> None:
+    table = (
+        "| IP ADDRESS | ROLE | DEVICE STATE |\n"
+        "| 999.0.0.5 | leaf | provisioned |\n"
+        "| 10.0.0.256 | spine | provisioned |\n"
+        "| 10.0.0.5 | leaf | provisioned |\n"
+    )
+    devs = parse_device_table(table)
+    assert [d.ip for d in devs] == ["10.0.0.5"]
+
+
 # -------------------------------------------------------------- evidence gaps
 def test_states_log_gaps() -> None:
     gaps = {g.value for g in find_evidence_gaps(SAMPLE, "case")}
@@ -190,6 +201,27 @@ def test_log_summary_counts_and_spans() -> None:
     assert s.worst == "ERROR"
     assert s.first_timestamp == "2024/06/19-10:00:01"
     assert s.last_timestamp == "2024/06/19-10:09:59"
+
+
+
+def test_log_summary_reports_chronological_timestamp_bounds() -> None:
+    text = (
+        "2024/06/19-10:09:59 ERROR Later event appears first\n"
+        "2024/06/19-10:00:01 INFO Earlier event appears second\n"
+    )
+    s = summarise_log(text)
+    assert s.first_timestamp == "2024/06/19-10:00:01"
+    assert s.last_timestamp == "2024/06/19-10:09:59"
+
+
+def test_log_summary_preserves_file_order_for_mixed_timestamp_formats() -> None:
+    text = (
+        "2024/06/19-10:09:59 ERROR Year-first timestamp\n"
+        "Jun 19 10:00:01 INFO Month-name timestamp\n"
+    )
+    s = summarise_log(text)
+    assert s.first_timestamp == "2024/06/19-10:09:59"
+    assert s.last_timestamp == "Jun 19 10:00:01"
 
 
 def test_log_summary_clusters_repeats_ignoring_variable_parts() -> None:

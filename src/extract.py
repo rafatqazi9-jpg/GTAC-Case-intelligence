@@ -303,23 +303,26 @@ def find_error_signatures(text: str, source: str) -> list[Extraction]:
 
 # ------------------------------------------------------------ device tables
 
-def parse_device_table(text: str) -> list[Device]:
-    """Rows of a pipe-delimited fabric inventory (`efa fabric show`).
 
-    Header order is read from the header row rather than assumed, so a table
-    with extra or reordered columns still parses instead of silently mapping
-    the wrong field.
+def parse_device_table(text: str) -> list[Device]:
+    """Parse a pipe-delimited fabric inventory using its header columns.
+
+    Reject malformed IPv4 addresses and preserve the original column mapping.
     """
     rows: list[Device] = []
     cols: dict[str, int] = {}
+
     for line in text.splitlines():
-        if line.count("|") < 4:
+        if line.count("|") < 2:
             continue
+
         cells = [c.strip() for c in line.strip().strip("|").split("|")]
         upper = [c.upper() for c in cells]
+
         if "IP ADDRESS" in upper:
             cols = {name: i for i, name in enumerate(upper)}
             continue
+
         if not cols or set(line.strip()) <= set("|-+ "):
             continue
 
@@ -330,8 +333,20 @@ def parse_device_table(text: str) -> list[Device]:
         ip = cell("IP ADDRESS")
         if not re.fullmatch(r"\d{1,3}(?:\.\d{1,3}){3}", ip):
             continue
-        rows.append(Device(ip=ip, hostname=cell("HOST NAME"), role=cell("ROLE"),
-                           state=cell("DEVICE STATE"), app_state=cell("APP STATE")))
+
+        if any(int(octet) > 255 for octet in ip.split(".")):
+            continue
+
+        rows.append(
+            Device(
+                ip=ip,
+                hostname=cell("HOST NAME"),
+                role=cell("ROLE"),
+                state=cell("DEVICE STATE"),
+                app_state=cell("APP STATE"),
+            )
+        )
+
     return rows
 
 
@@ -456,11 +471,21 @@ def summarise_log(text: str, *, top: int = 8) -> LogSummary:
             codes[r.group(0)] += 1
         msgs[_normalise(line)] += 1
 
+    year_first_stamps = [
+        stamp for stamp in stamps
+        if re.match(r"\d{4}[/-]\d{2}[/-]\d{2}", stamp)
+    ]
+
+    if len(year_first_stamps) == len(stamps):
+        ordered_stamps = sorted(stamps)
+    else:
+        ordered_stamps = stamps
+
     return LogSummary(
         lines=len([x for x in lines if x.strip()]),
         severities=dict(sev),
-        first_timestamp=stamps[0] if stamps else None,
-        last_timestamp=stamps[-1] if stamps else None,
+        first_timestamp=ordered_stamps[0] if ordered_stamps else None,
+        last_timestamp=ordered_stamps[-1] if ordered_stamps else None,
         top_messages=[(m, c) for m, c in msgs.most_common(top) if c > 1],
         raslog_codes=codes.most_common(top),
     )
