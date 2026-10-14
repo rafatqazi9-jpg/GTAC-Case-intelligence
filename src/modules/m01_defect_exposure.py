@@ -66,16 +66,39 @@ def run(case: Case, adapter: Adapter, window: EvidenceWindow) -> list[Finding]:
         unparsed = [d for d in exposed
                     if d.fixed_in and _version_key(d.fixed_in) is None]
 
+
         if parsed:
             target_defect, target_key = max(parsed, key=lambda p: p[1])
             target = target_defect.fixed_in
             cleared = [d.id for d, k in parsed if k <= target_key]
+
+            candidate_confidences = [
+                f.confidence for f in findings
+                if f.kind == "candidate"
+            ]
+            confidence_rank = {
+                Confidence.NONE: 0,
+                Confidence.LOW: 1,
+                Confidence.MEDIUM: 2,
+                Confidence.HIGH: 3,
+            }
+            target_confidence = min(
+                candidate_confidences,
+                key=lambda c: confidence_rank[c],
+                default=Confidence.HIGH,
+            )
+
             findings.append(Finding(
-                module=MODULE, kind="candidate",
-                statement=(f"Upgrading to {target} clears {len(cleared)} of "
-                           f"{len(exposed)} exposed defects"),
-                confidence=Confidence.HIGH, sources=tuple(cleared),
+                module=MODULE,
+                kind="candidate",
+                statement=(
+                    f"Upgrading to {target} clears {len(cleared)} of "
+                    f"{len(exposed)} exposed defects"
+                ),
+                confidence=target_confidence,
+                sources=tuple(cleared),
             ))
+
 
         if unparsed:
             # Say so rather than quietly dropping them from the recommendation.

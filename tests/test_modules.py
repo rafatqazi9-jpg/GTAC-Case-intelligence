@@ -454,3 +454,180 @@ def test_m01_candidate_distinguishes_exposure_from_confirmed_cause() -> None:
     assert "not confirmed as the cause" in candidate.statement.lower()
     assert candidate.sources == ("SLXOS-12345",)
     assert candidate.confidence == Confidence.MEDIUM
+
+def test_m01_does_not_count_unparseable_fix_as_cleared() -> None:
+    from datetime import datetime
+
+    from src.adapters.base import EvidenceWindow
+    from src.models import Case, Defect
+    from src.modules import m01_defect_exposure as m01
+
+    defects = (
+        Defect(
+            id="SLXOS-10001",
+            title="Defect with a known fix",
+            affected_versions=("20.7.2ab",),
+            fixed_in="20.7.3a",
+            feature_tags=("MCT",),
+            status="open",
+        ),
+        Defect(
+            id="SLXOS-10002",
+            title="Defect with an unparseable fix",
+            affected_versions=("20.7.2ab",),
+            fixed_in="unknown",
+            feature_tags=("MCT",),
+            status="open",
+        ),
+    )
+
+    class AdapterWithTwoDefects:
+        def defects_for_platform(self, platform, window):
+            return defects
+
+    case = Case(
+        id="CS-TEST-M01-UNKNOWN-FIX",
+        account="Test account",
+        platform="SLX",
+        sw_version="20.7.2ab",
+        symptom_class="packet_loss",
+        symptom_text="Intermittent packet loss",
+        features_enabled=("MCT",),
+        region="test",
+        created_at=datetime(2026, 10, 14),
+    )
+
+    findings = m01.run(
+        case,
+        AdapterWithTwoDefects(),
+        EvidenceWindow(cutoff=datetime(2026, 10, 14)),
+    )
+
+    upgrade = next(
+        f for f in findings
+        if f.kind == "candidate" and f.statement.startswith("Upgrading to")
+    )
+
+    assert "clears 1 of 2 exposed defects" in upgrade.statement
+
+
+def test_m01_selects_highest_parseable_fix_version() -> None:
+    from datetime import datetime
+
+    from src.adapters.base import EvidenceWindow
+    from src.models import Case, Defect
+    from src.modules import m01_defect_exposure as m01
+
+    defects = (
+        Defect(
+            id="SLXOS-10011",
+            title="Defect A",
+            affected_versions=("20.7.2ab",),
+            fixed_in="20.7.3a",
+            feature_tags=("MCT",),
+            status="open",
+        ),
+        Defect(
+            id="SLXOS-10012",
+            title="Defect B",
+            affected_versions=("20.7.2ab",),
+            fixed_in="20.7.4a",
+            feature_tags=("MCT",),
+            status="open",
+        ),
+    )
+
+    class AdapterWithTwoDefects:
+        def defects_for_platform(self, platform, window):
+            return defects
+
+    case = Case(
+        id="CS-TEST-M01-MULTI-FIX",
+        account="Test account",
+        platform="SLX",
+        sw_version="20.7.2ab",
+        symptom_class="packet_loss",
+        symptom_text="Intermittent packet loss",
+        features_enabled=("MCT",),
+        region="test",
+        created_at=datetime(2026, 10, 14),
+    )
+
+    findings = m01.run(
+        case,
+        AdapterWithTwoDefects(),
+        EvidenceWindow(cutoff=datetime(2026, 10, 14)),
+    )
+
+    upgrade = next(
+        f for f in findings
+        if f.kind == "candidate" and f.statement.startswith("Upgrading to")
+    )
+
+    assert "Upgrading to 20.7.4a" in upgrade.statement
+    assert "clears 2 of 2 exposed defects" in upgrade.statement
+    assert set(upgrade.sources) == {"SLXOS-10011", "SLXOS-10012"}
+
+
+def test_high_threshold_abstains_on_medium_candidate() -> None:
+    from datetime import datetime
+
+    from src.adapters.base import EvidenceWindow
+    from src.brief import build
+    from src.models import Case, Confidence, Defect
+
+    defect = Defect(
+        id="SLXOS-10021",
+        title="Example defect",
+        affected_versions=("20.7.2ab",),
+        fixed_in="20.7.3a",
+        feature_tags=("MCT",),
+        status="open",
+    )
+
+    class AdapterWithOneDefect:
+        def get_case(self, case_id, window):
+            return Case(
+                id=case_id,
+                account="Test account",
+                platform="SLX",
+                sw_version="20.7.2ab",
+                symptom_class="packet_loss",
+                symptom_text="Intermittent packet loss",
+                features_enabled=("MCT",),
+                region="test",
+                created_at=datetime(2026, 10, 14),
+            )
+
+        def defects_for_platform(self, platform, window):
+            return (defect,)
+
+        def similar_closed_cases(
+            self, symptom_class, platform, window, limit=20
+        ):
+            return ()
+
+        def open_cases_by_signature(
+            self, platform, sw_version, symptom_class, window, days=30
+        ):
+            return ()
+
+        def required_escalation_fields(self, platform):
+            return ()
+
+    brief = build(
+        "CS-TEST-HIGH-THRESHOLD",
+        AdapterWithOneDefect(),
+        EvidenceWindow(cutoff=datetime(2026, 10, 14)),
+        threshold=Confidence.HIGH,
+    )
+
+    assert any(
+        f.confidence == Confidence.MEDIUM
+        and f.kind == "candidate"
+        and "Upgrading to" not in f.statement
+        for f in brief.findings
+    )
+    assert brief.abstained
+    assert brief.abstain_reason is not None
+    assert "No candidate at high confidence or above" in brief.abstain_reason
