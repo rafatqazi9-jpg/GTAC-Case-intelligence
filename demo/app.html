@@ -254,9 +254,16 @@
 
       [["Platforms", ev.platforms, "Platform"],
        ["Defect IDs", ev.defects, "Defect"],
-       ["Error signatures", ev.errors, "Symptom"]].forEach(function (g) {
+       ["Observed symptoms / error signatures", ev.errors, "Symptom"]].forEach(function (g) {
         if (!g[1].length) return;
         var sec = section(g[0], g[1].length);
+
+        if (g[1] === ev.errors) {
+          sec.appendChild(el("p", "sub",
+            "These are symptoms or error text extracted from the supplied input. " +
+            "They are evidence to investigate, not confirmation of a root cause."));
+        }
+
         g[1].forEach(function (e) {
           sec.appendChild(item(g[2], e.value, e.evidence, e.confidence));
         });
