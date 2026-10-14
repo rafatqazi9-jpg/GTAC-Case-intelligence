@@ -4,9 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GTAC Analyzer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <style>
   :root{
     --ground:#F6F7F9; --surface:#FFFFFF; --surface-2:#EFF1F5; --line:#DDE1E8;
@@ -150,6 +147,449 @@
 
   footer{padding:0 22px 30px; color:var(--faint); font-size:11.5px; max-width:90ch}
   @media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+  /* ---------------------------------------------------------------
+     GTAC Intelligence visual refresh
+     Presentation only: existing HTML structure and JS are preserved.
+     --------------------------------------------------------------- */
+  :root {
+    --ground: #F3F6FB;
+    --surface: #FFFFFF;
+    --surface-2: #F7F9FC;
+    --line: #DCE4EF;
+    --ink: #152238;
+    --ink-2: #34445D;
+    --muted: #61718A;
+    --faint: #8391A6;
+    --accent: #315FEA;
+    --accent-soft: #EAF0FF;
+    --clear: #087F70;
+    --clear-soft: #E3F6F1;
+    --trap: #9A6208;
+    --trap-soft: #FFF4DB;
+    --critical: #B42318;
+    --critical-soft: #FDECEB;
+    --mono: ui-monospace, "Cascadia Code", "Segoe UI Mono", Consolas, monospace;
+    --sans: Inter, "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0B1220;
+      --surface: #111B2C;
+      --surface-2: #172338;
+      --line: #293951;
+      --ink: #EDF3FC;
+      --ink-2: #CBD7E8;
+      --muted: #9AABC2;
+      --faint: #8193AC;
+      --accent: #8BA9FF;
+      --accent-soft: #202E4E;
+      --clear: #5BD5BD;
+      --clear-soft: #163A38;
+      --trap: #F1C16A;
+      --trap-soft: #3B301C;
+      --critical: #FF9288;
+      --critical-soft: #3A2027;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #0B1220;
+    --surface: #111B2C;
+    --surface-2: #172338;
+    --line: #293951;
+    --ink: #EDF3FC;
+    --ink-2: #CBD7E8;
+    --muted: #9AABC2;
+    --faint: #8193AC;
+    --accent: #8BA9FF;
+    --accent-soft: #202E4E;
+    --clear: #5BD5BD;
+    --clear-soft: #163A38;
+    --trap: #F1C16A;
+    --trap-soft: #3B301C;
+    --critical: #FF9288;
+    --critical-soft: #3A2027;
+  }
+
+  html { scroll-behavior: smooth; }
+  body { font-size: 14px; line-height: 1.6; }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    padding: 17px clamp(16px, 3vw, 40px);
+    align-items: center;
+    background: var(--surface);
+    box-shadow: 0 3px 14px rgb(25 45 80 / 5%);
+  }
+
+  h1 {
+    font-size: 21px;
+    letter-spacing: -.035em;
+  }
+
+  .sub { line-height: 1.55; }
+
+  .privacy {
+    border: 1px solid var(--clear-soft);
+    border-radius: 999px;
+    padding: 6px 11px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .025em;
+  }
+
+  main {
+    width: min(1680px, 100%);
+    margin: 0 auto;
+    grid-template-columns: minmax(320px, 0.88fr) minmax(0, 1.12fr);
+    gap: 22px;
+    padding: 26px clamp(14px, 3vw, 40px) 42px;
+  }
+
+  .panel {
+    border-radius: 13px;
+    box-shadow: 0 5px 24px rgb(25 45 80 / 4%);
+  }
+
+  .ph {
+    min-height: 52px;
+    padding: 13px 17px;
+    background: var(--surface);
+  }
+
+  .ph h2 {
+    color: var(--ink-2);
+    font-size: 10.5px;
+    letter-spacing: .13em;
+  }
+
+  .pb { padding: 18px; }
+
+  textarea {
+    display: block;
+    min-height: 370px;
+    padding: 14px;
+    border-radius: 9px;
+    font-size: 12px;
+    line-height: 1.65;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+
+  textarea::placeholder { color: var(--faint); }
+
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  button {
+    min-height: 34px;
+    padding: 7px 12px;
+    border-radius: 7px;
+    transition: border-color .15s ease, background .15s ease,
+                color .15s ease, transform .15s ease;
+  }
+
+  button:hover { transform: translateY(-1px); }
+  button.primary { box-shadow: 0 3px 8px rgb(49 95 234 / 20%); }
+  button.link { min-height: 28px; }
+
+  .modes {
+    border-radius: 8px;
+    padding: 3px;
+    background: var(--surface-2);
+  }
+
+  .modes button {
+    border-radius: 6px;
+    padding: 6px 9px;
+  }
+
+  .modes button[aria-pressed="true"] {
+    background: var(--accent-soft);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  .row { gap: 9px; }
+  .hint { font-family: var(--mono); font-size: 10.5px; }
+
+  .empty {
+    padding: 54px 22px;
+    line-height: 1.8;
+  }
+
+  section.res {
+    padding: 19px 18px;
+    scroll-margin-top: 90px;
+  }
+
+  .rh { margin-bottom: 12px; }
+  .rh h3 { letter-spacing: .09em; }
+
+  .item {
+    padding: 11px 0;
+    border-top-color: var(--line);
+  }
+
+  .item .top { gap: 9px; align-items: center; }
+  .item .lbl { min-width: 64px; }
+  .item .val { font-size: 12px; line-height: 1.6; }
+
+  .item .conf {
+    border-radius: 999px;
+    padding: 2px 7px;
+    font-size: 9px;
+    letter-spacing: .035em;
+  }
+
+  .item .ev {
+    padding-left: 73px;
+    margin-top: 5px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .big {
+    font-size: 24px;
+    letter-spacing: -.04em;
+  }
+
+  ul.plain { gap: 10px; }
+  ul.plain li { line-height: 1.65; }
+  ul.plain li .ev { overflow-wrap: anywhere; }
+
+  table { min-width: 560px; }
+  th { padding: 9px; white-space: nowrap; }
+  td { padding: 9px; }
+  tbody tr:hover { background: var(--surface-2); }
+
+  .sevrow { gap: 7px; }
+  .sev { border-radius: 6px; padding: 4px 8px; }
+  .logline { padding: 9px 0; align-items: flex-start; }
+  .logline .m { line-height: 1.6; }
+  .logline .c { font-size: 11px; }
+
+  footer {
+    max-width: 110ch;
+    padding: 0 clamp(14px, 3vw, 40px) 32px;
+    line-height: 1.8;
+  }
+
+  @media (max-width: 940px) {
+    main { grid-template-columns: minmax(0, 1fr); }
+    textarea { min-height: 270px; }
+  }
+
+  @media (max-width: 560px) {
+    header { position: static; }
+    .privacy { white-space: normal; }
+    main { gap: 14px; padding-top: 14px; }
+    .pb { padding: 13px; }
+    section.res { padding: 15px 13px; }
+    .item .ev { padding-left: 0; }
+    .row { align-items: stretch; }
+    .hint { width: 100%; margin-left: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+  /* GTAC Case Intelligence workspace prototype */
+  .workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    width: min(1500px, 100%);
+    margin: 0 auto;
+    padding: 24px clamp(14px, 3vw, 38px) 40px;
+  }
+
+  .input-panel, .report-panel { min-width: 0; }
+  .input-heading, .report-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .input-heading .sub, .report-heading .sub { margin: 4px 0 0; }
+  .sample-actions, .input-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .input-controls { margin-top: 12px; }
+  .input-controls .hint { margin-left: auto; }
+  .workspace textarea {
+    width: 100%;
+    min-height: 190px;
+    resize: vertical;
+    box-sizing: border-box;
+  }
+  .report-heading { border-bottom: 1px solid var(--line); }
+  #out {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    padding: 16px;
+    align-items: start;
+  }
+  #out > .overview, #out > .empty, #out > .err {
+    grid-column: 1 / -1;
+  }
+  #out > section.res {
+    min-width: 0;
+    margin: 0;
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    padding: 16px;
+    background: var(--surface);
+    overflow-wrap: anywhere;
+  }
+  #out > section.res:has(table),
+  #out > section.res.ver {
+    grid-column: 1 / -1;
+  }
+  .overview {
+    grid-column: 1 / -1;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 17px;
+    background: var(--surface-2);
+  }
+  .overview-title {
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: .12em;
+    margin-bottom: 12px;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+    padding: 13px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: var(--surface);
+  }
+  .stat-label {
+    font-size: 11px;
+    font-weight: 650;
+    color: var(--muted);
+  }
+  .stat-value {
+    font-size: 25px;
+    line-height: 1.2;
+    letter-spacing: -.04em;
+  }
+  .stat-note { font-size: 11px; color: var(--muted); line-height: 1.45; }
+  .stat.caution { border-top: 3px solid var(--trap); }
+  .stat.positive { border-top: 3px solid var(--clear); }
+  .overview-status {
+    margin: 13px 0 0;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .report-panel .empty { text-align: left; }
+  .report-panel .empty strong { color: var(--ink); font-size: 16px; }
+  .report-panel .empty p { margin: 7px 0 0; }
+  #out table { display: block; max-width: 100%; overflow-x: auto; }
+  @media (max-width: 760px) {
+    #out { grid-template-columns: minmax(0, 1fr); padding: 10px; }
+    #out > section.res:has(table), #out > section.res.ver { grid-column: auto; }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .input-controls .hint { margin-left: 0; }
+  }
+  @media (max-width: 430px) {
+    .stats { grid-template-columns: minmax(0, 1fr); }
+    .sample-actions { width: 100%; }
+  }
+  /* Evidence collection checklist */
+  #out > section.res.checklist {
+    grid-column: 1 / -1;
+    border-left: 4px solid var(--trap);
+    background: var(--surface);
+  }
+
+  .evidence-checklist {
+    display: grid;
+    gap: 0;
+    margin-top: 12px;
+  }
+
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 13px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .checklist-number {
+    display: flex;
+    flex: 0 0 27px;
+    height: 27px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    background: var(--trap-soft);
+    color: var(--trap);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .checklist-body {
+    display: grid;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .checklist-category {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 750;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .checklist-text {
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .checklist-status {
+    width: fit-content;
+    max-width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 3px 7px;
+    color: var(--muted);
+    font-size: 10px;
+    overflow-wrap: anywhere;
+  }
+
+  .checklist-evidence {
+    display: block;
+    margin-top: 2px;
+    overflow-wrap: anywhere;
+  }
 </style>
 </head>
 <body>
@@ -163,34 +603,50 @@
   <span class="privacy">127.0.0.1 only &middot; nothing stored &middot; no outbound calls</span>
 </header>
 
-<main>
-  <div class="panel">
-    <div class="ph">
-      <h2>Input</h2>
-      <button type="button" class="link" data-sample="sample_case.txt">load sample case</button>
-      <button type="button" class="link" data-sample="sample_raslog.txt">load sample log</button>
-      <button type="button" class="link" id="clear">clear</button>
+<main class="workspace">
+  <section class="panel input-panel" aria-labelledby="input-title">
+    <div class="ph input-heading">
+      <div>
+        <h2 id="input-title">CASE INPUT</h2>
+        <p class="sub">Start with a customer case, CLI output, or device log.</p>
+      </div>
+      <div class="sample-actions">
+        <button type="button" class="link" data-sample="sample_case.txt">Sample case</button>
+        <button type="button" class="link" data-sample="sample_raslog.txt">Sample log</button>
+        <button type="button" class="link" id="clear">Clear</button>
+      </div>
     </div>
     <div class="pb">
-      <label for="text" class="sub">Case description, subject line, pasted CLI
-        output, or a raslog/syslog file.</label>
-      <textarea id="text" spellcheck="false" placeholder="Paste here…"></textarea>
-      <div class="row">
+      <label for="text" class="sub">Paste the case details or diagnostic output below.</label>
+      <textarea id="text" spellcheck="false" placeholder="Paste case details, symptoms, CLI output, or logs here..."></textarea>
+      <div class="input-controls">
         <div class="modes" role="group" aria-label="Analysis mode">
-          <button type="button" data-mode="both" aria-pressed="true">Both</button>
+          <button type="button" data-mode="both" aria-pressed="true">Case + logs</button>
           <button type="button" data-mode="case" aria-pressed="false">Case text</button>
-          <button type="button" data-mode="log" aria-pressed="false">Log only</button>
+          <button type="button" data-mode="log" aria-pressed="false">Logs only</button>
         </div>
-        <button type="button" class="primary" id="run">Analyze</button>
+        <button type="button" class="primary" id="run">Analyze case</button>
         <span class="hint" id="size"></span>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="panel">
-    <div class="ph"><h2>Result</h2><span class="sub" id="stamp"></span></div>
-    <div id="out"><div class="empty">Paste something and hit Analyze.</div></div>
-  </div>
+  <section class="panel report-panel" aria-labelledby="report-title">
+    <div class="ph report-heading">
+      <div>
+        <h2 id="report-title">INVESTIGATION REPORT</h2>
+        <p class="sub">Extracted findings and evidence from the supplied input.</p>
+      </div>
+      <span class="sub" id="stamp"></span>
+    </div>
+    <div id="out">
+      <div class="empty">
+        <strong>Ready to investigate</strong>
+        <p>Paste a case or load a sample, then select <strong>Analyze case</strong>.</p>
+        <p>The report will separate extracted findings from missing evidence. It will not assume a root cause.</p>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>
@@ -240,8 +696,40 @@
     var ev = data.evidence, log = data.log;
     var any = false;
 
+
     if (ev) {
-      var s = section("Running version", null, "ver");
+      var overview = el("div", "overview");
+      overview.appendChild(el("div", "overview-title", "CASE AT A GLANCE"));
+      var stats = el("div", "stats");
+
+      function addStat(label, value, note, tone) {
+        var card = el("div", "stat" + (tone ? " " + tone : ""));
+        card.appendChild(el("span", "stat-label", label));
+        card.appendChild(el("strong", "stat-value", String(value)));
+        card.appendChild(el("span", "stat-note", note));
+        stats.appendChild(card);
+      }
+
+      addStat("Platforms", ev.platforms.length,
+        "Platforms mentioned in the input", "");
+      addStat("Reported symptoms", ev.errors.length,
+        "Error text to investigate", "");
+      addStat("Defect references", ev.defects.length,
+        "Applicability not yet confirmed", "caution");
+      addStat("Evidence gaps", ev.gaps.length + ev.missing.length,
+        "Collection issues and missing information",
+        ev.gaps.length + ev.missing.length ? "caution" : "positive");
+
+      overview.appendChild(stats);
+
+      var statusText = ev.running_version
+        ? "Running version identified: " + ev.running_version.value
+        : "Running version not established from the supplied evidence.";
+      overview.appendChild(el("p", "overview-status", statusText));
+      out.appendChild(overview);
+    }
+    if (ev) {
+      var s = section("Running software version", null, "ver");
       if (ev.running_version) {
         s.appendChild(el("div", "big", ev.running_version.value));
         s.appendChild(el("span", "ev", "“" + ev.running_version.evidence + "”"));
@@ -274,7 +762,7 @@
         return !ev.running_version || v.value !== ev.running_version.value;
       });
       if (others.length) {
-        var os = section("Other release strings", others.length);
+        var os = section("Other versions mentioned", others.length);
         others.forEach(function (v) {
           os.appendChild(item("Version", v.value, v.evidence, v.confidence));
         });
@@ -300,28 +788,72 @@
         t.appendChild(tb); ds.appendChild(t); out.appendChild(ds);
       }
 
-      if (ev.gaps.length) {
-        var gs = section("Evidence gaps", ev.gaps.length, "gaps");
-        var ul = el("ul", "plain");
-        ev.gaps.forEach(function (g) {
-          var li = el("li", null, g.value);
-          li.appendChild(el("span", "ev", "“" + g.evidence + "”"));
-          ul.appendChild(li);
-        });
-        gs.appendChild(ul); out.appendChild(gs);
-      }
+      // TAC evidence checklist: derived only from the supplied input.
+      var checklistItems = [];
 
-      if (ev.missing.length) {
-        var ms = section("Still missing", ev.missing.length, "missing");
-        var mu = el("ul", "plain");
-        ev.missing.forEach(function (m) { mu.appendChild(el("li", null, m)); });
-        ms.appendChild(mu);
-        out.appendChild(ms);
+      ev.gaps.forEach(function (g) {
+        checklistItems.push({
+          category: "Collection issue",
+          text: g.value,
+          evidence: g.evidence || "",
+          status: "Collection issue mentioned in input"
+        });
+      });
+
+      ev.missing.forEach(function (m) {
+        checklistItems.push({
+          category: "Information needed",
+          text: m,
+          evidence: "",
+          status: "Not established from supplied input"
+        });
+      });
+
+      if (checklistItems.length) {
+        var cs = section(
+          "Evidence to Collect / Confirm",
+          checklistItems.length,
+          "checklist"
+        );
+
+        cs.appendChild(el(
+          "p",
+          "sub",
+          "These items were identified from the supplied text. " +
+          "They are not proof that evidence is unavailable elsewhere."
+        ));
+
+        var checklist = el("div", "evidence-checklist");
+
+        checklistItems.forEach(function (entry, index) {
+          var row = el("div", "checklist-item");
+          var number = el("span", "checklist-number", String(index + 1));
+          var body = el("div", "checklist-body");
+
+          body.appendChild(el("span", "checklist-category", entry.category));
+          body.appendChild(el("div", "checklist-text", entry.text));
+          body.appendChild(el("span", "checklist-status", entry.status));
+
+          if (entry.evidence) {
+            body.appendChild(el(
+              "div",
+              "ev checklist-evidence",
+              "Source evidence: " + entry.evidence
+            ));
+          }
+
+          row.appendChild(number);
+          row.appendChild(body);
+          checklist.appendChild(row);
+        });
+
+        cs.appendChild(checklist);
+        out.appendChild(cs);
       }
     }
 
     if (log) {
-      var ls = section("Log summary", log.lines + " lines");
+      var ls = section("Log analysis summary", log.lines + " lines");
       if (log.first_timestamp) {
         ls.appendChild(el("div", "sub",
           log.first_timestamp + "  →  " + log.last_timestamp));
