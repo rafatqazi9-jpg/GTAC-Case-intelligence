@@ -657,9 +657,11 @@
     <div class="pb">
       <label for="fixture-case-id" class="sub">Fixture case ID</label>
       <div class="row" style="margin-top:6px">
-        <input id="fixture-case-id" type="text" value="TEST-001"
-               placeholder="Enter a fixture case ID"
-               style="flex:1;min-width:220px;padding:9px 10px;border:1px solid var(--line);border-radius:5px;background:var(--surface-2);color:var(--ink)">
+        <select id="fixture-case-id"
+                aria-label="Select a synthetic fixture case"
+                style="flex:1;min-width:220px;padding:9px 10px;border:1px solid var(--line);border-radius:5px;background:var(--surface-2);color:var(--ink)">
+          <option value="">Loading fixture cases…</option>
+        </select>
         <button type="button" class="primary" id="fixture-run">Investigate fixture</button>
       </div>
       <p class="sub" style="margin-top:7px">
@@ -991,6 +993,45 @@
 const fixtureButton = document.getElementById("fixture-run");
 const fixtureId = document.getElementById("fixture-case-id");
 const fixtureOut = document.getElementById("fixture-out");
+async function loadFixtureCatalog() {
+  fixtureId.disabled = true;
+
+  try {
+    const response = await fetch("/api/fixtures");
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || `Request failed (${response.status})`);
+    }
+
+    fixtureId.replaceChildren();
+
+    const cases = Array.isArray(data.cases) ? data.cases : [];
+
+    if (!cases.length) {
+      fixtureId.add(new Option("No fixture cases available", ""));
+      return;
+    }
+
+    fixtureId.add(new Option("Select a fixture case…", ""));
+
+    for (const item of cases) {
+      const label =
+        `${item.case_id} — ${item.platform} ${item.sw_version} — ${item.symptom_text}`;
+      fixtureId.add(new Option(label, item.case_id));
+    }
+  } catch (error) {
+    fixtureId.replaceChildren(
+      new Option("Unable to load fixture cases", "")
+    );
+    fixtureOut.textContent =
+      `Fixture catalog failed to load: ${error.message}`;
+  } finally {
+    fixtureId.disabled = false;
+  }
+}
+
+loadFixtureCatalog();
 
 fixtureButton.addEventListener("click", async () => {
   const caseId = fixtureId.value.trim();

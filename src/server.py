@@ -91,6 +91,32 @@ def investigate_payload(case_id: str) -> dict[str, Any]:
     }
 
 
+def fixtures_payload() -> dict[str, Any]:
+    """List safe display metadata for local synthetic fixture cases."""
+    adapter = MockAdapter()
+    cases = []
+
+    for raw in adapter._raw.values():
+        cases.append({
+            "case_id": raw["id"],
+            "platform": raw["platform"],
+            "sw_version": raw["sw_version"],
+            "symptom_class": raw["symptom_class"],
+            "symptom_text": raw["symptom_text"],
+            "region": raw["region"],
+            "case_type": raw.get("case_type"),
+            "created_at": raw["created_at"],
+        })
+
+    cases.sort(key=lambda case: case["case_id"])
+
+    return {
+        "source": "local synthetic fixtures",
+        "count": len(cases),
+        "cases": cases,
+    }
+
+
 class Handler(BaseHTTPRequestHandler):
     server_version = "gtac-analyzer"
 
@@ -116,21 +142,33 @@ class Handler(BaseHTTPRequestHandler):
     # ---------------------------------------------------------------- GET
     def do_GET(self) -> None:
         path = self.path.split("?", 1)[0]
+
+        if path == "/api/fixtures":
+            try:
+                self._json(200, fixtures_payload())
+            except Exception:  # noqa: BLE001
+                self._json(500, {
+                    "error": "Unable to load fixture catalog"
+                })
+            return
+
         if path in ("/", "/index.html"):
             if not APP.is_file():
                 self._send(500, b"demo/app.html is missing", "text/plain")
                 return
             self._send(200, APP.read_bytes(), "text/html; charset=utf-8")
             return
+
         if path == "/api/samples":
-            # Convenience only: the synthetic fixtures shipped with the repo,
-            # so the page has something to demonstrate on.
             out = {}
             for name in ("sample_case.txt", "sample_raslog.txt"):
                 f = SAMPLES / name
-                out[name] = f.read_text(encoding="utf-8") if f.is_file() else ""
+                out[name] = (
+                    f.read_text(encoding="utf-8") if f.is_file() else ""
+                )
             self._json(200, out)
             return
+
         self._send(404, b"not found", "text/plain")
 
     # --------------------------------------------------------------- POST

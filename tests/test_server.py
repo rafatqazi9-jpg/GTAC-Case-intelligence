@@ -201,3 +201,39 @@ def test_investigate_invalid_case_id_returns_400(
     code, data = _post_investigate(base_url, payload)
     assert code == 400
     assert "error" in data
+
+
+def test_fixture_catalog_returns_safe_metadata(base_url: str) -> None:
+    with urllib.request.urlopen(base_url + "/api/fixtures") as response:
+        assert response.status == 200
+        data = json.loads(response.read())
+
+    assert data["source"] == "local synthetic fixtures"
+    assert data["count"] == len(data["cases"])
+    assert data["count"] > 0
+
+    case = data["cases"][0]
+    assert {
+        "case_id",
+        "platform",
+        "sw_version",
+        "symptom_class",
+        "symptom_text",
+        "region",
+        "case_type",
+        "created_at",
+    }.issubset(case)
+
+    assert "actual_root_cause" not in case
+    assert "initial_hypothesis" not in case
+    assert "closure_comments" not in case
+    assert "events" not in case
+
+
+def test_fixture_catalog_cases_are_sorted(base_url: str) -> None:
+    with urllib.request.urlopen(base_url + "/api/fixtures") as response:
+        data = json.loads(response.read())
+
+    case_ids = [case["case_id"] for case in data["cases"]]
+    assert case_ids == sorted(case_ids)
+    assert len(case_ids) == len(set(case_ids))
