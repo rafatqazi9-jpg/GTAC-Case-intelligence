@@ -91,6 +91,8 @@ class MockAdapter(Adapter):
         for raw in self._raw.values():
             if raw["symptom_class"] != symptom_class:
                 continue
+            if raw["platform"] != platform:
+                continue
             closed = _dt(raw.get("closed_at"))
             if closed is None or not window.permits(closed):
                 continue

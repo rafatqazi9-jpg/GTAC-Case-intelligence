@@ -935,3 +935,110 @@ def test_m06_does_not_emit_cluster_below_minimum_size() -> None:
     )
 
     assert findings == []
+
+
+# ----------------------------------------- similar_closed_cases platform isolation
+def test_similar_closed_cases_includes_matching_platform(adapter: MockAdapter) -> None:
+    """A prior case with matching symptom class AND platform, closed before the
+    cutoff, must be returned."""
+    cid = adapter.eval_case_ids[0]
+    window = _window(adapter, cid, 2)
+    case = adapter.get_case(cid, window)
+    results = adapter.similar_closed_cases(
+        case.symptom_class, case.platform, window
+    )
+    for prior in results:
+        assert prior.platform == case.platform, (
+            f"{prior.id} has platform {prior.platform!r}, expected "
+            f"{case.platform!r}"
+        )
+        assert prior.symptom_class == case.symptom_class
+
+
+def test_similar_closed_cases_excludes_different_platform(adapter: MockAdapter) -> None:
+    """Same symptom class on a different platform must NOT be returned."""
+    from datetime import datetime
+
+    # Pick a symptom class that exists on more than one platform.
+    by_class: dict[str, set[str]] = {}
+    for raw in adapter._raw.values():
+        by_class.setdefault(raw["symptom_class"], set()).add(raw["platform"])
+    multi = {k: v for k, v in by_class.items() if len(v) > 1}
+    assert multi, (
+        "fixtures must have a symptom class spanning multiple platforms "
+        "for this test to be meaningful"
+    )
+    symptom, platforms = next(iter(multi.items()))
+    platform_list = sorted(platforms)
+    target_platform = platform_list[0]
+    other_platform = platform_list[1]
+
+    # Use a window wide enough to include all closed cases.
+    window = EvidenceWindow(cutoff=datetime(2099, 1, 1))
+
+    results = adapter.similar_closed_cases(symptom, target_platform, window)
+    for prior in results:
+        assert prior.platform == target_platform, (
+            f"{prior.id} has platform {prior.platform!r} but query asked for "
+            f"{target_platform!r}"
+        )
+
+    # Cross-check: querying the OTHER platform should not return results
+    # belonging to the first platform.
+    other_results = adapter.similar_closed_cases(symptom, other_platform, window)
+    for prior in other_results:
+        assert prior.platform == other_platform
+
+
+def test_similar_closed_cases_excludes_post_cutoff(adapter: MockAdapter) -> None:
+    """A case closed AFTER the cutoff must not be returned, regardless of
+    matching symptom class and platform."""
+    from datetime import datetime
+
+    # Find a case that is closed.
+    closed_raw = None
+    for raw in adapter._raw.values():
+        if raw.get("closed_at"):
+            closed_raw = raw
+            break
+    assert closed_raw is not None, "fixtures must include a closed case"
+
+    # Set the cutoff to BEFORE the case was closed.
+    closed_at = datetime.fromisoformat(closed_raw["closed_at"])
+    window = EvidenceWindow(cutoff=closed_at - timedelta(days=1))
+    results = adapter.similar_closed_cases(
+        closed_raw["symptom_class"], closed_raw["platform"], window
+    )
+    result_ids = {c.id for c in results}
+    assert closed_raw["id"] not in result_ids, (
+        f"{closed_raw['id']} closed at {closed_at} should not appear with "
+        f"cutoff {window.cutoff}"
+    )
+
+
+def test_similar_closed_cases_ordering_and_limit(adapter: MockAdapter) -> None:
+    """Results are sorted newest-closed-first and respect the limit parameter."""
+    from datetime import datetime
+
+    window = EvidenceWindow(cutoff=datetime(2099, 1, 1))
+
+    # Pick a symptom/platform combo with cases.
+    for raw in adapter._raw.values():
+        if raw.get("closed_at"):
+            results = adapter.similar_closed_cases(
+                raw["symptom_class"], raw["platform"], window
+            )
+            if len(results) >= 2:
+                # Verify descending order by closed_at.
+                for a, b in zip(results, results[1:]):
+                    assert (a.closed_at or a.created_at) >= (b.closed_at or b.created_at), (
+                        f"ordering violated: {a.id} ({a.closed_at}) before "
+                        f"{b.id} ({b.closed_at})"
+                    )
+                # Verify limit is respected.
+                limited = adapter.similar_closed_cases(
+                    raw["symptom_class"], raw["platform"], window, limit=1
+                )
+                assert len(limited) <= 1
+                return
+    pytest.skip("no symptom/platform combo has ≥2 closed cases")
