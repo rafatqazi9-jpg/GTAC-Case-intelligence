@@ -667,10 +667,154 @@ def test_m07_does_not_treat_mentioned_but_uncollected_artifact_as_present() -> N
         AdapterWithRequiredArtifact(),
         EvidenceWindow(cutoff=datetime(2026, 10, 14)),
     )
-
     assert any(
         f.kind == "gap" and "show tech-support" in f.statement
         and "incomplete" in f.statement.lower()
+        for f in findings
+    )
+
+
+def test_m07_counts_uploaded_attachment_as_recorded_evidence() -> None:
+    from datetime import datetime
+
+    from src.adapters.base import EvidenceWindow
+    from src.models import Case, CaseEvent
+    from src.modules import m07_escalation_package as m07
+
+    case = Case(
+        id="CS-TEST-M07-ATTACHMENT",
+        account="Test account",
+        platform="SLX",
+        sw_version="20.7.2ab",
+        symptom_class="packet_loss",
+        symptom_text="Intermittent packet loss",
+        features_enabled=("MCT",),
+        region="test",
+        created_at=datetime(2026, 10, 14),
+        events=(
+            CaseEvent(
+                at=datetime(2026, 10, 14),
+                kind="attachment",
+                text="show tech-support uploaded",
+            ),
+        ),
+    )
+
+    class AdapterWithRequiredArtifact:
+        def required_escalation_fields(self, platform):
+            return ("show tech-support",)
+
+    findings = m07.run(
+        case,
+        AdapterWithRequiredArtifact(),
+        EvidenceWindow(cutoff=datetime(2026, 10, 14)),
+    )
+
+    assert any(
+        f.statement.startswith("Already on the case:")
+        and "show tech-support" in f.statement
+        for f in findings
+    )
+    assert not any(
+        "incomplete" in f.statement.lower()
+        and "show tech-support" in f.statement
+        for f in findings
+    )
+
+
+def test_m07_attachment_evidence_is_not_overridden_by_unrelated_note() -> None:
+    from datetime import datetime
+
+    from src.adapters.base import EvidenceWindow
+    from src.models import Case, CaseEvent
+    from src.modules import m07_escalation_package as m07
+
+    case = Case(
+        id="CS-TEST-M07-ATTACHMENT-AND-NOTE",
+        account="Test account",
+        platform="SLX",
+        sw_version="20.7.2ab",
+        symptom_class="packet_loss",
+        symptom_text="Intermittent packet loss",
+        features_enabled=("MCT",),
+        region="test",
+        created_at=datetime(2026, 10, 14),
+        events=(
+            CaseEvent(
+                at=datetime(2026, 10, 14),
+                kind="note",
+                text="Topology diagram is still missing.",
+            ),
+            CaseEvent(
+                at=datetime(2026, 10, 14),
+                kind="attachment",
+                text="show tech-support uploaded",
+            ),
+        ),
+    )
+
+    class AdapterWithRequiredArtifact:
+        def required_escalation_fields(self, platform):
+            return ("show tech-support", "topology diagram")
+
+    findings = m07.run(
+        case,
+        AdapterWithRequiredArtifact(),
+        EvidenceWindow(cutoff=datetime(2026, 10, 14)),
+    )
+
+    assert any(
+        f.statement.startswith("Already on the case:")
+        and "show tech-support" in f.statement
+        for f in findings
+    )
+
+    assert any(
+        "incomplete" in f.statement.lower()
+        and "topology diagram" in f.statement
+        for f in findings
+    )
+
+
+def test_m07_does_not_treat_positive_note_as_uploaded_artifact() -> None:
+    from datetime import datetime
+
+    from src.adapters.base import EvidenceWindow
+    from src.models import Case, CaseEvent
+    from src.modules import m07_escalation_package as m07
+
+    case = Case(
+        id="CS-TEST-M07-NOTE-ONLY",
+        account="Test account",
+        platform="SLX",
+        sw_version="20.7.2ab",
+        symptom_class="packet_loss",
+        symptom_text="Intermittent packet loss",
+        features_enabled=("MCT",),
+        region="test",
+        created_at=datetime(2026, 10, 14),
+        events=(
+            CaseEvent(
+                at=datetime(2026, 10, 14),
+                kind="note",
+                text="show tech-support uploaded by customer",
+            ),
+        ),
+    )
+
+    class AdapterWithRequiredArtifact:
+        def required_escalation_fields(self, platform):
+            return ("show tech-support",)
+
+    findings = m07.run(
+        case,
+        AdapterWithRequiredArtifact(),
+        EvidenceWindow(cutoff=datetime(2026, 10, 14)),
+    )
+
+    assert any(
+        "incomplete" in f.statement.lower()
+        and "show tech-support" in f.statement
         for f in findings
     )
     assert not any(

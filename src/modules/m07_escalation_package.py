@@ -23,28 +23,30 @@ _NEGATIVE_MARKERS = (
 )
 
 
-def _field_is_present(field: str, corpus: str) -> bool:
-    """Avoid treating a field mention as proof when explicitly marked absent."""
+def _field_is_present(field: str, events) -> bool:
+    """Treat matching attachment records as evidence of recorded upload."""
     key = field.lower()
-    for sentence in corpus.splitlines():
-        if key not in sentence:
+    for event in events:
+        if event.kind.lower() != "attachment":
             continue
-        if any(marker in sentence for marker in _NEGATIVE_MARKERS):
-            return False
+        text = event.text.lower()
+        if key not in text:
+            continue
+        if any(marker in text for marker in _NEGATIVE_MARKERS):
+            continue
         return True
     return False
 
 
 def run(case: Case, adapter: Adapter, window: EvidenceWindow) -> list[Finding]:
     required = adapter.required_escalation_fields(case.platform)
-    corpus = "\n".join(e.text.lower() for e in case.events)
 
     present: list[str] = []
     missing: list[str] = []
     for field in required:
         if field.lower() == "sw_version" and case.sw_version:
             present.append(field)
-        elif _field_is_present(field, corpus):
+        elif _field_is_present(field, case.events):
             present.append(field)
         else:
             missing.append(field)
