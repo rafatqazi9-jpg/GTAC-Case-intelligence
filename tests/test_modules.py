@@ -349,3 +349,63 @@ def test_m07_flags_missing_artefacts(adapter: MockAdapter) -> None:
     case = adapter.get_case(cid, window)
     gaps = [f for f in m07.run(case, adapter, window) if "incomplete" in f.statement]
     assert gaps
+
+# --------------------------------------------------------- brief rendering
+def test_brief_render_includes_case_id_timestamp_and_finding_sources() -> None:
+    from src.models import Brief
+
+    generated_at = datetime(2026, 10, 14, 9, 30)
+    finding = Finding(
+        module="m01_defect_exposure",
+        kind="candidate",
+        statement="Candidate defect affects the running version",
+        confidence=Confidence.MEDIUM,
+        sources=("SLXOS-12345",),
+    )
+    brief = Brief(
+        case_id="CS-TEST-001",
+        generated_at=generated_at,
+        findings=[finding],
+    )
+
+    rendered = brief.render()
+
+    assert "CS-TEST-001" in rendered
+    assert "2026-10-14 09:30" in rendered
+    assert "CANDIDATES" in rendered
+    assert "[medium]" in rendered
+    assert "Candidate defect affects the running version" in rendered
+    assert "SLXOS-12345" in rendered
+
+
+def test_abstained_brief_render_includes_reason() -> None:
+    from src.models import Brief
+
+    brief = Brief(
+        case_id="CS-TEST-002",
+        generated_at=datetime(2026, 10, 14, 9, 30),
+        abstained=True,
+        abstain_reason="No candidate meets the confidence threshold.",
+    )
+
+    rendered = brief.render()
+
+    assert "NO CONFIDENT CANDIDATE" in rendered
+    assert "No candidate meets the confidence threshold." in rendered
+
+
+def test_empty_brief_render_does_not_invent_findings() -> None:
+    from src.models import Brief
+
+    brief = Brief(
+        case_id="CS-TEST-003",
+        generated_at=datetime(2026, 10, 14, 9, 30),
+    )
+
+    rendered = brief.render()
+
+    assert "CS-TEST-003" in rendered
+    assert "CANDIDATES" not in rendered
+    assert "KNOWN TRAPS" not in rendered
+    assert "FLEET SIGNAL" not in rendered
+    assert "confirmed root cause" not in rendered.lower()
