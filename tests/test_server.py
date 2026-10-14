@@ -159,3 +159,45 @@ def test_analyze_payload_modes() -> None:
     assert "evidence" in both and "log" in both
     assert "log" not in analyze_payload("SLX: 20.7.3a\n", "case")
     assert "evidence" not in analyze_payload("ERROR x\n", "log")
+
+
+def _post_investigate(url: str, payload: object) -> tuple[int, dict]:
+    req = urllib.request.Request(
+        url + "/api/investigate",
+        data=json.dumps(payload).encode(),
+        headers={"Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(req) as r:
+            return r.status, json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        return e.code, json.loads(e.read())
+
+
+def test_investigate_returns_fixture_brief(base_url: str) -> None:
+    code, data = _post_investigate(
+        base_url, {"case_id": "CS-6100050"}
+    )
+    assert code == 200
+    assert data["case_id"] == "CS-6100050"
+    assert data["abstained"] is False
+    assert data["findings"]
+    assert data["rendered"].startswith("CASE INTELLIGENCE BRIEF")
+    assert all(f["sources"] for f in data["findings"])
+
+
+def test_investigate_unknown_case_returns_404(base_url: str) -> None:
+    code, data = _post_investigate(
+        base_url, {"case_id": "NOT-A-REAL-CASE"}
+    )
+    assert code == 404
+    assert "error" in data
+
+
+@pytest.mark.parametrize("payload", [{}, {"case_id": ""}, {"case_id": 123}])
+def test_investigate_invalid_case_id_returns_400(
+    base_url: str, payload: object
+) -> None:
+    code, data = _post_investigate(base_url, payload)
+    assert code == 400
+    assert "error" in data

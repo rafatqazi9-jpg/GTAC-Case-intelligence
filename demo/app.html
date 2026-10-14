@@ -647,6 +647,29 @@
       </div>
     </div>
   </section>
+  <section class="panel" aria-labelledby="fixture-title" style="grid-column:1 / -1">
+    <div class="ph">
+      <div>
+        <h2 id="fixture-title">FIXTURE-BASED CASE INVESTIGATION</h2>
+        <p class="sub">Synthetic demo cases only — not a live Salesforce lookup.</p>
+      </div>
+    </div>
+    <div class="pb">
+      <label for="fixture-case-id" class="sub">Fixture case ID</label>
+      <div class="row" style="margin-top:6px">
+        <input id="fixture-case-id" type="text" value="TEST-001"
+               placeholder="Enter a fixture case ID"
+               style="flex:1;min-width:220px;padding:9px 10px;border:1px solid var(--line);border-radius:5px;background:var(--surface-2);color:var(--ink)">
+        <button type="button" class="primary" id="fixture-run">Investigate fixture</button>
+      </div>
+      <p class="sub" style="margin-top:7px">
+        Uses local mock-data fixtures and the existing evidence-window rules.
+      </p>
+      <div id="fixture-out" aria-live="polite" style="margin-top:14px">
+        <div class="empty">Enter a fixture case ID and select Investigate fixture.</div>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>
@@ -964,6 +987,82 @@
       });
     });
 })();
+
+const fixtureButton = document.getElementById("fixture-run");
+const fixtureId = document.getElementById("fixture-case-id");
+const fixtureOut = document.getElementById("fixture-out");
+
+fixtureButton.addEventListener("click", async () => {
+  const caseId = fixtureId.value.trim();
+
+  if (!caseId) {
+    fixtureOut.textContent = "Enter a fixture case ID.";
+    return;
+  }
+
+  fixtureButton.disabled = true;
+  fixtureOut.textContent = "Investigating fixture…";
+
+  try {
+    const response = await fetch("/api/investigate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ case_id: caseId })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || `Request failed (${response.status})`);
+    }
+
+    fixtureOut.replaceChildren();
+
+    const status = document.createElement("p");
+    status.textContent = data.abstained
+      ? `Investigation abstained: ${data.abstain_reason || "Reason not supplied"}`
+      : `Investigation completed for ${data.case_id}`;
+    fixtureOut.appendChild(status);
+
+    const brief = document.createElement("pre");
+    brief.style.cssText =
+      "white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.6 var(--mono);color:var(--ink-2);background:var(--surface-2);padding:12px;border-radius:5px";
+    brief.textContent = data.rendered || "No brief returned.";
+    fixtureOut.appendChild(brief);
+
+    const heading = document.createElement("h3");
+    heading.textContent = `Findings (${(data.findings || []).length})`;
+    heading.style.fontSize = "12px";
+    fixtureOut.appendChild(heading);
+
+    for (const finding of data.findings || []) {
+      const item = document.createElement("section");
+      item.className = "res";
+
+      const title = document.createElement("strong");
+      title.textContent =
+        `${finding.module || "Unknown module"} · ${finding.kind || "Finding"}`;
+      item.appendChild(title);
+
+      const statement = document.createElement("p");
+      statement.textContent = finding.statement || "No statement supplied.";
+      item.appendChild(statement);
+
+      const details = document.createElement("p");
+      details.className = "sub";
+      const sources = Array.isArray(finding.sources) ? finding.sources : [];
+      details.textContent =
+        `Confidence: ${finding.confidence || "Not supplied"} · Sources: ${sources.length ? sources.join(", ") : "None supplied"}`;
+      item.appendChild(details);
+
+      fixtureOut.appendChild(item);
+    }
+  } catch (error) {
+    fixtureOut.textContent = `Investigation failed: ${error.message}`;
+  } finally {
+    fixtureButton.disabled = false;
+  }
+});
 </script>
 </body>
 </html>

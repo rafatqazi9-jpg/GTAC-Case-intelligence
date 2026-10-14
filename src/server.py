@@ -27,6 +27,7 @@ Read-only, like the rest of Phase 1: no systems of record, no writes.
 Stdlib only -- no new dependency.
 """
 from __future__ import annotations
+from datetime import datetime, timedelta
 
 import argparse
 import json
@@ -37,6 +38,10 @@ from typing import Any
 
 from .analyze import as_json
 from .extract import extract_all, summarise_log
+from .adapters.base import EvidenceWindow
+from .adapters.mock import MockAdapter
+from .brief import build
+from .models import Confidence
 
 APP = Path(__file__).resolve().parents[1] / "demo" / "app.html"
 SAMPLES = Path(__file__).resolve().parents[1] / "data" / "samples"
@@ -53,6 +58,37 @@ def analyze_payload(text: str, mode: str) -> dict[str, Any]:
     ev = extract_all(text, source="pasted input") if want_case else None
     log = summarise_log(text) if want_log else None
     return as_json(ev, log)
+
+
+def investigate_payload(case_id: str) -> dict[str, Any]:
+    """Build an evidence-windowed brief from synthetic fixture data."""
+    adapter = MockAdapter()
+
+    raw = adapter._raw.get(case_id)
+    if raw is None:
+        raise KeyError(case_id)
+
+    created_at = datetime.fromisoformat(raw["created_at"])
+    window = EvidenceWindow(cutoff=created_at + timedelta(days=2))
+    brief = build(case_id, adapter, window, threshold=Confidence.MEDIUM)
+
+    return {
+        "case_id": brief.case_id,
+        "generated_at": brief.generated_at.isoformat(),
+        "abstained": brief.abstained,
+        "abstain_reason": brief.abstain_reason,
+        "rendered": brief.render(),
+        "findings": [
+            {
+                "module": finding.module,
+                "kind": finding.kind,
+                "statement": finding.statement,
+                "confidence": finding.confidence.value,
+                "sources": list(finding.sources),
+            }
+            for finding in brief.findings
+        ],
+    }
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -99,7 +135,8 @@ class Handler(BaseHTTPRequestHandler):
 
     # --------------------------------------------------------------- POST
     def do_POST(self) -> None:
-        if self.path.split("?", 1)[0] != "/api/analyze":
+        path = self.path.split("?", 1)[0]
+        if path not in ("/api/analyze", "/api/investigate"):
             self._send(404, b"not found", "text/plain")
             return
 
@@ -120,6 +157,21 @@ class Handler(BaseHTTPRequestHandler):
             payload = json.loads(raw.decode("utf-8"))
         except (UnicodeDecodeError, json.JSONDecodeError):
             self._json(400, {"error": "body must be UTF-8 JSON"})
+            return
+        if path == "/api/investigate":
+            case_id = payload.get("case_id")
+            if not isinstance(case_id, str) or not case_id.strip():
+                self._json(400, {"error": "case_id must be a non-empty string"})
+                return
+
+            try:
+                self._json(200, investigate_payload(case_id.strip()))
+            except KeyError:
+                self._json(404, {"error": "case_id not found in fixture data"})
+            except Exception as exc:  # noqa: BLE001
+                self._json(500, {
+                    "error": f"{type(exc).__name__} while investigating"
+                })
             return
 
         text = payload.get("text")
