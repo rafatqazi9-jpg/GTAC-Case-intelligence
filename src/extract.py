@@ -246,8 +246,9 @@ def find_error_signatures(text: str, source: str) -> list[Extraction]:
             r"(?:is\s+)?flapp(?:ing|ed|ers)\b", re.I
         ),
         re.compile(
-            r"\bBGP\b.{0,40}\b(?:neighbor|peer|session)\b"
-            r".{0,30}\b(?:resets?|resetting|flaps?|flapping|drops?)\b", re.I
+            r"\bBGP\b.{0,40}\b(?:neighbor|peer|session|adjacency)\b"
+            r".{0,30}\b(?:resets?|resetting|flaps?|flapping|drops?|"
+            r"bounces?|bounced|bouncing)\b", re.I
         ),
         re.compile(
             r"\bhigh\s+(?:CPU|memory)(?:\s+(?:utilization|usage|consumption))?\b",

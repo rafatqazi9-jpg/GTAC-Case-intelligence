@@ -283,3 +283,16 @@ def test_hypothetical_sentence_does_not_hide_observed_symptom() -> None:
 
     assert len(packet_loss) == 1
     assert packet_loss[0].evidence == line
+
+def test_bgp_adjacency_bouncing_is_extracted() -> None:
+    line = "The BGP adjacency bounced three times after failover."
+    results = find_error_signatures(line, "case")
+    matches = [
+        e for e in results
+        if "bgp" in e.value.lower() and "bounced" in e.value.lower()
+    ]
+
+    assert len(matches) == 1
+    assert matches[0].evidence == line
+    assert matches[0].source == "case"
+    assert matches[0].confidence is Confidence.MEDIUM
