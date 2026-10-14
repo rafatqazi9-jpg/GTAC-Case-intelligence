@@ -37,9 +37,12 @@ def run(case: Case, adapter: Adapter, window: EvidenceWindow) -> list[Finding]:
         overlap = sorted(set(d.feature_tags) & enabled)
         findings.append(Finding(
             module=MODULE, kind="candidate",
-            statement=(f"{d.title} - affects {case.sw_version} with "
-                       f"{', '.join(overlap)} enabled"
-                       + (f"; fixed in {d.fixed_in}" if d.fixed_in else "; no fix available")),
+            statement=(
+                f"{d.title} - affects {case.sw_version} with "
+                f"{', '.join(overlap)} enabled"
+                + (f"; fixed in {d.fixed_in}" if d.fixed_in else "; no fix available")
+                + "; exposure match only, not confirmed as the cause"
+            ),
             confidence=Confidence.MEDIUM if d.fixed_in else Confidence.LOW,
             sources=(d.id,),
         ))

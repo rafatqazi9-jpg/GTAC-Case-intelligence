@@ -409,3 +409,48 @@ def test_empty_brief_render_does_not_invent_findings() -> None:
     assert "KNOWN TRAPS" not in rendered
     assert "FLEET SIGNAL" not in rendered
     assert "confirmed root cause" not in rendered.lower()
+
+# --------------------------------------------------- M01 candidate explanation
+def test_m01_candidate_distinguishes_exposure_from_confirmed_cause() -> None:
+    from datetime import datetime
+    from src.adapters.base import EvidenceWindow
+    from src.models import Case, Confidence, Defect
+    from src.modules import m01_defect_exposure as m01
+
+    defect = Defect(
+        id="SLXOS-12345",
+        title="Example forwarding defect",
+        affected_versions=("20.7.2ab",),
+        fixed_in="20.7.3a",
+        feature_tags=("MCT",),
+        status="open",
+    )
+
+    class AdapterWithOneDefect:
+        def defects_for_platform(self, platform, window):
+            return (defect,)
+
+    case = Case(
+        id="CS-TEST-M01",
+        account="Test account",
+        platform="SLX",
+        sw_version="20.7.2ab",
+        symptom_class="packet_loss",
+        symptom_text="Intermittent packet loss",
+        features_enabled=("MCT",),
+        region="test",
+        created_at=datetime(2026, 10, 14),
+    )
+
+    window = EvidenceWindow(cutoff=datetime(2026, 10, 14))
+    findings = m01.run(case, AdapterWithOneDefect(), window)
+    candidate = next(
+        f for f in findings
+        if f.kind == "candidate" and "Upgrading" not in f.statement
+    )
+
+    assert "20.7.2ab" in candidate.statement
+    assert "MCT" in candidate.statement
+    assert "not confirmed as the cause" in candidate.statement.lower()
+    assert candidate.sources == ("SLXOS-12345",)
+    assert candidate.confidence == Confidence.MEDIUM
