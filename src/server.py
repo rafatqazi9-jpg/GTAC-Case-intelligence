@@ -241,6 +241,7 @@ class Handler(BaseHTTPRequestHandler):
         # This page runs only from here and talks only to here.
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Referrer-Policy", "no-referrer")
+        self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
         self.end_headers()
         self.wfile.write(body)
 
