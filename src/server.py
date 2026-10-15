@@ -30,6 +30,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 
 import argparse
+import base64
 import json
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -41,6 +42,11 @@ from .extract import extract_all, summarise_log
 from .adapters.base import EvidenceWindow
 from .adapters.mock import MockAdapter
 from .brief import build
+from .config import get_provider
+from .conversation.engine import ConversationEngine
+from .escalation import build_escalation_package
+from .evidence.timeline import TimelineBuilder
+from .ingest.pipeline import IngestionPipeline
 from .models import Confidence
 
 APP = Path(__file__).resolve().parents[1] / "demo" / "app.html"
@@ -49,6 +55,20 @@ SAMPLES = Path(__file__).resolve().parents[1] / "data" / "samples"
 # A pasted show-tech or raslog is genuinely large; a request past this is a
 # mistake or an attack, and either way should be refused rather than buffered.
 MAX_BODY = 8 * 1024 * 1024
+
+# Lazy singleton: created on first chat request so the server starts fast
+# and tests that don't use chat don't pay for provider initialisation.
+_engine: ConversationEngine | None = None
+
+
+def _get_engine() -> ConversationEngine:
+    global _engine
+    if _engine is None:
+        _engine = ConversationEngine(
+            provider=get_provider(),
+            adapter=MockAdapter(),
+        )
+    return _engine
 
 
 def analyze_payload(text: str, mode: str) -> dict[str, Any]:
@@ -74,6 +94,9 @@ def investigate_payload(case_id: str) -> dict[str, Any]:
 
     return {
         "case_id": brief.case_id,
+        "platform": raw.get("platform"),
+        "sw_version": raw.get("sw_version"),
+        "symptom_text": raw.get("symptom_text"),
         "generated_at": brief.generated_at.isoformat(),
         "abstained": brief.abstained,
         "abstain_reason": brief.abstain_reason,
@@ -115,6 +138,92 @@ def fixtures_payload() -> dict[str, Any]:
         "count": len(cases),
         "cases": cases,
     }
+
+
+def upload_payload(filename: str, content_b64: str, password: str | None = None) -> dict[str, Any]:
+    """Ingest, decompress, and analyze uploaded log files or diagnostic archives."""
+    try:
+        raw_bytes = base64.b64decode(content_b64)
+    except Exception as exc:
+        raise ValueError(f"Invalid base64 payload: {exc}") from exc
+
+    pipeline = IngestionPipeline()
+    report = pipeline.ingest_bytes(raw_bytes, filename=filename, password=password)
+
+    # If extraction produced readable log text, run evidence extraction and summarization
+    analysis: dict[str, Any] | None = None
+    timeline_dict: dict[str, Any] | None = None
+
+    if report.combined_log_text.strip():
+        ev = extract_all(report.combined_log_text, source=f"uploaded archive: {filename}")
+        log = summarise_log(report.combined_log_text)
+        analysis = as_json(ev, log)
+
+        # Build cross-file timeline from processed items
+        text_files = [(item.relative_path, item.extracted_text) for item in report.items if item.is_text and item.extracted_text]
+        if not text_files:
+            text_files = [(filename, report.combined_log_text)]
+
+        tb = TimelineBuilder()
+        tl = tb.build_from_files(text_files)
+        timeline_dict = {
+            "total_events": tl.total_events,
+            "devices": tl.devices_seen,
+            "start_time": tl.start_time.isoformat() if tl.start_time else None,
+            "end_time": tl.end_time.isoformat() if tl.end_time else None,
+            "critical_count": len(tl.critical_events),
+            "rendered": tl.render_timeline(),
+            "correlations": tl.correlations,
+            "gaps": tl.gaps_detected,
+        }
+
+    return {
+        "filename": report.original_filename,
+        "format": report.detected_format,
+        "total_entries": report.total_entries,
+        "processed_count": report.processed_count,
+        "skipped_count": report.skipped_count,
+        "is_encrypted": report.is_encrypted,
+        "requires_password": report.requires_password,
+        "encryption_type": report.encryption_type,
+        "errors": report.errors,
+        "items": [
+            {
+                "path": item.relative_path,
+                "size": item.size_bytes,
+                "is_text": item.is_text,
+                "status": item.status,
+                "reason": item.reason,
+            }
+            for item in report.items
+        ],
+        "analysis": analysis,
+        "timeline": timeline_dict,
+    }
+
+
+def escalation_payload(
+    case_id: str | None = None,
+    evidence: dict[str, Any] | None = None,
+    timeline: dict[str, Any] | None = None,
+    notes: str | None = None,
+) -> dict[str, Any]:
+    """Generate structured DE / Tier 3 engineering escalation package."""
+    brief_data: dict[str, Any] | None = None
+    if case_id and isinstance(case_id, str) and case_id.strip():
+        try:
+            brief_data = investigate_payload(case_id.strip())
+        except KeyError:
+            pass
+
+    pkg = build_escalation_package(
+        case_id=case_id,
+        evidence=evidence,
+        timeline=timeline,
+        brief_data=brief_data,
+        notes=notes,
+    )
+    return pkg.to_dict()
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -169,12 +278,23 @@ class Handler(BaseHTTPRequestHandler):
             self._json(200, out)
             return
 
+        if path == "/api/sessions":
+            try:
+                engine = _get_engine()
+                self._json(200, {
+                    "provider": engine.provider_name,
+                    "sessions": engine.list_sessions(),
+                })
+            except Exception:  # noqa: BLE001
+                self._json(500, {"error": "Unable to list sessions"})
+            return
+
         self._send(404, b"not found", "text/plain")
 
     # --------------------------------------------------------------- POST
     def do_POST(self) -> None:
         path = self.path.split("?", 1)[0]
-        if path not in ("/api/analyze", "/api/investigate"):
+        if path not in ("/api/analyze", "/api/investigate", "/api/chat", "/api/upload", "/api/escalation"):
             self._send(404, b"not found", "text/plain")
             return
 
@@ -210,6 +330,73 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(500, {
                     "error": f"{type(exc).__name__} while investigating"
                 })
+            return
+
+        if path == "/api/chat":
+            message = payload.get("message")
+            if not isinstance(message, str) or not message.strip():
+                self._json(400, {"error": "message must be a non-empty string"})
+                return
+
+            session_id = payload.get("session_id")
+            case_id = payload.get("case_id")
+
+            try:
+                engine = _get_engine()
+                response = engine.ask(
+                    question=message.strip(),
+                    session_id=session_id if isinstance(session_id, str) else None,
+                    case_id=case_id.strip() if isinstance(case_id, str) and case_id.strip() else None,
+                )
+                self._json(200, response.to_dict())
+            except KeyError:
+                self._json(404, {"error": "case_id not found in fixture data"})
+            except Exception as exc:  # noqa: BLE001
+                self._json(500, {
+                    "error": f"{type(exc).__name__} while processing chat"
+                })
+            return
+
+        if path == "/api/upload":
+            filename = payload.get("filename")
+            content_b64 = payload.get("content_b64")
+            password = payload.get("password")
+
+            if not isinstance(filename, str) or not filename.strip():
+                self._json(400, {"error": "filename must be a non-empty string"})
+                return
+            if not isinstance(content_b64, str) or not content_b64.strip():
+                self._json(400, {"error": "content_b64 must be a non-empty base64 string"})
+                return
+
+            try:
+                res = upload_payload(
+                    filename=filename.strip(),
+                    content_b64=content_b64.strip(),
+                    password=password.strip() if isinstance(password, str) and password.strip() else None,
+                )
+                self._json(200, res)
+            except ValueError as exc:
+                self._json(400, {"error": str(exc)})
+            except Exception as exc:  # noqa: BLE001
+                self._json(500, {"error": f"{type(exc).__name__} during upload ingestion"})
+            return
+
+        if path == "/api/escalation":
+            case_id = payload.get("case_id")
+            evidence = payload.get("evidence")
+            timeline = payload.get("timeline")
+            notes = payload.get("notes")
+            try:
+                res = escalation_payload(
+                    case_id=case_id.strip() if isinstance(case_id, str) and case_id.strip() else None,
+                    evidence=evidence if isinstance(evidence, dict) else None,
+                    timeline=timeline if isinstance(timeline, dict) else None,
+                    notes=notes.strip() if isinstance(notes, str) and notes.strip() else None,
+                )
+                self._json(200, res)
+            except Exception as exc:  # noqa: BLE001
+                self._json(500, {"error": f"{type(exc).__name__} during escalation generation"})
             return
 
         text = payload.get("text")
