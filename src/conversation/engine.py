@@ -112,11 +112,14 @@ class ConversationEngine:
         question: str,
         session_id: str | None = None,
         case_id: str | None = None,
+        evidence: dict[str, Any] | None = None,
+        timeline: dict[str, Any] | None = None,
+        evidence_source: str | None = None,
     ) -> ChatResponse:
         """Process a user question and return the assistant's response.
 
         If session_id is provided, reuses that session. Otherwise creates
-        a new one, optionally loading the specified case.
+        a new one, optionally loading the specified case or evidence.
         """
         # Resolve or create session.
         session: Session | None = None
@@ -129,6 +132,14 @@ class ConversationEngine:
             # Load a different case into the existing session.
             self._load_case(session, case_id)
 
+        # If active evidence was supplied with the request, ground session in it
+        if evidence and isinstance(evidence, dict):
+            session.set_evidence_context(
+                evidence=evidence,
+                timeline=timeline if isinstance(timeline, dict) else None,
+                source_name=evidence_source or "analyzed case evidence",
+            )
+
         # If user pasted log text directly into the chat prompt, run extractor automatically
         if ("\n" in question or "SEC-" in question or "NSM-" in question) and len(question) > 60:
             ev = extract_all(question, source="pasted chat logs")
@@ -139,7 +150,7 @@ class ConversationEngine:
                 session.platform = ev.platforms[0].value
             if ev.errors:
                 session.symptom_text = ", ".join(e.value for e in ev.errors[:3])
-            session.data_source = "uploaded/pasted log"
+            session.data_source = "pasted log input"
 
         # Build the prompt.
         messages = build_messages(session, question)

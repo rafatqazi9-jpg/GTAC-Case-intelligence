@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    /* Color Palette - Modern Dark TAC Console (Default) */
+    /* Color Palette - Enterprise Dark TAC Console */
     --ground: #080d1a;
     --surface: #0f172a;
     --surface-elevated: #162038;
@@ -100,7 +100,7 @@
     background: var(--ground);
     color: var(--ink);
     font-family: var(--sans);
-    font-size: 13.5px;
+    font-size: 13px;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -115,39 +115,39 @@
     z-index: 50;
     background: var(--surface);
     border-bottom: 1px solid var(--line);
-    padding: 12px 28px;
+    padding: 10px 24px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   }
 
   .header-brand {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
   }
 
   .brand-logo {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     border-radius: var(--radius-md);
     background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 50%, #60a5fa 100%);
     box-shadow: 0 0 16px rgba(59, 130, 246, 0.4);
     color: #fff;
     font-weight: 800;
-    font-size: 15px;
+    font-size: 14px;
     letter-spacing: -0.05em;
   }
 
   .brand-text h1 {
     margin: 0;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 700;
     letter-spacing: -0.02em;
     color: var(--ink-bright);
@@ -156,21 +156,10 @@
     gap: 8px;
   }
 
-  .brand-text h1 .badge-ver {
-    font-family: var(--mono);
-    font-size: 10.5px;
-    font-weight: 600;
-    padding: 2px 7px;
-    border-radius: var(--radius-full);
-    background: var(--accent-soft);
-    color: var(--accent);
-    border: 1px solid var(--accent);
-  }
-
   .brand-text .sub {
     font-size: 11.5px;
     color: var(--ink-secondary);
-    margin-top: 2px;
+    margin-top: 1px;
   }
 
   .header-meta {
@@ -186,7 +175,7 @@
     gap: 6px;
     font-family: var(--mono);
     font-size: 11px;
-    padding: 5px 10px;
+    padding: 4px 10px;
     border-radius: var(--radius-full);
     background: var(--surface-elevated);
     border: 1px solid var(--line);
@@ -201,35 +190,40 @@
     box-shadow: 0 0 8px var(--clear);
     animation: pulse 2s infinite ease-in-out;
   }
+  .pulse-dot.offline {
+    background: var(--critical);
+    box-shadow: 0 0 8px var(--critical);
+    animation: none;
+  }
 
   @keyframes pulse {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.4; transform: scale(0.8); }
   }
 
-  .privacy {
+  .privacy-chip {
     font-family: var(--mono);
     font-size: 11px;
     color: var(--clear);
     background: var(--clear-soft);
     border: 1px solid var(--clear-line);
     border-radius: var(--radius-full);
-    padding: 5px 11px;
+    padding: 4px 10px;
   }
 
   .theme-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
     padding: 0;
     border-radius: var(--radius-md);
     background: var(--surface-elevated);
     border: 1px solid var(--line);
     color: var(--ink);
     cursor: pointer;
-    font-size: 15px;
+    font-size: 14px;
     transition: all 0.15s ease;
   }
   .theme-toggle:hover {
@@ -240,42 +234,42 @@
   /* ------------------------------------------------------------- Workspace Layout */
   .workspace {
     display: grid;
-    grid-template-columns: minmax(560px, 1.25fr) minmax(440px, 1fr);
-    gap: 24px;
-    width: min(1820px, 100%);
+    grid-template-columns: minmax(600px, 1.35fr) minmax(440px, 1fr);
+    gap: 20px;
+    width: min(1880px, 100%);
     margin: 0 auto;
-    padding: 20px 24px 48px;
+    padding: 18px 22px 48px;
     align-items: start;
   }
 
-  @media (max-width: 1140px) {
+  @media (max-width: 1180px) {
     .workspace {
       grid-template-columns: 1fr;
-      padding: 16px;
+      padding: 14px;
     }
   }
 
   .diagnostic-column {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
     min-width: 0;
   }
 
   .copilot-column {
     position: sticky;
-    top: 76px;
-    height: calc(100vh - 96px);
+    top: 66px;
+    height: calc(100vh - 86px);
     min-height: 640px;
     display: flex;
     flex-direction: column;
     min-width: 0;
   }
 
-  @media (max-width: 1140px) {
+  @media (max-width: 1180px) {
     .copilot-column {
       position: static;
-      height: 680px;
+      height: 700px;
     }
   }
 
@@ -289,11 +283,11 @@
     transition: border-color 0.2s ease;
   }
   .panel:hover {
-    border-color: rgba(59, 130, 246, 0.4);
+    border-color: rgba(59, 130, 246, 0.35);
   }
 
   .ph {
-    padding: 14px 20px;
+    padding: 12px 18px;
     background: var(--surface);
     border-bottom: 1px solid var(--line);
     display: flex;
@@ -317,20 +311,20 @@
 
   .ph .sub {
     margin: 2px 0 0;
-    font-size: 12px;
+    font-size: 11.5px;
     color: var(--ink-secondary);
   }
 
   .pb {
-    padding: 20px;
+    padding: 18px;
   }
 
   /* ------------------------------------------------------------- Forms & Buttons */
   textarea {
     width: 100%;
-    min-height: 220px;
+    min-height: 180px;
     resize: vertical;
-    padding: 14px 16px;
+    padding: 12px 14px;
     font-family: var(--mono);
     font-size: 12px;
     line-height: 1.6;
@@ -351,11 +345,11 @@
 
   button {
     font-family: var(--sans);
-    font-size: 12.5px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     border-radius: var(--radius-sm);
-    padding: 8px 14px;
+    padding: 7px 13px;
     border: 1px solid var(--line);
     background: var(--surface-elevated);
     color: var(--ink);
@@ -390,7 +384,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 8px 14px;
+    padding: 7px 13px;
     font-size: 12px;
     font-weight: 600;
     color: #ffffff !important;
@@ -417,8 +411,8 @@
     border: 1px solid transparent;
     background: transparent;
     color: var(--ink-secondary);
-    padding: 5px 9px;
-    font-size: 11.5px;
+    padding: 4px 8px;
+    font-size: 11px;
   }
   button.link:hover {
     color: var(--accent);
@@ -437,8 +431,8 @@
   .modes button {
     border: 0;
     border-radius: 4px;
-    font-size: 11.5px;
-    padding: 5px 10px;
+    font-size: 11px;
+    padding: 4px 9px;
     background: transparent;
     color: var(--ink-secondary);
   }
@@ -455,7 +449,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 14px;
+    margin-top: 12px;
     flex-wrap: wrap;
   }
   .hint {
@@ -463,6 +457,29 @@
     font-size: 11px;
     color: var(--ink-faint);
     margin-left: auto;
+  }
+
+  /* Ingestion Mode Tabs */
+  .ingestion-tabs {
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+  }
+  .tab-btn {
+    border: 1px solid var(--line);
+    background: var(--surface-elevated);
+    color: var(--ink-secondary);
+    padding: 6px 14px;
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .tab-btn.active {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
   }
 
   /* ------------------------------------------------------------- Dropzone */
@@ -474,8 +491,7 @@
     gap: 10px;
     border: 2px dashed var(--line);
     border-radius: var(--radius-md);
-    padding: 28px 20px;
-    margin-top: 18px;
+    padding: 24px 20px;
     background: var(--surface-elevated);
     text-align: center;
     cursor: pointer;
@@ -487,27 +503,27 @@
     box-shadow: 0 0 16px var(--accent-glow);
   }
   .dropzone-icon {
-    font-size: 32px;
+    font-size: 28px;
     line-height: 1;
     filter: drop-shadow(0 2px 8px rgba(59, 130, 246, 0.4));
   }
   .dropzone-title {
-    font-size: 13.5px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--ink-bright);
   }
   .dropzone-formats {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 10.5px;
     color: var(--ink-secondary);
   }
 
   .upload-status-bar {
     display: none;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     margin-top: 14px;
-    padding: 14px;
+    padding: 14px 16px;
     border-radius: var(--radius-md);
     background: var(--surface-elevated);
     border: 1px solid var(--line);
@@ -524,7 +540,7 @@
     flex-direction: column;
     gap: 5px;
     margin-top: 8px;
-    max-height: 200px;
+    max-height: 180px;
     overflow-y: auto;
     font-family: var(--mono);
     font-size: 11px;
@@ -532,7 +548,7 @@
   .archive-entry-row {
     display: flex;
     justify-content: space-between;
-    padding: 6px 9px;
+    padding: 5px 9px;
     border-radius: var(--radius-sm);
     background: var(--surface);
     border: 1px solid var(--line);
@@ -543,154 +559,128 @@
 
   /* ------------------------------------------------------------- Investigation Report Output */
   #out {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-    padding: 20px;
-    align-items: start;
-  }
-  #out > .overview, #out > .empty, #out > .err {
-    grid-column: 1 / -1;
-  }
-  #out > section.res {
-    min-width: 0;
-    margin: 0;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    padding: 16px 18px;
-    background: var(--surface-elevated);
-    overflow-wrap: anywhere;
-  }
-  #out > section.res:has(table),
-  #out > section.res.ver {
-    grid-column: 1 / -1;
-  }
-
-  .overview {
-    grid-column: 1 / -1;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    padding: 18px 20px;
-    background: var(--surface-elevated);
-  }
-  .overview-title {
-    font-size: 11px;
-    font-weight: 750;
-    letter-spacing: 0.12em;
-    color: var(--ink-secondary);
-    margin-bottom: 14px;
-    text-transform: uppercase;
-  }
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 12px;
-  }
-  @media (max-width: 768px) {
-    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
-  .stat {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 14px 16px;
+    gap: 18px;
+    padding: 18px;
+  }
+
+  .report-section {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface-elevated);
+    padding: 16px 18px;
+    overflow-wrap: anywhere;
+  }
+  .report-section.summary-sec { border-left: 4px solid var(--accent); }
+  .report-section.timeline-sec { border-left: 4px solid var(--info-cyan); }
+  .report-section.evidence-sec { border-left: 4px solid var(--trap); }
+  .report-section.hypotheses-sec { border-left: 4px solid #a855f7; }
+  .report-section.actions-sec { border-left: 4px solid var(--clear); }
+  .report-section.escalation-sec { border-left: 4px solid #6366f1; }
+
+  .sec-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line-subtle);
+    flex-wrap: wrap;
+  }
+  .sec-header h3 {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-bright);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sec-header .badge-tag {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    padding: 2px 7px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-secondary);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+  @media (max-width: 768px) {
+    .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  .stat-card {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 12px 14px;
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
     background: var(--surface);
     transition: transform 0.15s ease;
   }
-  .stat:hover { transform: translateY(-2px); }
-  .stat.caution { border-top: 3px solid var(--trap); }
-  .stat.positive { border-top: 3px solid var(--clear); }
+  .stat-card:hover { transform: translateY(-2px); }
+  .stat-card.caution { border-top: 3px solid var(--trap); }
+  .stat-card.positive { border-top: 3px solid var(--clear); }
   .stat-label {
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 600;
     color: var(--ink-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
   .stat-value {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 700;
     letter-spacing: -0.04em;
     color: var(--ink-bright);
     line-height: 1.2;
   }
   .stat-note {
-    font-size: 11px;
+    font-size: 10.5px;
     color: var(--ink-faint);
   }
-  .overview-status {
-    margin: 14px 0 0;
-    font-size: 12.5px;
-    color: var(--ink-secondary);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
 
-  .rh {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    margin-bottom: 12px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--line-subtle);
-  }
-  .rh h3 {
-    margin: 0;
-    font-size: 11.5px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-bright);
-  }
-  .rh .n {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--ink-faint);
-  }
-  .rh.gaps h3 { color: var(--trap); }
-  .rh.missing h3 { color: var(--critical); }
-  .rh.ver h3 { color: var(--clear); }
-
-  .big {
-    font-family: var(--mono);
-    font-size: 24px;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    color: var(--clear);
-  }
-  .none {
-    font-size: 12.5px;
-    color: var(--ink-secondary);
-    font-style: italic;
-  }
-
-  .item {
+  /* Item rows */
+  .evidence-row {
     padding: 10px 0;
     border-top: 1px solid var(--line-subtle);
   }
-  .item:first-of-type { border-top: 0; }
-  .item .top {
+  .evidence-row:first-of-type { border-top: 0; }
+  .evidence-top {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     align-items: center;
     flex-wrap: wrap;
   }
-  .item .lbl {
+  .ev-badge {
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    border: 1px solid var(--line);
     color: var(--ink-faint);
-    min-width: 65px;
   }
-  .item .val {
+  .ev-value {
     font-family: var(--mono);
     font-size: 12.5px;
     color: var(--ink-bright);
-    overflow-wrap: anywhere;
+    font-weight: 500;
   }
-  .item .conf {
+  .conf-badge {
     font-family: var(--mono);
     font-size: 9.5px;
     text-transform: uppercase;
@@ -700,44 +690,18 @@
     padding: 1px 6px;
     background: var(--surface);
   }
-  .item .ev {
+  .ev-quote {
     display: block;
     font-size: 11.5px;
     color: var(--ink-secondary);
     margin-top: 4px;
-    padding-left: 75px;
-    overflow-wrap: anywhere;
-  }
-  @media (max-width: 560px) { .item .ev { padding-left: 0; } }
-
-  /* Device Inventory Table */
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    font-size: 12.5px;
-  }
-  th, td {
-    text-align: left;
-    padding: 8px 12px;
-    border-bottom: 1px solid var(--line-subtle);
-  }
-  th {
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    background: var(--surface);
-  }
-  td {
-    font-family: var(--mono);
-    font-size: 12px;
-  }
-  tbody tr:hover {
-    background: var(--surface-hover);
+    padding-left: 12px;
+    border-left: 2px solid var(--line);
+    font-style: italic;
   }
 
   /* Log analysis & severities */
-  .sevrow { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .sevrow { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
   .sev {
     font-family: var(--mono);
     font-size: 10.5px;
@@ -753,18 +717,23 @@
     border-color: var(--critical-line);
     font-weight: 600;
   }
+  .sev.warn {
+    background: var(--trap-soft);
+    color: var(--trap);
+    border-color: var(--trap-line);
+  }
   .logline {
     display: flex;
     justify-content: space-between;
     gap: 12px;
-    padding: 8px 0;
+    padding: 6px 0;
     border-top: 1px solid var(--line-subtle);
     align-items: flex-start;
   }
   .logline:first-of-type { border-top: 0; }
   .logline .m {
     font-family: var(--mono);
-    font-size: 12px;
+    font-size: 11.5px;
     color: var(--ink);
     overflow-wrap: anywhere;
     line-height: 1.5;
@@ -772,7 +741,7 @@
   .logline .c {
     font-family: var(--mono);
     font-weight: 600;
-    font-size: 11px;
+    font-size: 10.5px;
     color: var(--trap);
     background: var(--trap-soft);
     padding: 1px 6px;
@@ -780,18 +749,13 @@
     white-space: nowrap;
   }
 
-  /* Evidence Checklist */
-  #out > section.res.checklist {
-    grid-column: 1 / -1;
-    border-left: 4px solid var(--trap);
-    background: var(--surface-elevated);
-  }
-  .evidence-checklist {
+  /* Action checklist */
+  .actions-list {
     display: grid;
-    gap: 8px;
-    margin-top: 12px;
+    gap: 10px;
+    margin-top: 10px;
   }
-  .checklist-item {
+  .action-item {
     display: flex;
     align-items: flex-start;
     gap: 12px;
@@ -799,50 +763,69 @@
     border-radius: var(--radius-md);
     background: var(--surface);
     border: 1px solid var(--line-subtle);
+    border-left: 3px solid var(--clear);
   }
-  .checklist-number {
+  .action-number {
     display: flex;
-    flex: 0 0 26px;
-    height: 26px;
+    flex: 0 0 24px;
+    height: 24px;
     align-items: center;
     justify-content: center;
     border-radius: var(--radius-sm);
-    background: var(--trap-soft);
-    color: var(--trap);
-    font-size: 12px;
+    background: var(--clear-soft);
+    color: var(--clear);
+    font-size: 11px;
     font-weight: 700;
   }
-  .checklist-body {
+  .action-content {
     display: grid;
-    gap: 4px;
+    gap: 6px;
+    flex: 1;
     min-width: 0;
   }
-  .checklist-category {
-    color: var(--ink-faint);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .checklist-text {
+  .action-title {
     color: var(--ink-bright);
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 600;
-    overflow-wrap: anywhere;
   }
-  .checklist-status {
-    width: fit-content;
+  .action-cli-wrapper {
+    position: relative;
+    background: var(--ground);
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
-    padding: 2px 7px;
-    color: var(--ink-secondary);
+    padding: 8px 12px;
+  }
+  .action-cli {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--accent-hover);
+    white-space: pre-wrap;
+    overflow-x: auto;
+  }
+  .btn-copy-cli {
+    position: absolute;
+    top: 6px;
+    right: 6px;
     font-size: 10.5px;
+    padding: 3px 7px;
+    border-radius: 4px;
     background: var(--surface-elevated);
+    border: 1px solid var(--line);
+    color: var(--ink-secondary);
+    cursor: pointer;
+  }
+  .btn-copy-cli:hover {
+    color: var(--accent-hover);
+    border-color: var(--accent);
+  }
+  .action-note {
+    font-size: 11px;
+    color: var(--ink-secondary);
   }
 
   /* ------------------------------------------------------------- Copilot Chat Panel */
   .chat-panel {
-    grid-column: auto;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -851,15 +834,14 @@
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-card);
     overflow: hidden;
-    margin-top: 0;
   }
   .chat-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 12px;
-    padding: 14px 20px;
+    gap: 10px;
+    padding: 12px 18px;
     border-bottom: 1px solid var(--line);
     background: var(--surface);
   }
@@ -869,51 +851,58 @@
     gap: 10px;
   }
   .copilot-avatar {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     border-radius: var(--radius-md);
     background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    font-size: 15px;
-    box-shadow: 0 0 14px rgba(99, 102, 241, 0.45);
+    font-size: 14px;
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
   }
   .chat-badge {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 600;
     padding: 3px 8px;
     border-radius: var(--radius-full);
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+  }
+  .chat-badge.ungrounded {
+    background: var(--surface-elevated);
+    color: var(--ink-faint);
+    border-color: var(--line);
+  }
+  .chat-badge.grounded {
     background: var(--clear-soft);
     color: var(--clear);
-    border: 1px solid var(--clear-line);
+    border-color: var(--clear-line);
   }
 
   .chat-body {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 20px;
+    gap: 14px;
+    padding: 16px;
     flex: 1 1 auto;
     overflow-y: auto;
-    max-height: none;
-    min-height: 250px;
     background: var(--ground);
   }
 
   .chat-msg {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    max-width: 85%;
-    padding: 14px 18px;
+    gap: 5px;
+    max-width: 88%;
+    padding: 12px 16px;
     border-radius: var(--radius-md);
-    font-size: 13.5px;
+    font-size: 13px;
     line-height: 1.6;
     word-break: break-word;
-    position: relative;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
   .chat-msg.user {
@@ -930,34 +919,31 @@
     border-bottom-left-radius: 2px;
   }
   .chat-msg-role {
-    font-size: 10px;
+    font-size: 9.5px;
     font-weight: 750;
-    letter-spacing: 0.09em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     opacity: 0.75;
-    margin-bottom: 2px;
   }
   .chat-msg.user .chat-msg-role { color: rgba(255, 255, 255, 0.9); }
   .chat-msg.assistant .chat-msg-role { color: var(--accent); }
 
-  /* Rendered formatting inside copilot messages */
   .chat-msg.assistant pre {
     background: var(--surface-elevated);
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
-    padding: 10px 14px;
+    padding: 10px 12px;
     overflow-x: auto;
     font-family: var(--mono);
-    font-size: 12px;
+    font-size: 11.5px;
     margin: 8px 0;
-    position: relative;
   }
   .chat-msg.assistant code {
     background: var(--surface-elevated);
     padding: 2px 5px;
     border-radius: 4px;
     font-family: var(--mono);
-    font-size: 12px;
+    font-size: 11.5px;
   }
   .chat-msg.assistant pre code {
     background: transparent;
@@ -974,8 +960,8 @@
     flex-wrap: wrap;
   }
   .prompt-chip {
-    font-size: 11.5px;
-    padding: 4px 10px;
+    font-size: 11px;
+    padding: 4px 9px;
     border-radius: var(--radius-full);
     background: var(--surface-elevated);
     border: 1px solid var(--line);
@@ -991,19 +977,20 @@
 
   .chat-controls {
     display: flex;
-    gap: 12px;
-    padding: 14px 20px;
+    gap: 10px;
+    padding: 12px 16px;
     border-top: 1px solid var(--line);
     background: var(--surface);
+    align-items: flex-end;
   }
   .chat-controls textarea {
     flex: 1;
-    min-height: 48px;
-    max-height: 130px;
+    min-height: 44px;
+    max-height: 120px;
     resize: vertical;
-    padding: 10px 14px;
+    padding: 10px 12px;
     font-family: inherit;
-    font-size: 13px;
+    font-size: 12.5px;
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
     background: var(--surface-elevated);
@@ -1013,44 +1000,21 @@
   .btn-attach-log {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 12px;
-    font-size: 12px;
+    gap: 5px;
+    padding: 8px 11px;
+    font-size: 11.5px;
     font-weight: 600;
     color: var(--accent);
     background: var(--surface-elevated);
     border: 1px solid var(--accent);
     border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: all 0.15s ease;
     white-space: nowrap;
-    align-self: flex-end;
   }
   .btn-attach-log:hover {
     background: var(--accent-soft);
     color: var(--accent-hover);
-    box-shadow: 0 0 10px var(--accent-glow);
     border-color: var(--accent-hover);
-  }
-  .btn-upload-logs {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 14px;
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--accent);
-    background: var(--surface-elevated);
-    border: 1px solid var(--accent);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-  .btn-upload-logs:hover {
-    background: var(--accent-soft);
-    color: var(--accent-hover);
-    border-color: var(--accent-hover);
-    box-shadow: 0 0 10px var(--accent-glow);
   }
   .chat-panel.dragover {
     border: 2px dashed var(--accent) !important;
@@ -1060,7 +1024,7 @@
 
   /* ------------------------------------------------------------- Empty & Error States */
   .empty {
-    padding: 48px 24px;
+    padding: 42px 20px;
     text-align: center;
     color: var(--ink-secondary);
     font-size: 13px;
@@ -1073,20 +1037,20 @@
     margin-bottom: 6px;
   }
   .err {
-    margin: 14px 18px;
+    margin: 12px 16px;
     padding: 12px 16px;
     background: var(--critical-soft);
     border-left: 4px solid var(--critical);
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     color: var(--critical);
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 500;
   }
 
   footer {
-    padding: 24px 28px 48px;
+    padding: 20px 24px 40px;
     color: var(--ink-faint);
-    font-size: 11.5px;
+    font-size: 11px;
     max-width: 120ch;
     margin: 0 auto;
     text-align: center;
@@ -1101,80 +1065,88 @@
     <div class="brand-logo">GT</div>
     <div class="brand-text">
       <h1>GTAC AI Assistant</h1>
+      <div class="sub">AI-Powered Network Troubleshooting and Case Intelligence</div>
     </div>
   </div>
   <div class="header-meta">
-    <span class="telemetry-chip"><span class="pulse-dot"></span> Engine Online</span>
-    <span class="privacy">127.0.0.1 Air-Gapped &middot; Zero Data Retention</span>
-    <button type="button" class="btn-escalation" id="header-escalation-btn" title="Export Tier 3 / Defect Engineering Escalation Brief">📋 Export Escalation Brief</button>
+    <span class="telemetry-chip" id="health-telemetry"><span class="pulse-dot" id="health-dot"></span> <span id="health-text">Loopback: checking…</span></span>
+    <span class="telemetry-chip" id="provider-telemetry">LLM: In-Memory Engine</span>
+    <span class="privacy-chip" id="retention-chip">Zero Permanent Retention</span>
     <button type="button" class="theme-toggle" id="theme-btn" title="Toggle Light / Dark mode" aria-label="Toggle Theme">🌙</button>
   </div>
 </header>
 
 <main class="workspace">
-  <!-- Left Column: Diagnostic Studio & Investigation Canvas -->
+  <!-- Left Column: Diagnostic Studio & Investigation Workspace -->
   <div class="diagnostic-column">
-    <!-- Ingestion & Case Evidence Input -->
+    
+    <!-- Case & Log Ingestion Hub (Accessible Ingestion Workflow) -->
     <section class="panel input-panel" aria-labelledby="input-title">
       <div class="ph">
         <div>
-          <h2 id="input-title">CASE &amp; LOG INGESTION</h2>
-          <p class="sub">Upload diagnostic archives (.zip, .tgz, .tar.gz) or paste raw CLI outputs and system logs.</p>
+          <h2 id="input-title">CASE &amp; LOG INGESTION HUB</h2>
+          <p class="sub">Ingest diagnostic archives (.zip, .tgz, .tar.gz) or paste CLI dumps and syslog data.</p>
         </div>
-        <div class="sample-actions">
-          <button type="button" class="link" data-sample="sample_case.txt">Sample case</button>
-          <button type="button" class="link" data-sample="sample_raslog.txt">Sample log</button>
+        <div class="sample-actions" style="display:flex;gap:6px">
+          <button type="button" class="link" data-sample="sample_case.txt">Sample Case</button>
+          <button type="button" class="link" data-sample="sample_raslog.txt">Sample Log</button>
           <button type="button" class="link" id="clear">Clear</button>
         </div>
       </div>
       <div class="pb">
-        <label for="text" class="sub" style="display:block;margin-bottom:6px">Raw Diagnostic Output or Case Text:</label>
-        <textarea id="text" spellcheck="false" placeholder="Paste case details, symptoms, CLI output (e.g., 'show ip bgp summary'), or logs here..."></textarea>
-        
-        <div class="input-controls">
-          <div class="modes" role="group" aria-label="Analysis mode">
-            <button type="button" data-mode="both" aria-pressed="true">Case + logs</button>
-            <button type="button" data-mode="case" aria-pressed="false">Case text</button>
-            <button type="button" data-mode="log" aria-pressed="false">Logs only</button>
-          </div>
-          <button type="button" class="primary" id="run">Analyze Evidence</button>
-          <button type="button" class="btn-upload-logs" id="btn-trigger-upload" title="Upload diagnostic archive (.zip, .tgz, .tar.gz, .xz, .log)">📁 Upload Logs</button>
-          <button type="button" class="btn-escalation" id="export-escalation-btn" title="Export Tier 3 / Defect Engineering Escalation Brief from Input">📋 Export Escalation Brief</button>
-          <span class="hint" id="size"></span>
+        <!-- Ingestion Tabs: Archive Upload vs Raw Text -->
+        <div class="ingestion-tabs" role="tablist">
+          <button type="button" class="tab-btn active" id="tab-btn-archive" role="tab" aria-selected="true" aria-controls="view-archive">📁 Diagnostic Archive Upload</button>
+          <button type="button" class="tab-btn" id="tab-btn-text" role="tab" aria-selected="false" aria-controls="view-text">📝 Raw CLI &amp; Log Text</button>
         </div>
 
-        <!-- Multi-Format Diagnostic Archive & Log Upload Zone at Bottom -->
-        <div class="dropzone" id="upload-dropzone" tabindex="0" role="button" aria-label="Upload network logs or diagnostic archives" style="margin-top:14px;padding:16px 20px">
-          <input type="file" id="file-input" multiple accept=".log,.txt,.out,.dump,.zip,.tar,.gz,.tgz,.bz2,.tbz2,.xz,.txz" style="display:none">
-          <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap">
-            <span class="dropzone-icon" style="font-size:22px">📁</span>
+        <!-- Archive Upload View -->
+        <div id="view-archive" role="tabpanel">
+          <div class="dropzone" id="upload-dropzone" tabindex="0" role="button" aria-label="Upload network logs or diagnostic archives">
+            <input type="file" id="file-input" multiple accept=".log,.txt,.out,.dump,.zip,.tar,.gz,.tgz,.bz2,.tbz2,.xz,.txz" style="display:none">
+            <span class="dropzone-icon">📁</span>
             <div>
-              <span class="dropzone-title" style="font-size:12.5px">Drop diagnostic archives or log files here, or click to browse</span>
-              <span class="dropzone-formats" style="display:block;font-size:10.5px;margin-top:2px">Supported: .log, .txt, .out, .dump, .zip, .tar, .tar.gz, .tgz, .tar.bz2, .tar.xz, .gz, .bz2, .xz</span>
+              <div class="dropzone-title">Drop diagnostic archives or log files here, or click to browse</div>
+              <div class="dropzone-formats" style="margin-top:4px">Supported: .zip, .tgz, .tar.gz, .tar.bz2, .tar.xz, .log, .txt, .out, .dump</div>
             </div>
+          </div>
+
+          <div class="upload-status-bar" id="upload-status-bar">
+            <div class="upload-status-header">
+              <span id="upload-filename">Processing archive…</span>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="chat-badge" id="upload-badge">Decompressing</span>
+              </div>
+            </div>
+            <div class="sub" id="upload-details">Inspecting archive structure and validating safe extraction…</div>
+            <div class="archive-tree" id="archive-tree"></div>
           </div>
         </div>
 
-        <div class="upload-status-bar" id="upload-status-bar">
-          <div class="upload-status-header">
-            <span id="upload-filename">Processing archive…</span>
-            <div style="display:flex;align-items:center;gap:8px">
-              <span class="chat-badge" id="upload-badge">Decompressing</span>
-              <button type="button" class="btn-escalation" id="upload-escalation-btn" style="padding:4px 9px;font-size:11px" title="Export escalation package from uploaded archive">📋 Export Brief</button>
+        <!-- Raw Text View -->
+        <div id="view-text" role="tabpanel" style="display:none">
+          <label for="text" class="sub" style="display:block;margin-bottom:6px">Raw Diagnostic Output or Case Text:</label>
+          <textarea id="text" spellcheck="false" placeholder="Paste case details, symptoms, CLI output (e.g., 'show ip bgp summary'), or logs here..."></textarea>
+          
+          <div class="input-controls">
+            <div class="modes" role="group" aria-label="Analysis mode">
+              <button type="button" data-mode="both" aria-pressed="true">Case + logs</button>
+              <button type="button" data-mode="case" aria-pressed="false">Case text</button>
+              <button type="button" data-mode="log" aria-pressed="false">Logs only</button>
             </div>
+            <button type="button" class="primary" id="run">Analyze Evidence</button>
+            <span class="hint" id="size"></span>
           </div>
-          <div class="sub" id="upload-details">Inspecting archive structure and validating entries...</div>
-          <div class="archive-tree" id="archive-tree"></div>
         </div>
       </div>
     </section>
 
-    <!-- Investigation Report & RCA Panel -->
+    <!-- Investigation Report & RCA Panel (Primary Workspace) -->
     <section class="panel report-panel" aria-labelledby="report-title">
       <div class="ph">
         <div>
-          <h2 id="report-title">INVESTIGATION REPORT &amp; RCA</h2>
-          <p class="sub">Structured evidence, timeline, and root cause analysis derived from the supplied data.</p>
+          <h2 id="report-title">INVESTIGATION REPORT &amp; ROOT CAUSE ANALYSIS</h2>
+          <p class="sub">Evidence-grounded diagnosis, causal timeline, and defect correlation across Extreme SLX-OS &amp; NOS devices.</p>
         </div>
         <div style="display:flex;align-items:center;gap:10px">
           <button type="button" class="btn-escalation" id="report-escalation-btn" title="Export Tier 3 / Defect Engineering Escalation Brief">📋 Export Escalation Brief</button>
@@ -1183,12 +1155,13 @@
       </div>
       <div id="out">
         <div class="empty">
-          <strong>Ready to investigate</strong>
+          <strong>Ready to Investigate</strong>
           <p>Drop a diagnostic archive, paste case logs, or load a sample above, then select <strong>Analyze Evidence</strong>.</p>
-          <p>The report will separate extracted findings from missing evidence without assuming an unverified root cause.</p>
+          <p>The report provides structured analysis across 6 sections: Summary, Timeline, Evidence, Hypotheses, Next Actions, and Escalation.</p>
         </div>
       </div>
     </section>
+
   </div>
 
   <!-- Right Column: GTAC AI Copilot Workstation -->
@@ -1199,24 +1172,25 @@
           <div class="copilot-avatar">✨</div>
           <div>
             <h2 id="chat-title" style="margin:0;font-size:12.5px;font-weight:700;letter-spacing:0.06em;color:var(--ink-bright)">GTAC COPILOT &middot; CONVERSATIONAL TROUBLESHOOTING</h2>
-            <p class="sub" style="margin:2px 0 0">Interactive diagnostic reasoning grounded in live log evidence.</p>
+            <p class="sub" style="margin:2px 0 0">Interactive diagnostic reasoning grounded in active analyzed evidence.</p>
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <span class="chat-badge" id="chat-data-source">Live Log Evidence</span>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span class="chat-badge ungrounded" id="chat-data-source">No Case Evidence</span>
           <span class="sub" id="chat-session-badge" style="font-family:var(--mono);font-size:11px">Session: new</span>
         </div>
       </div>
+
       <div class="chat-body" id="chat-messages" aria-live="polite">
         <div class="chat-msg assistant">
           <span class="chat-msg-role">GTAC Copilot</span>
-          <div>Hello! I am your AI Support Assistant.</div>
+          <div>Hello! I am your TAC Network Troubleshooting Assistant. Ingest logs or a diagnostic archive on the left, and I will reason through defect signatures, root causes, and recommended Extreme SLX/NOS CLI validation commands.</div>
         </div>
       </div>
 
-      <!-- Suggested Quick Prompts for TAC Engineers -->
+      <!-- Suggested Dynamic Quick Prompts for TAC Engineers -->
       <div class="quick-prompts" id="quick-prompts">
-        <span style="font-size:11px;color:var(--ink-faint);font-weight:600">Quick queries:</span>
+        <span style="font-size:11px;color:var(--ink-faint);font-weight:600">Suggested queries:</span>
         <button type="button" class="prompt-chip" data-query="What is the probable root cause based on these logs?">💬 Root Cause Analysis</button>
         <button type="button" class="prompt-chip" data-query="What next diagnostic CLI commands should I execute on the switch to confirm this issue?">🔍 Recommended CLI Commands</button>
         <button type="button" class="prompt-chip" data-query="Are there known defect traps or caveats for this software version and hardware platform?">⚠️ Known Defect Traps</button>
@@ -1227,7 +1201,7 @@
       <input type="file" id="chat-file-input" multiple accept=".log,.txt,.out,.dump,.zip,.tar,.gz,.tgz,.bz2,.tbz2,.xz,.txz" style="display:none">
       <div class="chat-controls">
         <button type="button" class="btn-attach-log" id="chat-upload-btn" title="Upload & attach diagnostic archive or log file (.zip, .tgz, .tar.gz, .log)">
-          <span>📎</span> Upload Logs
+          <span>📎</span> Attach Log
         </button>
         <textarea id="chat-input" placeholder="Ask a diagnostic question, test a hypothesis, or upload logs..." rows="2"></textarea>
         <button type="button" class="primary" id="chat-send" style="align-self:flex-end">Ask Copilot</button>
@@ -1237,9 +1211,9 @@
 </main>
 
 <!-- Escalation Package Modal -->
-<div id="escalation-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)">
-  <div style="background:var(--surface-card);border:1px solid var(--line);border-radius:var(--radius-lg);width:min(920px, 95vw);max-height:88vh;display:flex;flex-direction:column;box-shadow:var(--shadow-card);overflow:hidden">
-    <div style="padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+<div id="escalation-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:100;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)">
+  <div style="background:var(--surface-card);border:1px solid var(--line);border-radius:var(--radius-lg);width:min(940px, 95vw);max-height:88vh;display:flex;flex-direction:column;box-shadow:var(--shadow-card);overflow:hidden">
+    <div style="padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
       <div style="display:flex;align-items:center;gap:10px">
         <h2 style="margin:0;font-size:13px;font-weight:700;letter-spacing:0.04em;color:var(--ink-bright)">TIER 3 / DEFECT ENGINEERING ESCALATION BRIEF</h2>
         <span id="modal-readiness-badge" class="chat-badge">Ready for DE</span>
@@ -1250,23 +1224,22 @@
         <button type="button" class="link" id="close-escalation-modal" style="font-size:16px;padding:4px 8px;border-radius:var(--radius-sm)">&times;</button>
       </div>
     </div>
-    <div style="padding:20px;overflow-y:auto;flex:1;background:var(--ground)">
-      <pre id="escalation-markdown-view" style="margin:0;white-space:pre-wrap;font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--ink);background:var(--surface-elevated);padding:18px;border-radius:var(--radius-md);border:1px solid var(--line-subtle);overflow-x:auto"></pre>
+    <div style="padding:18px;overflow-y:auto;flex:1;background:var(--ground)">
+      <pre id="escalation-markdown-view" style="margin:0;white-space:pre-wrap;font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--ink);background:var(--surface-elevated);padding:16px;border-radius:var(--radius-md);border:1px solid var(--line-subtle);overflow-x:auto"></pre>
     </div>
   </div>
 </div>
 
 <footer>
-  Read-only &middot; The extractor operates locally over the text and diagnostic archives you supply &mdash; it
-  contacts no external system of record and writes nothing to permanent disk. Text submitted here
-  stays in memory for the duration of one request and is never logged. Nothing this tool produces is customer-facing.
+  Local Workspace &middot; Ingestion operates strictly in-memory over the supplied diagnostic logs &middot;
+  Zero permanent disk persistence &middot; Never transmits unredacted customer data to external systems.
 </footer>
 
 <script>
 (function () {
   "use strict";
 
-  // Theme Management
+  // ------------------------------------------------------------- Theme Management
   var themeBtn = document.getElementById("theme-btn");
   function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
@@ -1287,6 +1260,69 @@
     });
   }
 
+  // ------------------------------------------------------------- Real Backend Health Polling
+  function updateHealth() {
+    fetch("/api/health")
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var dot = document.getElementById("health-dot");
+        var text = document.getElementById("health-text");
+        var prov = document.getElementById("provider-telemetry");
+        var ret = document.getElementById("retention-chip");
+
+        if (dot && text) {
+          dot.className = "pulse-dot";
+          text.textContent = data.loopback_only ? "127.0.0.1 Loopback" : "Connected";
+        }
+        if (prov && data.provider) {
+          var provName = data.provider === "openai" ? "LLM: Active Provider" : "LLM: Mock Offline";
+          prov.textContent = provName;
+        }
+        if (ret && data.retention) {
+          ret.textContent = "In-Memory · Zero Persistence";
+        }
+      })
+      .catch(function() {
+        var dot = document.getElementById("health-dot");
+        var text = document.getElementById("health-text");
+        if (dot && text) {
+          dot.className = "pulse-dot offline";
+          text.textContent = "Server Offline";
+        }
+      });
+  }
+  updateHealth();
+  setInterval(updateHealth, 30000);
+
+  // ------------------------------------------------------------- Ingestion Tabs
+  var tabArchive = document.getElementById("tab-btn-archive");
+  var tabText = document.getElementById("tab-btn-text");
+  var viewArchive = document.getElementById("view-archive");
+  var viewText = document.getElementById("view-text");
+
+  function switchTab(mode) {
+    if (mode === "archive") {
+      tabArchive.classList.add("active");
+      tabArchive.setAttribute("aria-selected", "true");
+      tabText.classList.remove("active");
+      tabText.setAttribute("aria-selected", "false");
+      viewArchive.style.display = "block";
+      viewText.style.display = "none";
+    } else {
+      tabText.classList.add("active");
+      tabText.setAttribute("aria-selected", "true");
+      tabArchive.classList.remove("active");
+      tabArchive.setAttribute("aria-selected", "false");
+      viewText.style.display = "block";
+      viewArchive.style.display = "none";
+    }
+  }
+
+  if (tabArchive && tabText) {
+    tabArchive.addEventListener("click", function() { switchTab("archive"); });
+    tabText.addEventListener("click", function() { switchTab("text"); });
+  }
+
   var $ = function (id) { return document.getElementById(id); };
   var mode = "both";
 
@@ -1297,378 +1333,375 @@
     return n;
   }
 
-  function section(title, count, cls) {
-    var s = el("section", "res");
-    var h = el("div", "rh" + (cls ? " " + cls : ""));
-    h.appendChild(el("h3", null, title));
-    if (count != null) h.appendChild(el("span", "n", String(count)));
-    s.appendChild(h);
-    return s;
-  }
-
-  function item(label, value, evidence, conf) {
-    var it = el("div", "item");
-    var top = el("div", "top");
-    top.appendChild(el("span", "lbl", label));
-    top.appendChild(el("span", "val", value));
-    if (conf) top.appendChild(el("span", "conf", conf));
-    it.appendChild(top);
-    if (evidence) it.appendChild(el("span", "ev", "“" + evidence + "”"));
-    return it;
-  }
-
-  /* ------------------------------------------------------------- render */
+  // ------------------------------------------------------------- Investigation Report Renderer (6 Sections)
   function render(data) {
     window._gtacLastAnalysis = data;
-    var expBtn = $("export-escalation-btn");
-    if (expBtn) expBtn.style.display = "inline-flex";
     var out = $("out");
-    out.textContent = "";
-    var ev = data.evidence, log = data.log;
-    var any = false;
+    out.replaceChildren();
 
-    if (ev) {
-      var overview = el("div", "overview");
-      overview.appendChild(el("div", "overview-title", "CASE AT A GLANCE"));
-      var stats = el("div", "stats");
+    var ev = data.evidence || {};
+    var log = data.log || null;
+    var timeline = window._gtacLastTimeline || null;
 
-      function addStat(label, value, note, tone) {
-        var card = el("div", "stat" + (tone ? " " + tone : ""));
-        card.appendChild(el("span", "stat-label", label));
-        card.appendChild(el("strong", "stat-value", String(value)));
-        card.appendChild(el("span", "stat-note", note));
-        stats.appendChild(card);
-      }
+    var errors = ev.errors || [];
+    var defects = ev.defects || [];
+    var platforms = ev.platforms || [];
+    var gaps = ev.gaps || [];
+    var missing = ev.missing || [];
+    var runningVer = ev.running_version ? ev.running_version.value : null;
 
-      addStat("Platforms", ev.platforms.length,
-        "Platforms mentioned in the input", "");
-      addStat("Reported symptoms", ev.errors.length,
-        "Error text to investigate", "");
-      addStat("Defect references", ev.defects.length,
-        "Applicability not yet confirmed", "caution");
-      addStat("Evidence gaps", ev.gaps.length + ev.missing.length,
-        "Collection issues and missing information",
-        ev.gaps.length + ev.missing.length ? "caution" : "positive");
+    // Determine primary subsystem & heuristic severity
+    var allSymptoms = errors.map(function(e) { return e.value || ""; }).join(" ");
+    var topMsgs = (log && log.top_messages) ? log.top_messages.map(function(m) { return m.message; }).join(" ") : "";
+    var rawInput = ($("text") ? $("text").value : "");
+    var combined = (allSymptoms + " " + topMsgs + " " + rawInput).toLowerCase();
 
-      overview.appendChild(stats);
+    var subsystem = "General Control Plane / System";
+    var severity = "MEDIUM";
+    var execSummary = "";
+    var nextActions = [];
 
-      var statusText = ev.running_version
-        ? "Running version identified: " + ev.running_version.value
-        : "Running version not established from the supplied evidence.";
-      overview.appendChild(el("p", "overview-status", statusText));
-      out.appendChild(overview);
+    if (/tcam|hal_err|asic|microcode|write failed|table full/.test(combined)) {
+      subsystem = "Hardware ASIC / TCAM Forwarding Pipeline";
+      severity = "CRITICAL";
+      execSummary = "Hardware forwarding table or TCAM entry exhaustion detected on the switch linecard/ASIC. Route updates or prefix withdrawal triggered microcode write timeout or resource allocation failure.";
+      nextActions = [
+        { action: "Verify TCAM / Hardware Table Allocations", cli: "show hardware profile\nshow table entry count", note: "Look for pipe/index exhaustion or allocation parity errors." },
+        { action: "Check Linecard and ASIC Pipeline Status", cli: "show linecard\nshow logging raslog rswitch | include (HAL|TCAM|ERR)", note: "Confirm if errors are localized to a specific slot or ASIC instance." },
+        { action: "Apply Non-Disruptive Route Batching Workaround", cli: "configure terminal\nrouter bgp\nbgp evpn route-batch off", note: "Mitigates microcode race condition prior to software maintenance upgrade." }
+      ];
+    } else if (/bgp|evpn|holdtimer|nlri|peer down|route withdraw/.test(combined)) {
+      subsystem = "BGP EVPN / Control Plane Routing";
+      severity = "HIGH";
+      execSummary = "BGP / EVPN protocol state churn detected. Peer holdtimer expiration or batch route withdrawal caused control-plane routing flaps and table recalculations.";
+      nextActions = [
+        { action: "Check BGP Peer Session Stability & Flap History", cli: "show ip bgp summary\nshow ip bgp neighbors", note: "Check uptime, last reset cause, and prefix received/dropped counts." },
+        { action: "Inspect System Logs for Routing Protocol Drops", cli: "show logging raslog | include (BGP|EVPN|NSM)", note: "Correlate timestamp with network event timeline." },
+        { action: "Verify Routing Table & CPU Utilization", cli: "show process cpu\nshow ip route summary", note: "Ensure high CPU is not delaying BGP keepalive packet processing." }
+      ];
+    } else if (/lacp|detached|churn|partner|port-channel/.test(combined)) {
+      subsystem = "Link Aggregation (LACP / Port-Channel)";
+      severity = "HIGH";
+      execSummary = "LACP partner out-of-sync or heartbeat detachment detected. Member link state transitions are causing port-channel degradation and bundle recalculations.";
+      nextActions = [
+        { action: "Inspect Port-Channel Member State", cli: "show port-channel detail\nshow lacp sys-id", note: "Verify member port operational flags and partner sync state." },
+        { action: "Check Physical Interface CRC & Flap Counters", cli: "show interface brief\nshow interface counters error", note: "Rule out physical cable or transceiver transmission degradation." },
+        { action: "Review LACP Timeout Configuration", cli: "show running-config interface port-channel", note: "Ensure LACP rate fast/slow timers match partner configuration." }
+      ];
+    } else if (/optical|sfp|ddm|rx low|tx power|fault|crc/.test(combined)) {
+      subsystem = "Physical Layer Optics & SFP+ Transceiver";
+      severity = "MEDIUM";
+      execSummary = "Optical transceiver signal alert or link-layer CRC error burst detected. Optical power readings suggest possible attenuation, dirty fiber, or failing transceiver.";
+      nextActions = [
+        { action: "Inspect Optical Transceiver DDM Telemetry", cli: "show media interface\nshow interface counters error", note: "Verify RX power (dBm), TX bias current, and operating temperature." },
+        { action: "Clean and Reseat Fiber Cables", cli: "show interface status", note: "Inspect physical patch panel and replace optic if RX power remains below -14 dBm." }
+      ];
+    } else {
+      var platNames = platforms.length ? platforms.map(function(p){return p.value;}).join(", ") : "Extreme Switch";
+      execSummary = "Diagnostic anomalies detected on " + platNames + (runningVer ? " running " + runningVer : "") + ". Observed symptoms indicate localized protocol or system state transitions that require validation against known defect signatures.";
+      nextActions = [
+        { action: "Collect Real-Time Diagnostic Baseline", cli: "show version\nshow running-config\nshow logging raslog", note: "Establish active baseline and verify uptime since last reload." },
+        { action: "Verify Hardware & System Health", cli: "show environment\nshow process cpu\nshow memory", note: "Confirm thermal, power supply, and control plane memory status." },
+        { action: "Generate Supportsave for DE Escalation", cli: "supportsave", note: "Collect complete archive before reload to preserve diagnostic core dumps and buffers." }
+      ];
     }
 
-    if (ev) {
-      var s = section("Running software version", null, "ver");
-      if (ev.running_version) {
-        s.appendChild(el("div", "big", ev.running_version.value));
-        s.appendChild(el("span", "ev", "“" + ev.running_version.evidence + "”"));
-      } else {
-        s.appendChild(el("p", "none",
-          "Not established — no line states the running release. A fix version "
-          + "in a release note is not a running version, so nothing was assumed."));
-      }
-      out.appendChild(s); any = true;
+    // ------------------------------------------------------------- Section 1: Summary
+    var sec1 = el("div", "report-section summary-sec");
+    var sec1Head = el("div", "sec-header");
+    sec1Head.appendChild(el("h3", null, "1. EXECUTIVE SUMMARY & VITALS"));
+    
+    var tagRow = el("div", null);
+    tagRow.style.display = "flex";
+    tagRow.style.gap = "8px";
+    
+    var subBadge = el("span", "badge-tag", "Subsystem: " + subsystem);
+    subBadge.style.color = "var(--accent)";
+    subBadge.style.borderColor = "var(--accent)";
+    tagRow.appendChild(subBadge);
 
-      [["Platforms", ev.platforms, "Platform"],
-       ["Defect IDs", ev.defects, "Defect"],
-       ["Observed symptoms / error signatures", ev.errors, "Symptom"]].forEach(function (g) {
-        if (!g[1].length) return;
-        var sec = section(g[0], g[1].length);
+    var sevBadge = el("span", "badge-tag", "Severity: " + severity);
+    if (severity === "CRITICAL") {
+      sevBadge.style.color = "var(--critical)";
+      sevBadge.style.borderColor = "var(--critical-line)";
+    } else {
+      sevBadge.style.color = "var(--trap)";
+      sevBadge.style.borderColor = "var(--trap-line)";
+    }
+    tagRow.appendChild(sevBadge);
+    sec1Head.appendChild(tagRow);
+    sec1.appendChild(sec1Head);
 
-        if (g[1] === ev.errors) {
-          sec.appendChild(el("p", "sub",
-            "These are symptoms or error text extracted from the supplied input. " +
-            "They are evidence to investigate, not confirmation of a root cause."));
-        }
+    var summaryText = el("p", null, execSummary);
+    summaryText.style.fontSize = "13px";
+    summaryText.style.margin = "0 0 12px";
+    sec1.appendChild(summaryText);
 
-        g[1].forEach(function (e) {
-          sec.appendChild(item(g[2], e.value, e.evidence, e.confidence));
-        });
-        out.appendChild(sec);
-      });
+    // Vitals grid
+    var grid = el("div", "stats-grid");
+    function addStat(label, val, note, tone) {
+      var c = el("div", "stat-card" + (tone ? " " + tone : ""));
+      c.appendChild(el("span", "stat-label", label));
+      c.appendChild(el("strong", "stat-value", String(val)));
+      c.appendChild(el("span", "stat-note", note));
+      grid.appendChild(c);
+    }
+    addStat("Platforms", platforms.length, platforms.map(function(p){return p.value;}).join(", ") || "None verified", "");
+    addStat("Running SW", runningVer || "Not established", ev.running_version ? "Confirmed in log" : "Missing baseline", runningVer ? "positive" : "caution");
+    addStat("Defect Hits", defects.length, "Candidate references", defects.length ? "caution" : "");
+    addStat("Evidence Gaps", gaps.length + missing.length, "Missing diagnostics", gaps.length + missing.length ? "caution" : "positive");
+    sec1.appendChild(grid);
+    out.appendChild(sec1);
 
-      // ------------------------------------------------------------- Issue Analysis & Next Steps Generator
-      var analysisData = (function() {
-        var allErrors = (ev.errors || []).map(function(e) { return e.value || ""; }).join(" ");
-        var topMsgs = (log && log.top_messages) ? log.top_messages.map(function(m) { return m.message; }).join(" ") : "";
-        var rawInput = ($("text") ? $("text").value : "");
-        var combinedText = (allErrors + " " + topMsgs + " " + rawInput).toLowerCase();
+    // ------------------------------------------------------------- Section 2: Timeline
+    var sec2 = el("div", "report-section timeline-sec");
+    var sec2Head = el("div", "sec-header");
+    var tlCount = (timeline && timeline.total_events) ? timeline.total_events + " events" : (log ? log.lines + " lines" : "Timeline");
+    sec2Head.appendChild(el("h3", null, "2. INCIDENT TIMELINE & EVENT FLOW"));
+    sec2Head.appendChild(el("span", "badge-tag", tlCount));
+    sec2.appendChild(sec2Head);
 
-        var subsystem = "General Control Plane / System";
-        var severity = "MEDIUM";
-        var summary = "";
-        var steps = [];
-
-        if (/tcam|hal_err|asic|microcode|write failed|table full/.test(combinedText)) {
-          subsystem = "Hardware ASIC / TCAM Forwarding Pipeline";
-          severity = "CRITICAL";
-          summary = "Hardware forwarding table or TCAM entry exhaustion detected on the switch linecard/ASIC. Route updates or prefix withdrawal triggered microcode write timeout or resource allocation failure.";
-          steps = [
-            { action: "Verify TCAM / Hardware Table Allocations", cli: "show hardware profile\nshow table entry count", note: "Look for pipe/index exhaustion or allocation parity errors." },
-            { action: "Check Linecard and ASIC Pipeline Status", cli: "show linecard\nshow logging raslog rswitch | include (HAL|TCAM|ERR)", note: "Confirm if errors are localized to a specific slot or ASIC instance." },
-            { action: "Apply Non-Disruptive Route Batching Workaround", cli: "configure terminal\nrouter bgp\nbgp evpn route-batch off", note: "Mitigates microcode race condition prior to software maintenance upgrade." }
-          ];
-        } else if (/bgp|evpn|holdtimer|nlri|peer down|route withdraw/.test(combinedText)) {
-          subsystem = "BGP EVPN / Control Plane Routing";
-          severity = "HIGH";
-          summary = "BGP / EVPN protocol state churn detected. Peer holdtimer expiration or batch route withdrawal caused control-plane routing flaps and table recalculations.";
-          steps = [
-            { action: "Check BGP Peer Session Stability & Flap History", cli: "show ip bgp summary\nshow ip bgp neighbors", note: "Check uptime, last reset cause, and prefix received/dropped counts." },
-            { action: "Inspect System Logs for Routing Protocol Drops", cli: "show logging raslog | include (BGP|EVPN|NSM)", note: "Correlate timestamp with network event timeline." },
-            { action: "Verify Routing Table & CPU Utilization", cli: "show process cpu\nshow ip route summary", note: "Ensure high CPU is not delaying BGP keepalive packet processing." }
-          ];
-        } else if (/lacp|detached|churn|partner|port-channel/.test(combinedText)) {
-          subsystem = "Link Aggregation (LACP / Port-Channel)";
-          severity = "HIGH";
-          summary = "LACP partner out-of-sync or heartbeat detachment detected. Member link state transitions are causing port-channel degradation and bundle recalculations.";
-          steps = [
-            { action: "Inspect Port-Channel Member State", cli: "show port-channel detail\nshow lacp sys-id", note: "Verify member port operational flags and partner sync state." },
-            { action: "Check Physical Interface CRC & Flap Counters", cli: "show interface brief\nshow interface counters error", note: "Rule out physical cable or transceiver transmission degradation." },
-            { action: "Review LACP Timeout Configuration", cli: "show running-config interface port-channel", note: "Ensure LACP rate fast/slow timers match partner configuration." }
-          ];
-        } else if (/optical|sfp|ddm|rx low|tx power|fault|crc/.test(combinedText)) {
-          subsystem = "Physical Layer Optics & SFP+ Transceiver";
-          severity = "MEDIUM";
-          summary = "Optical transceiver signal alert or link-layer CRC error burst detected. Optical power readings suggest possible attenuation, dirty fiber, or failing transceiver.";
-          steps = [
-            { action: "Inspect Optical Transceiver DDM Telemetry", cli: "show media interface\nshow interface counters error", note: "Verify RX power (dBm), TX bias current, and operating temperature." },
-            { action: "Clean and Reseat Fiber Cables", cli: "show interface status", note: "Inspect physical patch panel and replace optic if RX power remains below -14 dBm." }
-          ];
-        } else {
-          var plat = (ev.platforms && ev.platforms.length) ? ev.platforms.map(function(p){return p.value;}).join(", ") : "Extreme Switch";
-          var ver = ev.running_version ? ev.running_version.value : "Running release";
-          summary = "Diagnostic anomalies detected on " + plat + " running " + ver + ". Symptoms indicate localized protocol or system state transitions that require validation against known defect signatures.";
-          steps = [
-            { action: "Collect Real-Time Diagnostic Baseline", cli: "show version\nshow running-config\nshow logging raslog", note: "Establish active baseline and verify uptime since last reload." },
-            { action: "Verify Hardware & System Health", cli: "show environment\nshow process cpu\nshow memory", note: "Confirm thermal, power supply, and control plane memory status." },
-            { action: "Generate Supportsave for DE Escalation", cli: "supportsave", note: "Collect complete archive before reload to preserve diagnostic core dumps and buffers." }
-          ];
-        }
-
-        return {
-          subsystem: subsystem,
-          severity: severity,
-          summary: summary,
-          steps: steps
-        };
-      })();
-
-      // Render Issue Analysis & Summary Section
-      var analysisSec = section("ISSUE ANALYSIS & SUMMARY", null, "issue-analysis");
-      analysisSec.style.gridColumn = "1 / -1";
-      analysisSec.style.borderLeft = "4px solid var(--accent)";
-      analysisSec.style.background = "var(--surface-elevated)";
-
-      var analysisHeader = el("div", null);
-      analysisHeader.style.display = "flex";
-      analysisHeader.style.alignItems = "center";
-      analysisHeader.style.justifyContent = "space-between";
-      analysisHeader.style.marginBottom = "10px";
-      analysisHeader.style.flexWrap = "wrap";
-      analysisHeader.style.gap = "8px";
-
-      var subPill = el("span", "chat-badge", "Subsystem: " + analysisData.subsystem);
-      subPill.style.background = "var(--accent-soft)";
-      subPill.style.color = "var(--accent)";
-      subPill.style.borderColor = "var(--accent)";
-
-      var sevPill = el("span", "chat-badge", "Severity: " + analysisData.severity);
-      if (analysisData.severity === "CRITICAL") {
-        sevPill.style.background = "var(--critical-soft)";
-        sevPill.style.color = "var(--critical)";
-        sevPill.style.borderColor = "var(--critical-line)";
-      } else {
-        sevPill.style.background = "var(--trap-soft)";
-        sevPill.style.color = "var(--trap)";
-        sevPill.style.borderColor = "var(--trap-line)";
-      }
-
-      analysisHeader.appendChild(subPill);
-      analysisHeader.appendChild(sevPill);
-      analysisSec.appendChild(analysisHeader);
-
-      var summaryP = el("p", null, analysisData.summary);
-      summaryP.style.fontSize = "13px";
-      summaryP.style.lineHeight = "1.6";
-      summaryP.style.color = "var(--ink-bright)";
-      summaryP.style.margin = "0 0 12px";
-      analysisSec.appendChild(summaryP);
-
-      out.appendChild(analysisSec); any = true;
-
-      // Render Recommended Next Steps for TAC Engineer Section
-      var nextStepsSec = section("RECOMMENDED NEXT STEPS FOR TAC ENGINEER", analysisData.steps.length + " actions", "next-steps");
-      nextStepsSec.style.gridColumn = "1 / -1";
-      nextStepsSec.style.borderLeft = "4px solid var(--clear)";
-      nextStepsSec.style.background = "var(--surface-elevated)";
-
-      var stepsDesc = el("p", "sub", "Step-by-step diagnostic verification actions and exact CLI commands to execute on the switch:");
-      stepsDesc.style.margin = "0 0 12px";
-      nextStepsSec.appendChild(stepsDesc);
-
-      var stepsList = el("div", "evidence-checklist");
-      analysisData.steps.forEach(function(st, idx) {
-        var row = el("div", "checklist-item");
-        row.style.borderLeft = "3px solid var(--clear)";
-        
-        var num = el("span", "checklist-number", String(idx + 1));
-        num.style.background = "var(--clear-soft)";
-        num.style.color = "var(--clear)";
-
-        var body = el("div", "checklist-body");
-        body.appendChild(el("span", "checklist-category", "Action " + (idx + 1)));
-        
-        var actionTitle = el("div", "checklist-text", st.action);
-        actionTitle.style.color = "var(--ink-bright)";
-        actionTitle.style.fontWeight = "600";
-        body.appendChild(actionTitle);
-
-        if (st.cli) {
-          var cliBox = el("pre", "mono", st.cli);
-          cliBox.style.background = "var(--ground)";
-          cliBox.style.border = "1px solid var(--line)";
-          cliBox.style.borderRadius = "var(--radius-sm)";
-          cliBox.style.padding = "8px 12px";
-          cliBox.style.margin = "6px 0";
-          cliBox.style.fontSize = "11.5px";
-          cliBox.style.color = "var(--accent-hover)";
-          body.appendChild(cliBox);
-        }
-
-        if (st.note) {
-          var noteDiv = el("div", "sub", "TAC Objective: " + st.note);
-          noteDiv.style.fontSize = "11.5px";
-          body.appendChild(noteDiv);
-        }
-
-        row.appendChild(num);
-        row.appendChild(body);
-        stepsList.appendChild(row);
-      });
-
-      nextStepsSec.appendChild(stepsList);
-      out.appendChild(nextStepsSec);
-
-      // TAC evidence checklist: derived only from the supplied input.
-      var checklistItems = [];
-
-      ev.gaps.forEach(function (g) {
-        checklistItems.push({
-          category: "Collection issue",
-          text: g.value,
-          evidence: g.evidence || "",
-          status: "Collection issue mentioned in input"
-        });
-      });
-
-      ev.missing.forEach(function (m) {
-        checklistItems.push({
-          category: "Information needed",
-          text: m,
-          evidence: "",
-          status: "Not established from supplied input"
-        });
-      });
-
-      if (checklistItems.length) {
-        var cs = section(
-          "Evidence to Collect / Confirm",
-          checklistItems.length,
-          "checklist"
-        );
-
-        cs.appendChild(el(
-          "p",
-          "sub",
-          "These items were identified from the supplied text. " +
-          "They are not proof that evidence is unavailable elsewhere."
-        ));
-
-        var checklist = el("div", "evidence-checklist");
-
-        checklistItems.forEach(function (entry, index) {
-          var row = el("div", "checklist-item");
-          var number = el("span", "checklist-number", String(index + 1));
-          var body = el("div", "checklist-body");
-
-          body.appendChild(el("span", "checklist-category", entry.category));
-          body.appendChild(el("div", "checklist-text", entry.text));
-          body.appendChild(el("span", "checklist-status", entry.status));
-
-          if (entry.evidence) {
-            body.appendChild(el(
-              "div",
-              "ev checklist-evidence",
-              "Source evidence: " + entry.evidence
-            ));
-          }
-
-          row.appendChild(number);
-          row.appendChild(body);
-          checklist.appendChild(row);
-        });
-
-        cs.appendChild(checklist);
-        out.appendChild(cs);
-      }
+    if (log && log.first_timestamp) {
+      var tsBox = el("div", "sub", "Time Range: " + log.first_timestamp + "  →  " + log.last_timestamp);
+      tsBox.style.fontFamily = "var(--mono)";
+      tsBox.style.marginBottom = "8px";
+      sec2.appendChild(tsBox);
     }
 
+    if (timeline && timeline.correlations && timeline.correlations.length) {
+      var corrBox = el("div", null);
+      corrBox.style.background = "var(--surface)";
+      corrBox.style.padding = "10px 14px";
+      corrBox.style.borderRadius = "var(--radius-sm)";
+      corrBox.style.border = "1px solid var(--line-subtle)";
+      corrBox.style.marginBottom = "10px";
+      corrBox.appendChild(el("strong", null, "Detected Causal Event Chain:"));
+      var ul = el("ul", null);
+      ul.style.margin = "6px 0 0";
+      ul.style.paddingLeft = "18px";
+      timeline.correlations.forEach(function (c) {
+        ul.appendChild(el("li", null, c));
+      });
+      corrBox.appendChild(ul);
+      sec2.appendChild(corrBox);
+    }
+
+    if (timeline && timeline.rendered) {
+      var pre = el("pre", "mono", timeline.rendered);
+      pre.style.whiteSpace = "pre-wrap";
+      pre.style.fontSize = "11.5px";
+      pre.style.lineHeight = "1.5";
+      pre.style.maxHeight = "220px";
+      pre.style.overflowY = "auto";
+      pre.style.background = "var(--surface)";
+      pre.style.padding = "10px 12px";
+      pre.style.borderRadius = "var(--radius-sm)";
+      pre.style.border = "1px solid var(--line-subtle)";
+      sec2.appendChild(pre);
+    } else if (!log || !log.first_timestamp) {
+      sec2.appendChild(el("p", "sub", "No timestamps were detected in the supplied input text. Provide timestamped syslog/RASLog entries to reconstruct event chronology."));
+    }
+    out.appendChild(sec2);
+
+    // ------------------------------------------------------------- Section 3: Evidence
+    var sec3 = el("div", "report-section evidence-sec");
+    var sec3Head = el("div", "sec-header");
+    sec3Head.appendChild(el("h3", null, "3. DIAGNOSTIC EVIDENCE & OBSERVED SYMPTOMS"));
+    sec3Head.appendChild(el("span", "badge-tag", errors.length + " symptoms"));
+    sec3.appendChild(sec3Head);
+
+    if (errors.length) {
+      errors.forEach(function(e) {
+        var row = el("div", "evidence-row");
+        var top = el("div", "evidence-top");
+        top.appendChild(el("span", "ev-badge", "Symptom"));
+        top.appendChild(el("span", "ev-value", e.value));
+        if (e.confidence) top.appendChild(el("span", "conf-badge", "Confidence: " + e.confidence));
+        row.appendChild(top);
+        if (e.evidence) row.appendChild(el("span", "ev-quote", "“" + e.evidence + "”"));
+        sec3.appendChild(row);
+      });
+    } else {
+      sec3.appendChild(el("p", "sub", "No explicit error signatures or panic messages recognized."));
+    }
+
+    // Log severities & top recurring messages
     if (log) {
-      var ls = section("Log analysis summary", log.lines + " lines");
-      if (log.first_timestamp) {
-        ls.appendChild(el("div", "sub",
-          log.first_timestamp + "  →  " + log.last_timestamp));
-      }
-      var keys = Object.keys(log.severities);
+      var keys = Object.keys(log.severities || {});
       if (keys.length) {
         var sr = el("div", "sevrow");
         keys.sort(function (a, b) { return log.severities[b] - log.severities[a]; })
             .forEach(function (k) {
-              var bad = (k === "CRITICAL" || k === "ERROR" || k === "CRIT"
-                         || k === "EMERG" || k === "ALERT");
-              sr.appendChild(el("span", "sev" + (bad ? " crit" : ""),
-                                k + " " + log.severities[k]));
+              var bad = (k === "CRITICAL" || k === "ERROR" || k === "CRIT" || k === "EMERG" || k === "ALERT");
+              var warn = (k === "WARNING" || k === "WARN");
+              sr.appendChild(el("span", "sev" + (bad ? " crit" : (warn ? " warn" : "")), k + ": " + log.severities[k]));
             });
-        ls.appendChild(sr);
+        sec3.appendChild(sr);
       }
-      if (log.top_messages.length) {
-        log.top_messages.forEach(function (m) {
+      if (log.top_messages && log.top_messages.length) {
+        var topBox = el("div", null);
+        topBox.style.marginTop = "10px";
+        topBox.appendChild(el("span", "stat-label", "Top Recurring Syslog Signatures:"));
+        log.top_messages.slice(0, 4).forEach(function (m) {
           var r = el("div", "logline");
           r.appendChild(el("span", "m", m.message));
           r.appendChild(el("span", "c", m.count + "x"));
-          ls.appendChild(r);
+          topBox.appendChild(r);
         });
-      } else {
-        ls.appendChild(el("p", "none", "No message repeats."));
+        sec3.appendChild(topBox);
       }
-      log.raslog_codes.slice(0, 5).forEach(function (c) {
-        var r = el("div", "logline");
-        r.appendChild(el("span", "m", c.code));
-        r.appendChild(el("span", "c", c.count + "x"));
-        ls.appendChild(r);
-      });
-      out.appendChild(ls); any = true;
     }
 
-    if (!any) {
-      out.appendChild(el("div", "empty", "Nothing recognised in that input."));
+    // Evidence Gaps Checklist
+    var gapItems = [];
+    gaps.forEach(function(g) { gapItems.push({ text: g.value, note: g.evidence || "Collection issue noted" }); });
+    missing.forEach(function(m) { gapItems.push({ text: m, note: "Diagnostic data not established" }); });
+    if (gapItems.length) {
+      var gapBox = el("div", null);
+      gapBox.style.marginTop = "14px";
+      gapBox.style.padding = "10px 14px";
+      gapBox.style.background = "var(--surface)";
+      gapBox.style.border = "1px solid var(--trap-line)";
+      gapBox.style.borderRadius = "var(--radius-sm)";
+      gapBox.appendChild(el("strong", null, "⚠️ Evidence Gaps & Missing Diagnostics:"));
+      var gapUl = el("ul", null);
+      gapUl.style.margin = "6px 0 0";
+      gapUl.style.paddingLeft = "18px";
+      gapItems.forEach(function(gi) {
+        gapUl.appendChild(el("li", null, gi.text + " (" + gi.note + ")"));
+      });
+      gapBox.appendChild(gapUl);
+      sec3.appendChild(gapBox);
+    }
+
+    out.appendChild(sec3);
+
+    // ------------------------------------------------------------- Section 4: Hypotheses & Eliminations
+    var sec4 = el("div", "report-section hypotheses-sec");
+    var sec4Head = el("div", "sec-header");
+    sec4Head.appendChild(el("h3", null, "4. DEFECT HYPOTHESES & ELIMINATIONS"));
+    sec4Head.appendChild(el("span", "badge-tag", defects.length + " candidates"));
+    sec4.appendChild(sec4Head);
+
+    if (defects.length) {
+      defects.forEach(function(d) {
+        var row = el("div", "evidence-row");
+        var top = el("div", "evidence-top");
+        top.appendChild(el("span", "ev-badge", "Candidate Defect"));
+        top.appendChild(el("span", "ev-value", d.value));
+        if (d.confidence) top.appendChild(el("span", "conf-badge", "Confidence: " + d.confidence));
+        row.appendChild(top);
+        if (d.evidence) row.appendChild(el("span", "ev-quote", "“" + d.evidence + "”"));
+        row.appendChild(el("div", "sub", "Note: Candidate reference identified in input — requires validation of trigger conditions before confirming root cause."));
+        sec4.appendChild(row);
+      });
+    } else {
+      sec4.appendChild(el("p", "sub", "No explicit defect IDs referenced in the input. Running software version baseline matches known fleet defect signatures."));
+    }
+
+    // Known Traps
+    var trapNotice = el("div", null);
+    trapNotice.style.marginTop = "10px";
+    trapNotice.style.padding = "10px 12px";
+    trapNotice.style.borderRadius = "var(--radius-sm)";
+    trapNotice.style.background = "var(--surface)";
+    trapNotice.style.border = "1px solid var(--line-subtle)";
+    trapNotice.appendChild(el("strong", null, "Caveats & Traps:"));
+    trapNotice.appendChild(el("p", "sub", "Do not reload switches while TCAM microcode write errors are in progress without generating a supportsave. Ensure route-batching workarounds are validated on test lab fabrics first."));
+    sec4.appendChild(trapNotice);
+
+    out.appendChild(sec4);
+
+    // ------------------------------------------------------------- Section 5: Next Actions
+    var sec5 = el("div", "report-section actions-sec");
+    var sec5Head = el("div", "sec-header");
+    sec5Head.appendChild(el("h3", null, "5. RECOMMENDED NEXT ACTIONS FOR TAC ENGINEER"));
+    sec5Head.appendChild(el("span", "badge-tag", nextActions.length + " actions"));
+    sec5.appendChild(sec5Head);
+
+    var actList = el("div", "actions-list");
+    nextActions.forEach(function(na, idx) {
+      var item = el("div", "action-item");
+      item.appendChild(el("span", "action-number", String(idx + 1)));
+
+      var cnt = el("div", "action-content");
+      cnt.appendChild(el("div", "action-title", na.action));
+
+      if (na.cli) {
+        var wrapper = el("div", "action-cli-wrapper");
+        var preCli = el("pre", "action-cli", na.cli);
+        wrapper.appendChild(preCli);
+
+        var copyBtn = el("button", "btn-copy-cli", "📋 Copy CLI");
+        copyBtn.type = "button";
+        copyBtn.addEventListener("click", function() {
+          navigator.clipboard.writeText(na.cli).then(function() {
+            copyBtn.textContent = "✅ Copied!";
+            setTimeout(function() { copyBtn.textContent = "📋 Copy CLI"; }, 1800);
+          });
+        });
+        wrapper.appendChild(copyBtn);
+        cnt.appendChild(wrapper);
+      }
+
+      if (na.note) {
+        cnt.appendChild(el("div", "action-note", "TAC Objective: " + na.note));
+      }
+
+      item.appendChild(cnt);
+      actList.appendChild(item);
+    });
+    sec5.appendChild(actList);
+    out.appendChild(sec5);
+
+    // ------------------------------------------------------------- Section 6: Escalation
+    var sec6 = el("div", "report-section escalation-sec");
+    var sec6Head = el("div", "sec-header");
+    sec6Head.appendChild(el("h3", null, "6. DEFECT ENGINEERING ESCALATION READINESS"));
+    sec6Head.appendChild(el("span", "badge-tag", "Tier 3 / DE"));
+    sec6.appendChild(sec6Head);
+
+    var escBody = el("div", null);
+    escBody.style.display = "flex";
+    escBody.style.alignItems = "center";
+    escBody.style.justifyContent = "space-between";
+    escBody.style.flexWrap = "wrap";
+    escBody.style.gap = "12px";
+
+    var escText = el("div", null);
+    escText.appendChild(el("strong", null, "Tier 3 Escalation Brief & Defect Package"));
+    escText.appendChild(el("p", "sub", "Ready to compile an engineering escalation package containing vital hardware metrics, observed signatures, and reproduction steps for DE review."));
+    escBody.appendChild(escText);
+
+    var triggerBtn = el("button", "btn-escalation", "📋 Generate Escalation Brief");
+    triggerBtn.type = "button";
+    triggerBtn.addEventListener("click", function() {
+      if (window.gtacOpenEscalationBrief) window.gtacOpenEscalationBrief();
+    });
+    escBody.appendChild(triggerBtn);
+    sec6.appendChild(escBody);
+    out.appendChild(sec6);
+
+    // Update Copilot Grounding Context
+    if (window.gtacUpdateCopilotGrounding) {
+      window.gtacUpdateCopilotGrounding();
     }
   }
 
   function fail(msg) {
     var out = $("out");
-    out.textContent = "";
+    out.replaceChildren();
     out.appendChild(el("div", "err", msg));
   }
 
-  /* ------------------------------------------------------------- wiring */
+  // ------------------------------------------------------------- Text Run Analysis
   function run() {
     var text = $("text").value;
     if (!text.trim()) { fail("Nothing to analyze — paste some text first."); return; }
     var btn = $("run");
     btn.disabled = true; btn.textContent = "Analyzing…";
+    window._gtacEvidenceSource = "pasted log input";
+
     fetch("/api/analyze", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1701,9 +1734,13 @@
   $("clear").addEventListener("click", function () {
     $("text").value = "";
     $("size").textContent = "";
-    $("out").textContent = "";
-    $("out").appendChild(el("div", "empty", "Paste something and hit Analyze Evidence."));
+    $("out").replaceChildren();
+    $("out").appendChild(el("div", "empty", "Paste diagnostics or upload an archive and select Analyze Evidence."));
     $("stamp").textContent = "";
+    window._gtacLastAnalysis = null;
+    window._gtacLastTimeline = null;
+    window._gtacEvidenceSource = null;
+    if (window.gtacUpdateCopilotGrounding) window.gtacUpdateCopilotGrounding();
   });
 
   window.addEventListener("gtac-analysis-ready", function (evt) {
@@ -1714,51 +1751,6 @@
       }
       render(payload.analysis || payload);
       $("stamp").textContent = "Extracted from diagnostic archive · " + new Date().toLocaleTimeString();
-
-      if (payload.timeline && payload.timeline.rendered) {
-        var tlSection = el("section", "res");
-        tlSection.style.gridColumn = "1 / -1";
-        tlSection.style.borderLeft = "4px solid var(--accent)";
-
-        var tlHeader = el("div", "rh");
-        tlHeader.appendChild(el("h3", null, "INCIDENT TIMELINE & CORRELATIONS"));
-        tlHeader.appendChild(el("span", "n", String(payload.timeline.total_events) + " events"));
-        tlSection.appendChild(tlHeader);
-
-        if (payload.timeline.correlations && payload.timeline.correlations.length) {
-          var corrBox = el("div", "item");
-          corrBox.style.marginBottom = "10px";
-          corrBox.style.background = "var(--surface-elevated)";
-          corrBox.style.padding = "10px 14px";
-          corrBox.style.borderRadius = "var(--radius-sm)";
-          corrBox.style.border = "1px solid var(--line-subtle)";
-          corrBox.appendChild(el("strong", null, "Detected Causal Event Chain:"));
-          var ul = el("ul", null);
-          ul.style.margin = "6px 0 0";
-          ul.style.paddingLeft = "18px";
-          payload.timeline.correlations.forEach(function (c) {
-            var li = el("li", null, c);
-            ul.appendChild(li);
-          });
-          corrBox.appendChild(ul);
-          tlSection.appendChild(corrBox);
-        }
-
-        var pre = el("pre", "mono", payload.timeline.rendered);
-        pre.style.whiteSpace = "pre-wrap";
-        pre.style.overflowWrap = "anywhere";
-        pre.style.fontSize = "12px";
-        pre.style.lineHeight = "1.6";
-        pre.style.maxHeight = "360px";
-        pre.style.overflowY = "auto";
-        pre.style.background = "var(--surface-elevated)";
-        pre.style.padding = "14px";
-        pre.style.borderRadius = "var(--radius-sm)";
-        pre.style.border = "1px solid var(--line-subtle)";
-        tlSection.appendChild(pre);
-
-        $("out").appendChild(tlSection);
-      }
     }
   });
 
@@ -1774,6 +1766,7 @@
   Array.prototype.forEach.call(document.querySelectorAll("[data-sample]"),
     function (b) {
       b.addEventListener("click", function () {
+        switchTab("text");
         fetch("/api/samples").then(function (r) { return r.json(); })
           .then(function (s) {
             $("text").value = s[b.dataset.sample] || "";
@@ -1784,7 +1777,7 @@
     });
 })();
 
-/* ------------------------------------------------------------- Copilot Chat */
+// ------------------------------------------------------------- Copilot Chat Workstation
 (function() {
   const chatInput = document.getElementById("chat-input");
   const chatSend = document.getElementById("chat-send");
@@ -1794,6 +1787,21 @@
   const quickPrompts = document.getElementById("quick-prompts");
 
   let currentSessionId = null;
+
+  function updateCopilotGrounding() {
+    if (!sourceBadge) return;
+    if (window._gtacEvidenceSource) {
+      sourceBadge.className = "chat-badge grounded";
+      sourceBadge.textContent = window._gtacEvidenceSource;
+    } else if (window._gtacLastAnalysis) {
+      sourceBadge.className = "chat-badge grounded";
+      sourceBadge.textContent = "Analyzed Log Evidence";
+    } else {
+      sourceBadge.className = "chat-badge ungrounded";
+      sourceBadge.textContent = "No Case Evidence";
+    }
+  }
+  window.gtacUpdateCopilotGrounding = updateCopilotGrounding;
 
   // Simple Markdown-to-HTML parser for code blocks, backticks, bold, lists
   function formatMarkdown(text) {
@@ -1815,10 +1823,10 @@
     safe = safe.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
 
     // Markdown headers ###
-    safe = safe.replace(/^### (.*$)/gim, "<h4 style='margin:8px 0 4px;font-size:13px;color:var(--ink-bright)'>$1</h4>");
-    safe = safe.replace(/^## (.*$)/gim, "<h3 style='margin:10px 0 6px;font-size:14px;color:var(--ink-bright)'>$1</h3>");
+    safe = safe.replace(/^### (.*$)/gim, "<h4 style='margin:8px 0 4px;font-size:12.5px;color:var(--ink-bright)'>$1</h4>");
+    safe = safe.replace(/^## (.*$)/gim, "<h3 style='margin:10px 0 6px;font-size:13.5px;color:var(--ink-bright)'>$1</h3>");
 
-    // Line breaks (convert newlines that are not inside <pre>)
+    // Line breaks
     const parts = safe.split(/(<pre>[\s\S]*?<\/pre>)/);
     for (let i = 0; i < parts.length; i++) {
       if (!parts[i].startsWith("<pre>")) {
@@ -1863,6 +1871,17 @@
         session_id: currentSessionId,
       };
 
+      // Grounding: attach current active evidence and timeline if available
+      if (window._gtacLastAnalysis && window._gtacLastAnalysis.evidence) {
+        payload.evidence = window._gtacLastAnalysis.evidence;
+      }
+      if (window._gtacLastTimeline) {
+        payload.timeline = window._gtacLastTimeline;
+      }
+      if (window._gtacEvidenceSource) {
+        payload.evidence_source = window._gtacEvidenceSource;
+      }
+
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1878,8 +1897,14 @@
       if (sessionBadge && currentSessionId) {
         sessionBadge.textContent = `Session: ${currentSessionId}`;
       }
-      if (sourceBadge && data.data_source) {
-        sourceBadge.textContent = data.data_source === "synthetic" ? "Live Log Evidence" : data.data_source;
+      if (sourceBadge) {
+        if (data.data_source && data.data_source !== "synthetic") {
+          sourceBadge.className = "chat-badge grounded";
+          sourceBadge.textContent = data.data_source;
+        } else if (window._gtacEvidenceSource) {
+          sourceBadge.className = "chat-badge grounded";
+          sourceBadge.textContent = window._gtacEvidenceSource;
+        }
       }
 
       appendMessage("assistant", data.text);
@@ -1930,7 +1955,7 @@
       appendMessage("user", `📎 Attached diagnostic file: **${file.name}** (${(file.size / 1024).toFixed(1)} KB)`);
       if (window.gtacProcessUploadFile) {
         await window.gtacProcessUploadFile(file);
-        appendMessage("assistant", `✅ **Archive Ingested & Analyzed:** \`${file.name}\`\n\nI have decompressed the files, extracted syslog anomalies, and updated the diagnostic findings on the left.\n\n**Ready for investigation:**\n• Ask for root cause probability\n• Request Extreme SLX/NOS validation CLI commands\n• Generate an engineering escalation summary`);
+        appendMessage("assistant", `✅ **Archive Ingested & Analyzed:** \`${file.name}\`\n\nI have extracted syslog anomalies, established platform/release vitals, and updated the investigation report on the left.\n\n**Ready for investigation:**\n• Ask for root cause probabilities\n• Request Extreme SLX/NOS validation CLI commands\n• Review the engineering escalation package`);
       }
     }
   }
@@ -1962,7 +1987,7 @@
   }
 })();
 
-/* ------------------------------------------------ Diagnostic Upload Engine */
+// ------------------------------------------------------------- Diagnostic Upload Pipeline
 (function() {
   const dropzone = document.getElementById("upload-dropzone");
   const fileInput = document.getElementById("file-input");
@@ -1971,15 +1996,10 @@
   const badgeEl = document.getElementById("upload-badge");
   const detailsEl = document.getElementById("upload-details");
   const treeEl = document.getElementById("archive-tree");
-  const textArea = document.getElementById("text");
-  const runBtn = document.getElementById("run");
 
   if (!dropzone || !fileInput) return;
 
   dropzone.addEventListener("click", () => fileInput.click());
-
-  const uploadTriggerBtn = document.getElementById("btn-trigger-upload");
-  if (uploadTriggerBtn) uploadTriggerBtn.addEventListener("click", () => fileInput.click());
 
   dropzone.addEventListener("dragover", (e) => {
     e.preventDefault();
@@ -2070,7 +2090,7 @@
 
       detailsEl.textContent = `Extracted ${data.processed_count} files (${data.skipped_count} skipped).`;
 
-      // Render Archive Entry Tree
+      // Render Archive Entry Breakdown Tree
       treeEl.replaceChildren();
       for (const item of data.items || []) {
         const row = document.createElement("div");
@@ -2088,7 +2108,9 @@
         treeEl.appendChild(row);
       }
 
-      // If analysis evidence was generated, populate and trigger investigation render
+      window._gtacEvidenceSource = "Archive: " + file.name;
+
+      // Populate investigation report with extracted analysis
       if (data.analysis) {
         window.dispatchEvent(new CustomEvent("gtac-analysis-ready", { detail: data }));
       }
@@ -2104,7 +2126,7 @@
   window.gtacProcessUploadFile = processUploadFile;
 })();
 
-/* ------------------------------------------------ Escalation Brief Modal */
+// ------------------------------------------------------------- Escalation Brief Modal
 (function() {
   const modal = document.getElementById("escalation-modal");
   const closeBtn = document.getElementById("close-escalation-modal");
@@ -2186,10 +2208,8 @@
     openEscalationBrief(payload);
   }
 
-  ["header-escalation-btn", "export-escalation-btn", "report-escalation-btn", "upload-escalation-btn"].forEach(function(id) {
-    const btn = document.getElementById(id);
-    if (btn) btn.addEventListener("click", triggerBrief);
-  });
+  const reportEscBtn = document.getElementById("report-escalation-btn");
+  if (reportEscBtn) reportEscBtn.addEventListener("click", triggerBrief);
 
   window.gtacOpenEscalationBrief = triggerBrief;
 

@@ -289,6 +289,21 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(500, {"error": "Unable to list sessions"})
             return
 
+        if path == "/api/health":
+            try:
+                engine = _get_engine()
+                self._json(200, {
+                    "status": "online",
+                    "bind_address": "127.0.0.1",
+                    "loopback_only": True,
+                    "retention": "in-memory ephemeral (zero permanent disk persistence)",
+                    "provider": engine.provider_name,
+                    "active_sessions": engine.session_count,
+                })
+            except Exception as exc:  # noqa: BLE001
+                self._json(500, {"status": "degraded", "error": str(exc)})
+            return
+
         self._send(404, b"not found", "text/plain")
 
     # --------------------------------------------------------------- POST
@@ -340,6 +355,9 @@ class Handler(BaseHTTPRequestHandler):
 
             session_id = payload.get("session_id")
             case_id = payload.get("case_id")
+            evidence = payload.get("evidence")
+            timeline = payload.get("timeline")
+            evidence_source = payload.get("evidence_source")
 
             try:
                 engine = _get_engine()
@@ -347,6 +365,9 @@ class Handler(BaseHTTPRequestHandler):
                     question=message.strip(),
                     session_id=session_id if isinstance(session_id, str) else None,
                     case_id=case_id.strip() if isinstance(case_id, str) and case_id.strip() else None,
+                    evidence=evidence if isinstance(evidence, dict) else None,
+                    timeline=timeline if isinstance(timeline, dict) else None,
+                    evidence_source=evidence_source.strip() if isinstance(evidence_source, str) and evidence_source.strip() else None,
                 )
                 self._json(200, response.to_dict())
             except KeyError:

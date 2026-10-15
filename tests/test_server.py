@@ -274,6 +274,18 @@ def test_chat_creates_session_and_answers(base_url: str) -> None:
     assert data["has_case"] is False
 
 
+def test_health_endpoint(base_url: str) -> None:
+    req = urllib.request.Request(base_url + "/api/health")
+    with urllib.request.urlopen(req) as response:
+        assert response.status == 200
+        data = json.loads(response.read())
+
+    assert data["status"] == "online"
+    assert data["loopback_only"] is True
+    assert "provider" in data
+    assert "retention" in data
+
+
 def test_chat_with_case_context(base_url: str) -> None:
     code, data = _post_chat(
         base_url,
@@ -282,6 +294,26 @@ def test_chat_with_case_context(base_url: str) -> None:
     assert code == 200
     assert data["has_case"] is True
     assert data["data_source"] == "synthetic"
+
+
+def test_chat_with_evidence_context(base_url: str) -> None:
+    evidence = {
+        "running_version": {"value": "20.4.1b"},
+        "platforms": [{"value": "SLX-9850"}],
+        "errors": [{"value": "HAL_ERR_TCAM_WRITE_FAIL", "evidence": "linecard 3 tcam full"}],
+        "defects": [{"value": "DEFECT-84920"}],
+    }
+    code, data = _post_chat(
+        base_url,
+        {
+            "message": "Explain the defect exposure",
+            "evidence": evidence,
+            "evidence_source": "supportsave_core01.tgz",
+        },
+    )
+    assert code == 200
+    assert data["has_case"] is True
+    assert data["data_source"] == "supportsave_core01.tgz"
 
 
 def test_chat_invalid_payload_returns_400(base_url: str) -> None:
