@@ -1389,35 +1389,167 @@
         out.appendChild(sec);
       });
 
-      var others = ev.versions.filter(function (v) {
-        return !ev.running_version || v.value !== ev.running_version.value;
-      });
-      if (others.length) {
-        var os = section("Other versions mentioned", others.length);
-        others.forEach(function (v) {
-          os.appendChild(item("Version", v.value, v.evidence, v.confidence));
-        });
-        out.appendChild(os);
+      // ------------------------------------------------------------- Issue Analysis & Next Steps Generator
+      var analysisData = (function() {
+        var allErrors = (ev.errors || []).map(function(e) { return e.value || ""; }).join(" ");
+        var topMsgs = (log && log.top_messages) ? log.top_messages.map(function(m) { return m.message; }).join(" ") : "";
+        var rawInput = ($("text") ? $("text").value : "");
+        var combinedText = (allErrors + " " + topMsgs + " " + rawInput).toLowerCase();
+
+        var subsystem = "General Control Plane / System";
+        var severity = "MEDIUM";
+        var summary = "";
+        var steps = [];
+
+        if (/tcam|hal_err|asic|microcode|write failed|table full/.test(combinedText)) {
+          subsystem = "Hardware ASIC / TCAM Forwarding Pipeline";
+          severity = "CRITICAL";
+          summary = "Hardware forwarding table or TCAM entry exhaustion detected on the switch linecard/ASIC. Route updates or prefix withdrawal triggered microcode write timeout or resource allocation failure.";
+          steps = [
+            { action: "Verify TCAM / Hardware Table Allocations", cli: "show hardware profile\nshow table entry count", note: "Look for pipe/index exhaustion or allocation parity errors." },
+            { action: "Check Linecard and ASIC Pipeline Status", cli: "show linecard\nshow logging raslog rswitch | include (HAL|TCAM|ERR)", note: "Confirm if errors are localized to a specific slot or ASIC instance." },
+            { action: "Apply Non-Disruptive Route Batching Workaround", cli: "configure terminal\nrouter bgp\nbgp evpn route-batch off", note: "Mitigates microcode race condition prior to software maintenance upgrade." }
+          ];
+        } else if (/bgp|evpn|holdtimer|nlri|peer down|route withdraw/.test(combinedText)) {
+          subsystem = "BGP EVPN / Control Plane Routing";
+          severity = "HIGH";
+          summary = "BGP / EVPN protocol state churn detected. Peer holdtimer expiration or batch route withdrawal caused control-plane routing flaps and table recalculations.";
+          steps = [
+            { action: "Check BGP Peer Session Stability & Flap History", cli: "show ip bgp summary\nshow ip bgp neighbors", note: "Check uptime, last reset cause, and prefix received/dropped counts." },
+            { action: "Inspect System Logs for Routing Protocol Drops", cli: "show logging raslog | include (BGP|EVPN|NSM)", note: "Correlate timestamp with network event timeline." },
+            { action: "Verify Routing Table & CPU Utilization", cli: "show process cpu\nshow ip route summary", note: "Ensure high CPU is not delaying BGP keepalive packet processing." }
+          ];
+        } else if (/lacp|detached|churn|partner|port-channel/.test(combinedText)) {
+          subsystem = "Link Aggregation (LACP / Port-Channel)";
+          severity = "HIGH";
+          summary = "LACP partner out-of-sync or heartbeat detachment detected. Member link state transitions are causing port-channel degradation and bundle recalculations.";
+          steps = [
+            { action: "Inspect Port-Channel Member State", cli: "show port-channel detail\nshow lacp sys-id", note: "Verify member port operational flags and partner sync state." },
+            { action: "Check Physical Interface CRC & Flap Counters", cli: "show interface brief\nshow interface counters error", note: "Rule out physical cable or transceiver transmission degradation." },
+            { action: "Review LACP Timeout Configuration", cli: "show running-config interface port-channel", note: "Ensure LACP rate fast/slow timers match partner configuration." }
+          ];
+        } else if (/optical|sfp|ddm|rx low|tx power|fault|crc/.test(combinedText)) {
+          subsystem = "Physical Layer Optics & SFP+ Transceiver";
+          severity = "MEDIUM";
+          summary = "Optical transceiver signal alert or link-layer CRC error burst detected. Optical power readings suggest possible attenuation, dirty fiber, or failing transceiver.";
+          steps = [
+            { action: "Inspect Optical Transceiver DDM Telemetry", cli: "show media interface\nshow interface counters error", note: "Verify RX power (dBm), TX bias current, and operating temperature." },
+            { action: "Clean and Reseat Fiber Cables", cli: "show interface status", note: "Inspect physical patch panel and replace optic if RX power remains below -14 dBm." }
+          ];
+        } else {
+          var plat = (ev.platforms && ev.platforms.length) ? ev.platforms.map(function(p){return p.value;}).join(", ") : "Extreme Switch";
+          var ver = ev.running_version ? ev.running_version.value : "Running release";
+          summary = "Diagnostic anomalies detected on " + plat + " running " + ver + ". Symptoms indicate localized protocol or system state transitions that require validation against known defect signatures.";
+          steps = [
+            { action: "Collect Real-Time Diagnostic Baseline", cli: "show version\nshow running-config\nshow logging raslog", note: "Establish active baseline and verify uptime since last reload." },
+            { action: "Verify Hardware & System Health", cli: "show environment\nshow process cpu\nshow memory", note: "Confirm thermal, power supply, and control plane memory status." },
+            { action: "Generate Supportsave for DE Escalation", cli: "supportsave", note: "Collect complete archive before reload to preserve diagnostic core dumps and buffers." }
+          ];
+        }
+
+        return {
+          subsystem: subsystem,
+          severity: severity,
+          summary: summary,
+          steps: steps
+        };
+      })();
+
+      // Render Issue Analysis & Summary Section
+      var analysisSec = section("ISSUE ANALYSIS & SUMMARY", null, "issue-analysis");
+      analysisSec.style.gridColumn = "1 / -1";
+      analysisSec.style.borderLeft = "4px solid var(--accent)";
+      analysisSec.style.background = "var(--surface-elevated)";
+
+      var analysisHeader = el("div", null);
+      analysisHeader.style.display = "flex";
+      analysisHeader.style.alignItems = "center";
+      analysisHeader.style.justifyContent = "space-between";
+      analysisHeader.style.marginBottom = "10px";
+      analysisHeader.style.flexWrap = "wrap";
+      analysisHeader.style.gap = "8px";
+
+      var subPill = el("span", "chat-badge", "Subsystem: " + analysisData.subsystem);
+      subPill.style.background = "var(--accent-soft)";
+      subPill.style.color = "var(--accent)";
+      subPill.style.borderColor = "var(--accent)";
+
+      var sevPill = el("span", "chat-badge", "Severity: " + analysisData.severity);
+      if (analysisData.severity === "CRITICAL") {
+        sevPill.style.background = "var(--critical-soft)";
+        sevPill.style.color = "var(--critical)";
+        sevPill.style.borderColor = "var(--critical-line)";
+      } else {
+        sevPill.style.background = "var(--trap-soft)";
+        sevPill.style.color = "var(--trap)";
+        sevPill.style.borderColor = "var(--trap-line)";
       }
 
-      if (ev.devices.length) {
-        var ds = section("Device inventory", ev.devices.length);
-        var t = el("table");
-        var thead = el("thead"), trh = el("tr");
-        ["IP", "Host", "Role", "State", "App state"].forEach(function (h) {
-          trh.appendChild(el("th", null, h));
-        });
-        thead.appendChild(trh); t.appendChild(thead);
-        var tb = el("tbody");
-        ev.devices.forEach(function (d) {
-          var tr = el("tr");
-          [d.ip, d.hostname, d.role, d.state, d.app_state].forEach(function (c) {
-            tr.appendChild(el("td", null, c || "—"));
-          });
-          tb.appendChild(tr);
-        });
-        t.appendChild(tb); ds.appendChild(t); out.appendChild(ds);
-      }
+      analysisHeader.appendChild(subPill);
+      analysisHeader.appendChild(sevPill);
+      analysisSec.appendChild(analysisHeader);
+
+      var summaryP = el("p", null, analysisData.summary);
+      summaryP.style.fontSize = "13px";
+      summaryP.style.lineHeight = "1.6";
+      summaryP.style.color = "var(--ink-bright)";
+      summaryP.style.margin = "0 0 12px";
+      analysisSec.appendChild(summaryP);
+
+      out.appendChild(analysisSec); any = true;
+
+      // Render Recommended Next Steps for TAC Engineer Section
+      var nextStepsSec = section("RECOMMENDED NEXT STEPS FOR TAC ENGINEER", analysisData.steps.length + " actions", "next-steps");
+      nextStepsSec.style.gridColumn = "1 / -1";
+      nextStepsSec.style.borderLeft = "4px solid var(--clear)";
+      nextStepsSec.style.background = "var(--surface-elevated)";
+
+      var stepsDesc = el("p", "sub", "Step-by-step diagnostic verification actions and exact CLI commands to execute on the switch:");
+      stepsDesc.style.margin = "0 0 12px";
+      nextStepsSec.appendChild(stepsDesc);
+
+      var stepsList = el("div", "evidence-checklist");
+      analysisData.steps.forEach(function(st, idx) {
+        var row = el("div", "checklist-item");
+        row.style.borderLeft = "3px solid var(--clear)";
+        
+        var num = el("span", "checklist-number", String(idx + 1));
+        num.style.background = "var(--clear-soft)";
+        num.style.color = "var(--clear)";
+
+        var body = el("div", "checklist-body");
+        body.appendChild(el("span", "checklist-category", "Action " + (idx + 1)));
+        
+        var actionTitle = el("div", "checklist-text", st.action);
+        actionTitle.style.color = "var(--ink-bright)";
+        actionTitle.style.fontWeight = "600";
+        body.appendChild(actionTitle);
+
+        if (st.cli) {
+          var cliBox = el("pre", "mono", st.cli);
+          cliBox.style.background = "var(--ground)";
+          cliBox.style.border = "1px solid var(--line)";
+          cliBox.style.borderRadius = "var(--radius-sm)";
+          cliBox.style.padding = "8px 12px";
+          cliBox.style.margin = "6px 0";
+          cliBox.style.fontSize = "11.5px";
+          cliBox.style.color = "var(--accent-hover)";
+          body.appendChild(cliBox);
+        }
+
+        if (st.note) {
+          var noteDiv = el("div", "sub", "TAC Objective: " + st.note);
+          noteDiv.style.fontSize = "11.5px";
+          body.appendChild(noteDiv);
+        }
+
+        row.appendChild(num);
+        row.appendChild(body);
+        stepsList.appendChild(row);
+      });
+
+      nextStepsSec.appendChild(stepsList);
+      out.appendChild(nextStepsSec);
 
       // TAC evidence checklist: derived only from the supplied input.
       var checklistItems = [];
