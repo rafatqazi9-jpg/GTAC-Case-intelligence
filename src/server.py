@@ -177,6 +177,28 @@ def upload_payload(filename: str, content_b64: str, password: str | None = None)
             "gaps": tl.gaps_detected,
         }
 
+    # Core dump detection & bundle completeness evaluation
+    core_dumps = [
+        item.relative_path for item in report.items
+        if any(marker in item.relative_path.lower() for marker in (".core", ".dmp", "core.", ".dump", "crash"))
+    ]
+    has_config = any("config" in item.relative_path.lower() or item.relative_path.lower().endswith(".cfg") for item in report.items)
+    has_syslog = any(any(m in item.relative_path.lower() for m in ("raslog", "syslog", "messages", ".log")) for item in report.items)
+    has_supportsave = any(any(m in item.relative_path.lower() for m in ("supportsave", "show_tech", "support")) for item in report.items) or "supportsave" in filename.lower()
+
+    scorecard = {
+        "has_core_dumps": len(core_dumps) > 0,
+        "core_dumps": len(core_dumps),
+        "core_dump_files": core_dumps,
+        "has_config": has_config,
+        "has_syslog": has_syslog,
+        "has_supportsave": has_supportsave,
+    }
+
+    if analysis and "evidence" in analysis:
+        analysis["evidence"]["scorecard"] = scorecard
+        analysis["evidence"]["core_dumps"] = core_dumps
+
     return {
         "filename": report.original_filename,
         "format": report.detected_format,
@@ -199,6 +221,8 @@ def upload_payload(filename: str, content_b64: str, password: str | None = None)
         ],
         "analysis": analysis,
         "timeline": timeline_dict,
+        "scorecard": scorecard,
+        "core_dumps": core_dumps,
     }
 
 

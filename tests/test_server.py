@@ -358,6 +358,37 @@ def test_upload_plain_text(base_url: str) -> None:
     assert data["processed_count"] == 1
     assert data["analysis"] is not None
     assert data["analysis"]["evidence"]["running_version"]["value"] == "20.7.3a"
+    assert "scorecard" in data
+    assert "core_dumps" in data
+    assert data["scorecard"]["has_supportsave"] is True
+
+
+def test_upload_core_dump_detection(base_url: str) -> None:
+    import base64
+    import io
+    import tarfile
+
+    tar_buf = io.BytesIO()
+    with tarfile.open(fileobj=tar_buf, mode="w:gz") as tar:
+        # Add a text log
+        log_bytes = b"SLX: 20.7.3a\nBGP flap"
+        info_log = tarfile.TarInfo(name="supportsave/show_tech.log")
+        info_log.size = len(log_bytes)
+        tar.addfile(info_log, io.BytesIO(log_bytes))
+
+        # Add a core dump binary
+        core_bytes = b"\x7fELF\x02\x01\x01\x00crashdata"
+        info_core = tarfile.TarInfo(name="supportsave/fib_mgr.core.gz")
+        info_core.size = len(core_bytes)
+        tar.addfile(info_core, io.BytesIO(core_bytes))
+
+    b64 = base64.b64encode(tar_buf.getvalue()).decode()
+    code, data = _post_upload(base_url, {"filename": "supportsave.tar.gz", "content_b64": b64})
+
+    assert code == 200
+    assert data["scorecard"]["has_core_dumps"] is True
+    assert len(data["core_dumps"]) == 1
+    assert "fib_mgr.core.gz" in data["core_dumps"][0]
 
 
 def test_upload_invalid_payload_returns_400(base_url: str) -> None:

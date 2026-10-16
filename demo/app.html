@@ -1374,44 +1374,144 @@
       severity = "CRITICAL";
       execSummary = "Hardware forwarding table or TCAM entry exhaustion detected on the switch linecard/ASIC. Route updates or prefix withdrawal triggered microcode write timeout or resource allocation failure.";
       nextActions = [
-        { action: "Verify TCAM / Hardware Table Allocations", cli: "show hardware profile\nshow table entry count", note: "Look for pipe/index exhaustion or allocation parity errors." },
-        { action: "Check Linecard and ASIC Pipeline Status", cli: "show linecard\nshow logging raslog rswitch | include (HAL|TCAM|ERR)", note: "Confirm if errors are localized to a specific slot or ASIC instance." },
-        { action: "Apply Non-Disruptive Route Batching Workaround", cli: "configure terminal\nrouter bgp\nbgp evpn route-batch off", note: "Mitigates microcode race condition prior to software maintenance upgrade." }
+        {
+          action: "Verify TCAM / Hardware Table Allocations",
+          cli: "show hardware profile\nshow table entry count",
+          note: "Look for pipe/index exhaustion or allocation parity errors.",
+          expected: "Profile: Default-SP4 | IPv4 Route entries: 14200/65536 (21% utilized) | Alloc Failures: 0 | Parity Errors: 0",
+          fault: "ALLOCATION FAILURE: Table full on pipe 0 | microcode write timeout | HW error counter HAL_ERR_TABLE_EXHAUSTION incrementing"
+        },
+        {
+          action: "Check Linecard and ASIC Pipeline Status",
+          cli: "show linecard\nshow logging raslog rswitch | include (HAL|TCAM|ERR)",
+          note: "Confirm if errors are localized to a specific slot or ASIC instance.",
+          expected: "Linecard 1: Operational, status: OK | Diagnostics: PASS | Zero HAL/TCAM errors in last 24h",
+          fault: "Linecard 1: Diagnostic alarm | [HAL-1003] TCAM entry write failed on ASIC instance 0, retries exhausted"
+        },
+        {
+          action: "Apply Non-Disruptive Route Batching Workaround",
+          cli: "configure terminal\nrouter bgp\nbgp evpn route-batch off",
+          note: "Mitigates microcode race condition prior to software maintenance upgrade.",
+          expected: "bgp evpn route-batch disabled | BGP updates serialized cleanly to forwarding pipeline",
+          fault: "Batching active during massive prefix flap triggers ASIC microcode buffer overflow and kernel thread lockup"
+        }
       ];
     } else if (/bgp|evpn|holdtimer|nlri|peer down|route withdraw/.test(combined)) {
       subsystem = "BGP EVPN / Control Plane Routing";
       severity = "HIGH";
       execSummary = "BGP / EVPN protocol state churn detected. Peer holdtimer expiration or batch route withdrawal caused control-plane routing flaps and table recalculations.";
       nextActions = [
-        { action: "Check BGP Peer Session Stability & Flap History", cli: "show ip bgp summary\nshow ip bgp neighbors", note: "Check uptime, last reset cause, and prefix received/dropped counts." },
-        { action: "Inspect System Logs for Routing Protocol Drops", cli: "show logging raslog | include (BGP|EVPN|NSM)", note: "Correlate timestamp with network event timeline." },
-        { action: "Verify Routing Table & CPU Utilization", cli: "show process cpu\nshow ip route summary", note: "Ensure high CPU is not delaying BGP keepalive packet processing." }
+        {
+          action: "Check BGP Peer Session Stability & Flap History",
+          cli: "show ip bgp summary\nshow ip bgp neighbors",
+          note: "Check uptime, last reset cause, and prefix received/dropped counts.",
+          expected: "Neighbor 10.0.0.1: Up 42d18h, State: Established, Prefixes Received: 1250, State Transitions: 0",
+          fault: "Neighbor 10.0.0.1: Down (Hold timer expired), Last Reset: Keepalive timeout, State: Active/Connect, Flaps: 14"
+        },
+        {
+          action: "Inspect System Logs for Routing Protocol Drops",
+          cli: "show logging raslog | include (BGP|EVPN|NSM)",
+          note: "Correlate timestamp with network event timeline.",
+          expected: "No BGP-1002 or NSM route drop events recorded in logging buffer",
+          fault: "[BGP-1002] Peer 10.0.0.1 connection reset: Hold timer expired | [NSM-1014] Route batch withdrawal failed"
+        },
+        {
+          action: "Verify Routing Table & CPU Utilization",
+          cli: "show process cpu\nshow ip route summary",
+          note: "Ensure high CPU is not delaying BGP keepalive packet processing.",
+          expected: "CPU utilization for 1 min: 8%, 5 min: 6% | BGP process CPU: 2.1% (Healthy)",
+          fault: "CPU utilization for 1 min: 98% (Spike) | Process bgp_mgr using 89% CPU, delaying keepalive acknowledgments"
+        }
       ];
     } else if (/lacp|detached|churn|partner|port-channel/.test(combined)) {
       subsystem = "Link Aggregation (LACP / Port-Channel)";
       severity = "HIGH";
       execSummary = "LACP partner out-of-sync or heartbeat detachment detected. Member link state transitions are causing port-channel degradation and bundle recalculations.";
       nextActions = [
-        { action: "Inspect Port-Channel Member State", cli: "show port-channel detail\nshow lacp sys-id", note: "Verify member port operational flags and partner sync state." },
-        { action: "Check Physical Interface CRC & Flap Counters", cli: "show interface brief\nshow interface counters error", note: "Rule out physical cable or transceiver transmission degradation." },
-        { action: "Review LACP Timeout Configuration", cli: "show running-config interface port-channel", note: "Ensure LACP rate fast/slow timers match partner configuration." }
+        {
+          action: "Inspect Port-Channel Member State",
+          cli: "show port-channel detail\nshow lacp sys-id",
+          note: "Verify member port operational flags and partner sync state.",
+          expected: "Port-Channel 1: Status: Up, Protocol: LACP | Member Eth 1/1: Selected/In-Sync (Actor.Sync=1, Partner.Sync=1)",
+          fault: "Port-Channel 1: Status: Degraded | Member Eth 1/1: Detached (Partner out of sync, Actor.Sync=0, Heartbeat loss)"
+        },
+        {
+          action: "Check Physical Interface CRC & Flap Counters",
+          cli: "show interface brief\nshow interface counters error",
+          note: "Rule out physical cable or transceiver transmission degradation.",
+          expected: "Eth 1/1: Up/Up, CRC: 0, Frame errors: 0, Overruns: 0, Link flaps: 0",
+          fault: "Eth 1/1: Up/Down or Flapping, CRC: 48920 errors, Input drops: 12000 packets"
+        },
+        {
+          action: "Review LACP Timeout Configuration",
+          cli: "show running-config interface port-channel",
+          note: "Ensure LACP rate fast/slow timers match partner configuration.",
+          expected: "lacp timeout fast (configured identically on both local switch and remote partner)",
+          fault: "Timer mismatch: Local switch is set to fast (1s) while remote partner switch is set to slow (30s)"
+        }
       ];
     } else if (/optical|sfp|ddm|rx low|tx power|fault|crc/.test(combined)) {
       subsystem = "Physical Layer Optics & SFP+ Transceiver";
       severity = "MEDIUM";
       execSummary = "Optical transceiver signal alert or link-layer CRC error burst detected. Optical power readings suggest possible attenuation, dirty fiber, or failing transceiver.";
       nextActions = [
-        { action: "Inspect Optical Transceiver DDM Telemetry", cli: "show media interface\nshow interface counters error", note: "Verify RX power (dBm), TX bias current, and operating temperature." },
-        { action: "Clean and Reseat Fiber Cables", cli: "show interface status", note: "Inspect physical patch panel and replace optic if RX power remains below -14 dBm." }
+        {
+          action: "Inspect Optical Transceiver DDM Telemetry",
+          cli: "show media interface\nshow interface counters error",
+          note: "Verify RX power (dBm), TX bias current, and operating temperature.",
+          expected: "Eth 1/1 (10G-SR): RX Power: -3.8 dBm (Normal range: -9.0 to -1.0 dBm), TX Power: -2.1 dBm, Status: Normal",
+          fault: "Eth 1/1: RX Power: -16.4 dBm [ALERT: Low Alarm], CRC error counter: 48912 packets dropped"
+        },
+        {
+          action: "Clean and Reseat Fiber Cables",
+          cli: "show interface status",
+          note: "Inspect physical patch panel and replace optic if RX power remains below -14 dBm.",
+          expected: "Port: Eth 1/1, Link: Up, Speed: 10G, Duplex: Full, Optic Temperature: 38C (Normal)",
+          fault: "Port: Eth 1/1, Link: Flapping / No signal detected, Optic Temperature: 74C (High Warning Alarm)"
+        }
       ];
     } else {
       var platNames = platforms.length ? platforms.map(function(p){return p.value;}).join(", ") : "Extreme Switch";
       execSummary = "Diagnostic anomalies detected on " + platNames + (runningVer ? " running " + runningVer : "") + ". Observed symptoms indicate localized protocol or system state transitions that require validation against known defect signatures.";
       nextActions = [
-        { action: "Collect Real-Time Diagnostic Baseline", cli: "show version\nshow running-config\nshow logging raslog", note: "Establish active baseline and verify uptime since last reload." },
-        { action: "Verify Hardware & System Health", cli: "show environment\nshow process cpu\nshow memory", note: "Confirm thermal, power supply, and control plane memory status." },
-        { action: "Generate Supportsave for DE Escalation", cli: "supportsave", note: "Collect complete archive before reload to preserve diagnostic core dumps and buffers." }
+        {
+          action: "Collect Real-Time Diagnostic Baseline",
+          cli: "show version\nshow running-config\nshow logging raslog",
+          note: "Establish active baseline and verify uptime since last reload.",
+          expected: "Uptime: > 30 days, Operating System: Ready, Flash partition: Healthy (18% used)",
+          fault: "System status: 'OS is not ready. Please login later' | Flash partition: 99% full"
+        },
+        {
+          action: "Verify Hardware & System Health",
+          cli: "show environment\nshow process cpu\nshow memory",
+          note: "Confirm thermal, power supply, and control plane memory status.",
+          expected: "Fan trays: Normal, PSUs: Redundant Normal, Temperature: 36C, Free RAM: > 4.2 GB",
+          fault: "Thermal alarm: ASIC temp exceeding threshold, Process leak: memory decreasing continuously"
+        },
+        {
+          action: "Generate Supportsave for DE Escalation",
+          cli: "supportsave",
+          note: "Collect complete archive before reload to preserve diagnostic core dumps and buffers.",
+          expected: "Supportsave archive completed successfully: /var/log/supportsave_switch1.tgz",
+          fault: "Core dump files generated in /var/log/core/ (Preserve supportsave before power cycling switch!)"
+        }
       ];
+    }
+
+    // ------------------------------------------------------------- Core Dump Detection Alert
+    var coreDumps = (ev.core_dumps || (data.core_dumps || []));
+    var scorecard = data.scorecard || (ev.scorecard || null);
+
+    if (coreDumps && coreDumps.length) {
+      var alertBanner = el("div", "err");
+      alertBanner.style.background = "var(--critical-soft)";
+      alertBanner.style.borderLeft = "5px solid var(--critical)";
+      alertBanner.style.margin = "0 0 16px";
+      alertBanner.style.padding = "12px 16px";
+      alertBanner.style.borderRadius = "var(--radius-sm)";
+      alertBanner.innerHTML = "🚨 <strong>CRASH CORE DUMP DETECTED:</strong> Diagnostic archive contains process crash artifact(s): <code>" +
+        coreDumps.join(", ") + "</code>. These files contain essential crash stack traces and must be attached to the Tier 3 DE Escalation Brief.";
+      out.appendChild(alertBanner);
     }
 
     // ------------------------------------------------------------- Section 1: Summary
@@ -1459,6 +1559,52 @@
     addStat("Defect Hits", defects.length, "Candidate references", defects.length ? "caution" : "");
     addStat("Evidence Gaps", gaps.length + missing.length, "Missing diagnostics", gaps.length + missing.length ? "caution" : "positive");
     sec1.appendChild(grid);
+
+    // Diagnostic Bundle Completeness Scorecard
+    if (scorecard) {
+      var scoreBox = el("div", null);
+      scoreBox.style.marginTop = "14px";
+      scoreBox.style.padding = "10px 14px";
+      scoreBox.style.background = "var(--surface)";
+      scoreBox.style.border = "1px solid var(--line-subtle)";
+      scoreBox.style.borderRadius = "var(--radius-sm)";
+      
+      var scoreHead = el("div", null, "DIAGNOSTIC ARTIFACT COMPLETENESS SCORECARD");
+      scoreHead.style.fontSize = "10.5px";
+      scoreHead.style.fontWeight = "700";
+      scoreHead.style.letterSpacing = "0.06em";
+      scoreHead.style.color = "var(--ink-secondary)";
+      scoreHead.style.marginBottom = "6px";
+      scoreBox.appendChild(scoreHead);
+
+      var scoreRow = el("div", null);
+      scoreRow.style.display = "flex";
+      scoreRow.style.gap = "14px";
+      scoreRow.style.flexWrap = "wrap";
+      scoreRow.style.fontSize = "11.5px";
+      scoreRow.style.fontFamily = "var(--mono)";
+
+      var cdStat = scorecard.has_core_dump
+        ? "<strong style='color:var(--critical)'>🚨 " + scorecard.core_dumps + " Detected</strong>"
+        : "<strong style='color:var(--clear)'>None (Clean)</strong>";
+      var sysStat = scorecard.has_syslog
+        ? "<strong style='color:var(--clear)'>✅ Present</strong>"
+        : "<strong style='color:var(--trap)'>⚠️ Missing</strong>";
+      var cfgStat = scorecard.has_config
+        ? "<strong style='color:var(--clear)'>✅ Present</strong>"
+        : "<strong style='color:var(--trap)'>⚠️ Missing</strong>";
+      var ssStat = scorecard.has_supportsave
+        ? "<strong style='color:var(--clear)'>✅ Supportsave Verified</strong>"
+        : "<strong style='color:var(--ink-secondary)'>Log Extract Only</strong>";
+
+      scoreRow.innerHTML = "<span>Core Dumps: " + cdStat + "</span>" +
+        "<span>Syslog/RASLog: " + sysStat + "</span>" +
+        "<span>Config: " + cfgStat + "</span>" +
+        "<span>Bundle: " + ssStat + "</span>";
+      scoreBox.appendChild(scoreRow);
+      sec1.appendChild(scoreBox);
+    }
+
     out.appendChild(sec1);
 
     // ------------------------------------------------------------- Section 2: Timeline
@@ -1654,6 +1800,76 @@
 
       if (na.note) {
         cnt.appendChild(el("div", "action-note", "TAC Objective: " + na.note));
+      }
+
+      if (na.expected || na.fault) {
+        var details = el("details");
+        details.style.marginTop = "8px";
+        details.style.fontSize = "11.5px";
+
+        var summary = el("summary", null, "👁️ Expected Normal Baseline vs. Failure Signature");
+        summary.style.cursor = "pointer";
+        summary.style.color = "var(--accent)";
+        summary.style.fontWeight = "600";
+        summary.style.userSelect = "none";
+        details.appendChild(summary);
+
+        var compGrid = el("div", null);
+        compGrid.style.display = "grid";
+        compGrid.style.gridTemplateColumns = "repeat(auto-fit, minmax(260px, 1fr))";
+        compGrid.style.gap = "8px";
+        compGrid.style.marginTop = "6px";
+
+        if (na.expected) {
+          var expBox = el("div", null);
+          expBox.style.background = "var(--ground)";
+          expBox.style.border = "1px solid var(--clear-line)";
+          expBox.style.borderRadius = "var(--radius-sm)";
+          expBox.style.padding = "8px 10px";
+
+          var expTitle = el("div", null, "✅ Expected Healthy Output (Normal)");
+          expTitle.style.color = "var(--clear)";
+          expTitle.style.fontWeight = "700";
+          expTitle.style.fontSize = "10.5px";
+          expTitle.style.textTransform = "uppercase";
+          expTitle.style.marginBottom = "4px";
+          expBox.appendChild(expTitle);
+
+          var expPre = el("pre", "mono", na.expected);
+          expPre.style.margin = "0";
+          expPre.style.fontSize = "11px";
+          expPre.style.color = "var(--ink)";
+          expPre.style.whiteSpace = "pre-wrap";
+          expBox.appendChild(expPre);
+          compGrid.appendChild(expBox);
+        }
+
+        if (na.fault) {
+          var fltBox = el("div", null);
+          fltBox.style.background = "var(--ground)";
+          fltBox.style.border = "1px solid var(--critical-line)";
+          fltBox.style.borderRadius = "var(--radius-sm)";
+          fltBox.style.padding = "8px 10px";
+
+          var fltTitle = el("div", null, "⚠️ Anomaly Signature (Failure Condition)");
+          fltTitle.style.color = "var(--critical)";
+          fltTitle.style.fontWeight = "700";
+          fltTitle.style.fontSize = "10.5px";
+          fltTitle.style.textTransform = "uppercase";
+          fltTitle.style.marginBottom = "4px";
+          fltBox.appendChild(fltTitle);
+
+          var fltPre = el("pre", "mono", na.fault);
+          fltPre.style.margin = "0";
+          fltPre.style.fontSize = "11px";
+          fltPre.style.color = "var(--critical)";
+          fltPre.style.whiteSpace = "pre-wrap";
+          fltBox.appendChild(fltPre);
+          compGrid.appendChild(fltBox);
+        }
+
+        details.appendChild(compGrid);
+        cnt.appendChild(details);
       }
 
       item.appendChild(cnt);
