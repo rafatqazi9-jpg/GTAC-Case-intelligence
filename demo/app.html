@@ -1047,165 +1047,6 @@
     font-weight: 500;
   }
 
-  /* ------------------------------------------------------------- Advanced Diagnostic Studio Hero & Scenario Presets */
-  .diagnostic-hero {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    padding: 8px 4px 16px;
-  }
-  .hero-header-box {
-    text-align: center;
-    padding: 24px 20px 20px;
-    background: linear-gradient(180deg, rgba(22, 34, 59, 0.7) 0%, rgba(13, 19, 34, 0.9) 100%);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 8px 24px rgba(0, 0, 0, 0.3);
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-header-box::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 260px;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #6366f1, #3b82f6, transparent);
-  }
-  .hero-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--mono);
-    font-size: 10.5px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #818cf8;
-    background: rgba(99, 102, 241, 0.12);
-    border: 1px solid rgba(99, 102, 241, 0.28);
-    border-radius: var(--radius-full);
-    padding: 3px 10px;
-    margin-bottom: 10px;
-  }
-  .hero-title {
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: var(--ink-bright);
-    margin: 0 0 6px;
-  }
-  .hero-sub {
-    font-size: 12px;
-    color: var(--ink-secondary);
-    max-width: 64ch;
-    margin: 0 auto;
-    line-height: 1.55;
-  }
-  .capabilities-strip {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-    margin-top: 18px;
-  }
-  @media (max-width: 768px) {
-    .capabilities-strip { grid-template-columns: 1fr; }
-  }
-  .cap-card {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    text-align: left;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  .cap-icon {
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-  .cap-text {
-    display: flex;
-    flex-direction: column;
-  }
-  .cap-title {
-    font-size: 11.5px;
-    font-weight: 700;
-    color: var(--ink-bright);
-  }
-  .cap-sub {
-    font-size: 10.5px;
-    color: var(--ink-secondary);
-  }
-  .scenarios-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    gap: 12px;
-  }
-  .scenario-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 14px 16px;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    position: relative;
-    overflow: hidden;
-  }
-  .scenario-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--accent);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 16px var(--accent-glow);
-  }
-  .scenario-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 8px;
-  }
-  .scenario-badge {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 2px 7px;
-    border-radius: var(--radius-full);
-  }
-  .scenario-badge.crit { background: var(--critical-soft); color: var(--critical); border: 1px solid var(--critical-line); }
-  .scenario-badge.high { background: var(--trap-soft); color: var(--trap); border: 1px solid var(--trap-line); }
-  .scenario-badge.norm { background: var(--clear-soft); color: var(--clear); border: 1px solid var(--clear-line); }
-  .scenario-name {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--ink-bright);
-    margin-bottom: 4px;
-  }
-  .scenario-desc {
-    font-size: 11.5px;
-    color: var(--ink-secondary);
-    line-height: 1.45;
-    margin-bottom: 12px;
-  }
-  .scenario-action {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--accent);
-  }
-  .scenario-card:hover .scenario-action {
-    color: var(--accent-hover);
-    text-decoration: underline;
-  }
-
   /* Copilot Interactive Inquiry Grid */
   .copilot-welcome-box {
     display: flex;
@@ -1330,7 +1171,6 @@
       <div class="ph">
         <div>
           <h2 id="input-title">CASE &amp; LOG INGESTION HUB</h2>
-          <p class="sub">Ingest diagnostic archives (.zip, .tgz, .tar.gz) or paste CLI dumps and syslog data.</p>
         </div>
         <div class="sample-actions" style="display:flex;gap:6px">
           <button type="button" class="tab-btn" data-sample="sample_case.txt" style="font-size:11px;padding:4px 10px">📄 Sample Case</button>
@@ -1394,7 +1234,6 @@
       <div class="ph">
         <div>
           <h2 id="report-title">INVESTIGATION REPORT &amp; ROOT CAUSE ANALYSIS</h2>
-          <p class="sub">Evidence-grounded diagnosis, causal timeline, and defect correlation across Extreme SLX-OS &amp; NOS devices.</p>
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
           <button type="button" class="btn-escalation" id="report-escalation-btn" title="Export Tier 3 / Defect Engineering Escalation Brief">🛠️ DE Brief</button>
@@ -1404,74 +1243,9 @@
         </div>
       </div>
       <div id="out">
-        <div class="diagnostic-hero" id="default-hero">
-          <div class="hero-header-box">
-            <span class="hero-tag">⚡ Network Intelligence Engine · Extreme SLX-OS &amp; NOS</span>
-            <h2 class="hero-title">Diagnostic Studio &amp; Root Cause Analysis Hub</h2>
-            <p class="hero-sub">Ingest raw SupportSave archives, show-tech dumps, or syslog streams. The engine correlates causal timelines, isolates software defect signatures, and drafts DE escalation packages.</p>
-            
-            <div class="capabilities-strip">
-              <div class="cap-card">
-                <span class="cap-icon">⚡</span>
-                <div class="cap-text">
-                  <span class="cap-title">169 Regex Pattern Matchers</span>
-                  <span class="cap-sub">Sub-second hardware &amp; protocol extraction</span>
-                </div>
-              </div>
-              <div class="cap-card">
-                <span class="cap-icon">🎯</span>
-                <div class="cap-text">
-                  <span class="cap-title">10/10 Reverse-Test Standard</span>
-                  <span class="cap-sub">0 Miss, 0 False-Eliminations</span>
-                </div>
-              </div>
-              <div class="cap-card">
-                <span class="cap-icon">🛡️</span>
-                <div class="cap-text">
-                  <span class="cap-title">Air-Gapped In-Memory</span>
-                  <span class="cap-sub">Zero permanent disk persistence</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-              <span style="font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-secondary)">One-Click Diagnostic Scenarios:</span>
-              <span style="font-size:11px;color:var(--ink-faint)">Click any preset to test live analysis</span>
-            </div>
-            <div class="scenarios-grid">
-              <div class="scenario-card" data-sample="sample_case.txt" title="Click to test live analysis">
-                <div class="scenario-top">
-                  <span class="scenario-badge crit">Critical Bug</span>
-                  <span style="font-family:var(--mono);font-size:10px;color:var(--ink-faint)">SLX 9540</span>
-                </div>
-                <div class="scenario-name">Hardware TCAM Exhaustion</div>
-                <div class="scenario-desc">Route table overflow, microcode write timeout, and HAL_ERR_TABLE_EXHAUSTION parity warning.</div>
-                <div class="scenario-action">▶ Load &amp; Run Analysis ➔</div>
-              </div>
-
-              <div class="scenario-card" data-sample="sample_raslog.txt" title="Click to test live analysis">
-                <div class="scenario-top">
-                  <span class="scenario-badge high">High Priority</span>
-                  <span style="font-family:var(--mono);font-size:10px;color:var(--ink-faint)">SLX-OS 20.7.3</span>
-                </div>
-                <div class="scenario-name">RASLOG &amp; Syslog Anomaly Stream</div>
-                <div class="scenario-desc">BGP EVPN session churn, keepalive hold timer expired, and interface flap correlation.</div>
-                <div class="scenario-action">▶ Load &amp; Run Analysis ➔</div>
-              </div>
-
-              <div class="scenario-card" id="preset-upload-card" title="Click to open file picker for your archive">
-                <div class="scenario-top">
-                  <span class="scenario-badge norm">Production Bundle</span>
-                  <span style="font-family:var(--mono);font-size:10px;color:var(--ink-faint)">SupportSave</span>
-                </div>
-                <div class="scenario-name">Enterprise Diagnostic Archive</div>
-                <div class="scenario-desc">Drop your real customer ShowSupport or SupportSave zip (up to 500 MB) for automated triage.</div>
-                <div class="scenario-action">📂 Browse or Drop File ➔</div>
-              </div>
-            </div>
-          </div>
+        <div class="empty">
+          <strong>Ready to Investigate</strong>
+          <p>Drop a diagnostic archive, paste case logs, or load a sample above, then select <strong>Analyze Evidence</strong>.</p>
         </div>
       </div>
     </section>
@@ -1486,7 +1260,6 @@
           <div class="copilot-avatar">✨</div>
           <div>
             <h2 id="chat-title" style="margin:0;font-size:12.5px;font-weight:700;letter-spacing:0.06em;color:var(--ink-bright)">GTAC COPILOT &middot; CONVERSATIONAL TROUBLESHOOTING</h2>
-            <p class="sub" style="margin:2px 0 0">Interactive diagnostic reasoning grounded in active analyzed evidence.</p>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
@@ -1502,7 +1275,7 @@
           
           <div class="copilot-welcome-box">
             <div style="font-size:11.5px;color:var(--ink-secondary);line-height:1.45">
-              I can reason over active case evidence, validate Extreme SLX/NOS CLI commands, check for known defect caveats, and draft Tier 3 escalations.
+              I can reason over active case evidence, validate CLI commands, check for known defect caveats, and draft Tier 3 escalations.
             </div>
             
             <div class="inquiry-grid">
