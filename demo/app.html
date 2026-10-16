@@ -8,15 +8,17 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    /* Color Palette - Enterprise Dark TAC Console */
-    --ground: #080d1a;
-    --surface: #0f172a;
-    --surface-elevated: #162038;
-    --surface-card: #131b2e;
-    --surface-hover: #1c2844;
-    --line: #223354;
-    --line-subtle: #19263e;
+  :root,
+  :root[data-theme="obsidian"],
+  :root[data-theme="dark"] {
+    /* 1. Obsidian Dark Console (Default - Modern High-Contrast Observability) */
+    --ground: #0b0f17;
+    --surface: #111827;
+    --surface-elevated: #182235;
+    --surface-card: #131c2e;
+    --surface-hover: #1e2a42;
+    --line: #223249;
+    --line-subtle: #172233;
     
     --ink: #f1f5f9;
     --ink-secondary: #94a3b8;
@@ -51,11 +53,90 @@
     --radius-lg: 14px;
     --radius-full: 9999px;
     
-    --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.4), 0 2px 6px -1px rgba(0, 0, 0, 0.2);
+    --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.25);
+    --shadow-glow: 0 0 24px -4px var(--accent-glow);
+  }
+
+  :root[data-theme="charcoal"] {
+    /* 2. Charcoal NOC (Classic Dark Console / Low Glare) */
+    --ground: #0d1117;
+    --surface: #161b22;
+    --surface-elevated: #21262d;
+    --surface-card: #161b22;
+    --surface-hover: #262c36;
+    --line: #30363d;
+    --line-subtle: #21262d;
+    
+    --ink: #e6edf3;
+    --ink-secondary: #8b949e;
+    --ink-faint: #6e7681;
+    --ink-bright: #ffffff;
+    
+    --accent: #2f81f7;
+    --accent-glow: rgba(47, 129, 247, 0.25);
+    --accent-soft: rgba(47, 129, 247, 0.12);
+    --accent-hover: #58a6ff;
+    
+    --clear: #2ea043;
+    --clear-soft: rgba(46, 160, 67, 0.14);
+    --clear-line: rgba(46, 160, 67, 0.35);
+    
+    --trap: #d29922;
+    --trap-soft: rgba(210, 153, 34, 0.14);
+    --trap-line: rgba(210, 153, 34, 0.35);
+    
+    --critical: #f85149;
+    --critical-soft: rgba(248, 81, 73, 0.15);
+    --critical-line: rgba(248, 81, 73, 0.4);
+    
+    --info-cyan: #38bdf8;
+    --info-cyan-soft: rgba(56, 189, 248, 0.12);
+    
+    --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.6), 0 2px 6px -1px rgba(0, 0, 0, 0.3);
+    --shadow-glow: 0 0 24px -4px var(--accent-glow);
+  }
+
+  :root[data-theme="midnight"] {
+    /* 3. Deep Midnight (OLED Pitch Black / High Contrast) */
+    --ground: #040507;
+    --surface: #0b0c10;
+    --surface-elevated: #13151c;
+    --surface-card: #0e0f14;
+    --surface-hover: #181a24;
+    --line: #1e212d;
+    --line-subtle: #14161f;
+    
+    --ink: #f3f4f6;
+    --ink-secondary: #9ca3af;
+    --ink-faint: #6b7280;
+    --ink-bright: #ffffff;
+    
+    --accent: #818cf8;
+    --accent-glow: rgba(129, 140, 248, 0.28);
+    --accent-soft: rgba(129, 140, 248, 0.12);
+    --accent-hover: #a5b4fc;
+    
+    --clear: #10b981;
+    --clear-soft: rgba(16, 185, 129, 0.14);
+    --clear-line: rgba(16, 185, 129, 0.35);
+    
+    --trap: #fbbf24;
+    --trap-soft: rgba(251, 191, 36, 0.14);
+    --trap-line: rgba(251, 191, 36, 0.35);
+    
+    --critical: #fb7185;
+    --critical-soft: rgba(251, 113, 133, 0.15);
+    --critical-line: rgba(251, 113, 133, 0.4);
+    
+    --info-cyan: #22d3ee;
+    --info-cyan-soft: rgba(34, 211, 238, 0.12);
+    
+    --shadow-card: 0 4px 24px -2px rgba(0, 0, 0, 0.75);
     --shadow-glow: 0 0 24px -4px var(--accent-glow);
   }
 
   :root[data-theme="light"] {
+    /* 4. Daylight Console (Enterprise Clean Light) */
     --ground: #f8fafc;
     --surface: #ffffff;
     --surface-elevated: #f1f5f9;
@@ -209,6 +290,55 @@
     border: 1px solid var(--clear-line);
     border-radius: var(--radius-full);
     padding: 4px 10px;
+  }
+
+  .theme-picker {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 28px;
+    padding: 2px 8px 2px 6px;
+    border-radius: var(--radius-full);
+    background: var(--surface-elevated);
+    border: 1px solid var(--line);
+    color: var(--ink-secondary);
+    transition: all 0.15s ease;
+  }
+  .theme-picker:hover, .theme-picker:focus-within {
+    border-color: var(--accent);
+    color: var(--ink);
+    box-shadow: 0 0 12px -2px var(--accent-glow);
+  }
+  .theme-picker-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 2px;
+    line-height: 1;
+    color: var(--ink);
+    transition: transform 0.15s ease;
+  }
+  .theme-picker-btn:hover {
+    transform: scale(1.18);
+  }
+  .theme-select {
+    background: transparent;
+    border: none;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    padding-right: 2px;
+  }
+  .theme-select option {
+    background: var(--surface-card);
+    color: var(--ink);
   }
 
   .theme-toggle {
@@ -1158,7 +1288,15 @@
     <span class="telemetry-chip" id="health-telemetry"><span class="pulse-dot" id="health-dot"></span> <span id="health-text">Loopback: checking…</span></span>
     <span class="telemetry-chip" id="provider-telemetry">LLM: In-Memory Engine</span>
     <span class="privacy-chip" id="retention-chip">Zero Permanent Retention</span>
-    <button type="button" class="theme-toggle" id="theme-btn" title="Toggle Light / Dark mode" aria-label="Toggle Theme">🌙</button>
+    <div class="theme-picker" title="Color Theme">
+      <button type="button" class="theme-picker-btn" id="theme-btn" title="Cycle Theme" aria-label="Cycle Color Theme">🌑</button>
+      <select id="theme-select" class="theme-select" aria-label="Color Theme">
+        <option value="obsidian">Obsidian</option>
+        <option value="charcoal">Charcoal NOC</option>
+        <option value="midnight">Deep Midnight</option>
+        <option value="light">Daylight</option>
+      </select>
+    </div>
   </div>
 </header>
 
@@ -1376,22 +1514,50 @@
 
   // ------------------------------------------------------------- Theme Management
   var themeBtn = document.getElementById("theme-btn");
+  var themeSelect = document.getElementById("theme-select");
+  var themeIcons = {
+    obsidian: "🌑",
+    charcoal: "💻",
+    midnight: "🌌",
+    light: "☀️"
+  };
+  var themeOrder = ["obsidian", "charcoal", "midnight", "light"];
+
   function applyTheme(theme) {
+    if (theme === "dark") theme = "obsidian";
+    if (!themeIcons[theme]) theme = "obsidian";
+
     document.documentElement.setAttribute("data-theme", theme);
     if (themeBtn) {
-      themeBtn.textContent = theme === "dark" ? "🌙" : "☀️";
-      themeBtn.title = theme === "dark" ? "Switch to Light mode" : "Switch to Dark mode";
+      themeBtn.textContent = themeIcons[theme] || "🌑";
+      themeBtn.title = "Current: " + theme.charAt(0).toUpperCase() + theme.slice(1) + " (Click to cycle)";
+    }
+    if (themeSelect && themeSelect.value !== theme) {
+      themeSelect.value = theme;
     }
     try { localStorage.setItem("gtac-theme", theme); } catch (e) {}
   }
-  var savedTheme = "dark";
-  try { savedTheme = localStorage.getItem("gtac-theme") || "dark"; } catch (e) {}
+
+  var savedTheme = "obsidian";
+  try {
+    savedTheme = localStorage.getItem("gtac-theme") || "obsidian";
+    if (savedTheme === "dark") savedTheme = "obsidian";
+  } catch (e) {}
   applyTheme(savedTheme);
 
   if (themeBtn) {
     themeBtn.addEventListener("click", function () {
-      var cur = document.documentElement.getAttribute("data-theme") || "dark";
-      applyTheme(cur === "dark" ? "light" : "dark");
+      var cur = document.documentElement.getAttribute("data-theme") || "obsidian";
+      if (cur === "dark") cur = "obsidian";
+      var idx = themeOrder.indexOf(cur);
+      var nextTheme = themeOrder[(idx + 1) % themeOrder.length];
+      applyTheme(nextTheme);
+    });
+  }
+
+  if (themeSelect) {
+    themeSelect.addEventListener("change", function () {
+      applyTheme(themeSelect.value);
     });
   }
 
