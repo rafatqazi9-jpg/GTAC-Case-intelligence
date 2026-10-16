@@ -106,6 +106,18 @@ _RESPONSES: list[tuple[re.Pattern[str], str]] = [
      "I need the specific old version, new version, and symptom description "
      "to cross-reference against known defects."),
 
+    (re.compile(r"\b(os\s+is\s+not\s+ready|login\s+later|login\s+issue|unable\s+to\s+log\s*in)\b", re.I),
+     "The 'OS is not ready. Please login later' error occurs when the SLX-OS management "
+     "plane or login manager (SSMD/SEC daemons) has not finished its boot-up state sequence, "
+     "or has entered a deadlock waiting on IPC dependencies.\n\n"
+     "Key triage steps:\n"
+     "1. Wait 3-5 minutes post-boot to allow daemons to signal healthy state.\n"
+     "2. If persistent, connect via serial console to review console boot logs.\n"
+     "3. Inspect `show logging raslog` for daemon failure or core dump assertions.\n"
+     "4. Note: A power cycle may temporarily clear the deadlock but will not prevent recurrence "
+     "if exposed to a known defect in the running release train."),
+
+
     (re.compile(r"\bwhat\s+(is|are)\b.*\b(finding|brief|investigation)", re.I),
      "The investigation brief is a structured summary of what the evidence "
      "supports and what it rules out. It contains:\n"
@@ -208,29 +220,150 @@ class MockLLMProvider(LLMProvider):
                 model="mock-v1",
             )
 
-        # Context-aware extraction from system prompt if a case was loaded
+        # Context-aware extraction from system prompt if a case or evidence was loaded
         system_msg = next((m for m in messages if m.role == "system"), None)
         system_text = system_msg.content if system_msg else ""
 
-        if "Case:" in system_text:
-            if any(k in query.lower() for k in ("symptom", "issue", "problem", "happening", "summary")):
+        has_context = bool(
+            "Current investigation context" in system_text
+            and "No case loaded" not in system_text
+        )
+
+        if has_context:
+            q_lower = query.lower()
+
+            # Extract vitals
+            case_id = ""
+            m_case = re.search(r"\bCase:\s*([A-Za-z0-9_-]+)", system_text)
+            if m_case:
+                case_id = m_case.group(1).strip()
+
+            platform = ""
+            m_plat = re.search(r"(?:Platform:\s*([^\n|]+)|Hardware\s*/\s*Platform:\s*([^\n]+))", system_text)
+            if m_plat:
+                platform = (m_plat.group(1) or m_plat.group(2) or "").strip()
+
+            sw_version = ""
+            m_sw = re.search(r"(?:Software:\s*([^\n|]+)|Identified Software Release:\s*([^\n]+))", system_text)
+            if m_sw:
+                sw_version = (m_sw.group(1) or m_sw.group(2) or "").strip()
+
+            symptom = ""
+            m_sym = re.search(r"(?:Symptom:\s*([^\n|]+)|Observed Error Signatures:\s*(?:•|-|\*)\s*([^\n]+))", system_text)
+            if m_sym:
+                symptom = (m_sym.group(1) or m_sym.group(2) or "").strip()
+            elif "OS is not ready" in system_text:
+                symptom = '"OS is not ready. Please login later"'
+
+            plat_str = platform or "SLX Platform"
+            sw_str = sw_version or "active release train"
+            sym_str = symptom or "observed control-plane anomalies"
+
+            # 1. Recommended Verification CLI / Diagnostic Commands
+            if any(k in q_lower for k in ("cli", "command", "show command", "execute on", "commands to execute")):
                 return LLMResponse(
-                    text="Based on the active case context, the reported symptom is:\n"
-                         + "\n".join(line for line in system_text.splitlines() if "Symptom:" in line or "Case:" in line),
+                    text=(
+                        f"### Recommended Verification CLI Commands\n\n"
+                        f"Execute the following diagnostic commands on {plat_str} running {sw_str} to isolate the issue:\n\n"
+                        f"1. **Confirm Partition & Version State**:\n"
+                        f"   `show version`\n"
+                        f"   *Expected*: Confirm running release is {sw_str} across active and standby partitions.\n\n"
+                        f"2. **Inspect Process CPU & System Memory**:\n"
+                        f"   `show process cpu`\n"
+                        f"   `show system memory`\n"
+                        f"   *Expected*: Check for daemon lockups, memory exhaustion, or thread starvation.\n\n"
+                        f"3. **Examine System Event Log**:\n"
+                        f"   `show logging raslog`\n"
+                        f"   *Expected*: Search for critical error signatures around the failure time.\n\n"
+                        f"4. **Collect Diagnostic Bundle for Escalation**:\n"
+                        f"   `supportsave`\n"
+                        f"   *Expected*: Complete compressed diagnostic archive containing core dumps and internal tech-support."
+                    ),
                     provider="mock",
                     model="mock-v1",
                 )
-            if any(k in query.lower() for k in ("finding", "brief", "candidate", "defect", "rule out", "eliminated")):
+
+            # 2. Root Cause Analysis / Probable Cause / Triage / Hypothesis
+            if any(k in q_lower for k in ("root cause", "probable", "cause", "hypothesis", "diagnos", "triage", "why", "reason")):
+                findings_lines = [l for l in system_text.splitlines() if "Candidate Defect" in l or ("*" in l and ("20." in l or "SLXOS" in l))]
+                defects_note = f"\n• **Candidate Defects Cited**: {', '.join(l.replace('*', '').strip() for l in findings_lines[:3])}" if findings_lines else ""
+                return LLMResponse(
+                    text=(
+                        f"### Root Cause Triage & Hypothesis\n\n"
+                        f"Based on the active investigation evidence:\n"
+                        f"• **Target Platform**: {plat_str}\n"
+                        f"• **Running Software**: {sw_str}\n"
+                        f"• **Primary Symptom**: {sym_str}{defects_note}\n\n"
+                        f"**Primary Assessment**:\n"
+                        f"The observed symptom indicates that the management and control-plane daemons are stalled or "
+                        f"have not transitioned to healthy readiness. When \"{sym_str}\" appears, the operating system kernel "
+                        f"blocks incoming management sessions pending IPC initialization.\n\n"
+                        f"**Known Precedents & Caveats**:\n"
+                        f"• A power cycle temporarily clears volatile buffer queues, but the defect will recur once the trigger condition re-accumulates.\n"
+                        f"• Permanent resolution requires upgrading to a verified maintenance release containing the bug fix.\n\n"
+                        f"**Recommended Action**:\n"
+                        f"Run verification CLI commands (`show logging raslog`, `show process cpu`) and generate a `supportsave` bundle for Tier 3 escalation."
+                    ),
+                    provider="mock",
+                    model="mock-v1",
+                )
+
+            # 3. Known Defect Traps / Microcode & Reload Workarounds
+            if any(k in q_lower for k in ("trap", "workaround", "microcode", "reload", "avoid", "caveat", "first hypothesis")):
+                return LLMResponse(
+                    text=(
+                        f"### Known Defect Traps & Workaround Caveats\n\n"
+                        f"When investigating {plat_str} running {sw_str}:\n\n"
+                        f"• **The Reload Trap (False Resolution)**: Power cycling {plat_str} temporarily unblocks logins by clearing volatile buffers, "
+                        f"but does not resolve the root cause. Do NOT close the case as resolved based solely on reload recovery.\n"
+                        f"• **Config Mutation Trap**: Avoid issuing configuration commits while daemons are in a degraded state, as changes may partially commit.\n"
+                        f"• **ISSU Caution**: Do not attempt an in-service software upgrade while control-plane daemons are degraded. Schedule a maintenance window for a clean reboot upgrade."
+                    ),
+                    provider="mock",
+                    model="mock-v1",
+                )
+
+            # 4. Tier 3 DE Package / Escalation Brief / Customer Email / Case Notes
+            if any(k in q_lower for k in ("tier 3", "de package", "de brief", "escalat", "email", "notes", "salesforce", "customer update")):
+                return LLMResponse(
+                    text=(
+                        f"### Tier 3 / Defect Engineering Escalation Brief\n\n"
+                        f"**Case Intelligence Summary**:\n"
+                        f"• **Platform**: {plat_str}\n"
+                        f"• **Software Version**: {sw_str}\n"
+                        f"• **Observed Signature**: {sym_str}\n\n"
+                        f"**Engineering Action Plan**:\n"
+                        f"1. Generate supportsave archive using `supportsave` on affected nodes.\n"
+                        f"2. Cross-reference defect database for known caveats in {sw_str}.\n"
+                        f"3. Advise customer on target patch release and avoid premature case closure following transient power cycles."
+                    ),
+                    provider="mock",
+                    model="mock-v1",
+                )
+
+            # 5. Symptom / Issue / Problem / Summary
+            if any(k in q_lower for k in ("symptom", "issue", "problem", "happening", "summary")):
+                symptom_lines = [line for line in system_text.splitlines() if "Symptom:" in line or "Case:" in line or "Observed Error" in line or (sym_str and sym_str in line)]
+                body = "\n".join(symptom_lines) if symptom_lines else f"• Symptom: {sym_str}"
+                return LLMResponse(
+                    text=f"Based on the active case context, the reported symptom is:\n{body}",
+                    provider="mock",
+                    model="mock-v1",
+                )
+
+            # 6. Findings / Brief / Candidate / Defect / Rule Out / Eliminated
+            if any(k in q_lower for k in ("finding", "brief", "candidate", "defect", "rule out", "eliminated")):
                 return LLMResponse(
                     text="Here are the investigation findings from the evidence engine:\n\n"
-                         + "\n".join(line for line in system_text.splitlines() if "sources:" in line or "[" in line),
+                         + "\n".join(line for line in system_text.splitlines() if "sources:" in line or "[" in line or "Identified" in line or "Evidence:" in line or "*" in line or "•" in line),
                     provider="mock",
                     model="mock-v1",
                 )
-            if any(k in query.lower() for k in ("version", "release", "platform")):
+
+            # 7. Version / Release / Platform
+            if any(k in q_lower for k in ("version", "release", "platform")):
                 return LLMResponse(
-                    text="According to the case evidence:\n"
-                         + "\n".join(line for line in system_text.splitlines() if "Platform:" in line or "Software:" in line),
+                    text=f"According to the case evidence:\n• Platform: {plat_str}\n• Software Version: {sw_str}",
                     provider="mock",
                     model="mock-v1",
                 )
@@ -241,6 +374,18 @@ class MockLLMProvider(LLMProvider):
                 text="In this GTAC environment, supported SLX-OS releases include 20.7.x, 20.6.x, and 32.x train releases (such as 32.5.2 and 32.5.10). "
                      "To determine the specific recommended target release for your platform, please provide your current running version (`show version`) "
                      "or select a fixture case above to cross-reference exposed defects.",
+                provider="mock",
+                model="mock-v1",
+            )
+
+        # Fallback CLI diagnostic query
+        if any(k in query.lower() for k in ("verification cli", "diagnostic cli", "commands to execute", "cli commands")):
+            return LLMResponse(
+                text="Standard GTAC verification and diagnostic commands:\n"
+                     "1. `show version` — Verify active/standby partitions, hardware platform, and uptime.\n"
+                     "2. `show logging raslog` — Check system event log for crash assertions and warnings.\n"
+                     "3. `show process cpu` / `show system memory` — Check for daemon CPU spikes or memory leaks.\n"
+                     "4. `supportsave` — Collect full diagnostic bundle for Tier 3 escalation.",
                 provider="mock",
                 model="mock-v1",
             )
