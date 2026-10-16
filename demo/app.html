@@ -1047,6 +1047,251 @@
     font-weight: 500;
   }
 
+  /* ------------------------------------------------------------- Advanced Diagnostic Studio Hero & Scenario Presets */
+  .diagnostic-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 8px 4px 16px;
+  }
+  .hero-header-box {
+    text-align: center;
+    padding: 24px 20px 20px;
+    background: linear-gradient(180deg, rgba(22, 34, 59, 0.7) 0%, rgba(13, 19, 34, 0.9) 100%);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 8px 24px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-header-box::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 260px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #6366f1, #3b82f6, transparent);
+  }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #818cf8;
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(99, 102, 241, 0.28);
+    border-radius: var(--radius-full);
+    padding: 3px 10px;
+    margin-bottom: 10px;
+  }
+  .hero-title {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink-bright);
+    margin: 0 0 6px;
+  }
+  .hero-sub {
+    font-size: 12px;
+    color: var(--ink-secondary);
+    max-width: 64ch;
+    margin: 0 auto;
+    line-height: 1.55;
+  }
+  .capabilities-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 18px;
+  }
+  @media (max-width: 768px) {
+    .capabilities-strip { grid-template-columns: 1fr; }
+  }
+  .cap-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    text-align: left;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .cap-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .cap-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .cap-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--ink-bright);
+  }
+  .cap-sub {
+    font-size: 10.5px;
+    color: var(--ink-secondary);
+  }
+  .scenarios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 12px;
+  }
+  .scenario-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  .scenario-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 16px var(--accent-glow);
+  }
+  .scenario-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+  .scenario-badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 7px;
+    border-radius: var(--radius-full);
+  }
+  .scenario-badge.crit { background: var(--critical-soft); color: var(--critical); border: 1px solid var(--critical-line); }
+  .scenario-badge.high { background: var(--trap-soft); color: var(--trap); border: 1px solid var(--trap-line); }
+  .scenario-badge.norm { background: var(--clear-soft); color: var(--clear); border: 1px solid var(--clear-line); }
+  .scenario-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-bright);
+    margin-bottom: 4px;
+  }
+  .scenario-desc {
+    font-size: 11.5px;
+    color: var(--ink-secondary);
+    line-height: 1.45;
+    margin-bottom: 12px;
+  }
+  .scenario-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .scenario-card:hover .scenario-action {
+    color: var(--accent-hover);
+    text-decoration: underline;
+  }
+
+  /* Copilot Interactive Inquiry Grid */
+  .copilot-welcome-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .inquiry-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  @media (max-width: 600px) {
+    .inquiry-grid { grid-template-columns: 1fr; }
+  }
+  .inquiry-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 9px 12px;
+    background: var(--surface-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    text-align: left;
+  }
+  .inquiry-card:hover {
+    border-color: var(--accent);
+    background: var(--surface-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+  .inquiry-icon {
+    font-size: 15px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .inquiry-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--ink-bright);
+    margin-bottom: 2px;
+  }
+  .inquiry-sub {
+    font-size: 10px;
+    color: var(--ink-secondary);
+    line-height: 1.35;
+  }
+
+  .dropzone-icon-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(59, 130, 246, 0.35) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+  }
+  .format-tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 6px;
+  }
+  .format-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: var(--radius-full);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--ink-secondary);
+  }
+
+  /* Custom Slim Scrollbars */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--ground); }
+  ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 9999px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.24); }
+
   footer {
     padding: 20px 24px 40px;
     color: var(--ink-faint);
@@ -1088,9 +1333,9 @@
           <p class="sub">Ingest diagnostic archives (.zip, .tgz, .tar.gz) or paste CLI dumps and syslog data.</p>
         </div>
         <div class="sample-actions" style="display:flex;gap:6px">
-          <button type="button" class="link" data-sample="sample_case.txt">Sample Case</button>
-          <button type="button" class="link" data-sample="sample_raslog.txt">Sample Log</button>
-          <button type="button" class="link" id="clear">Clear</button>
+          <button type="button" class="tab-btn" data-sample="sample_case.txt" style="font-size:11px;padding:4px 10px">📄 Sample Case</button>
+          <button type="button" class="tab-btn" data-sample="sample_raslog.txt" style="font-size:11px;padding:4px 10px">📜 Sample Syslog</button>
+          <button type="button" class="tab-btn" id="clear" style="font-size:11px;padding:4px 10px;color:var(--ink-faint)">🧹 Clear</button>
         </div>
       </div>
       <div class="pb">
@@ -1104,10 +1349,15 @@
         <div id="view-archive" role="tabpanel">
           <div class="dropzone" id="upload-dropzone" tabindex="0" role="button" aria-label="Upload network logs or diagnostic archives">
             <input type="file" id="file-input" multiple accept=".log,.txt,.out,.dump,.zip,.tar,.gz,.tgz,.bz2,.tbz2,.xz,.txz" style="display:none">
-            <span class="dropzone-icon">📁</span>
+            <div class="dropzone-icon-circle">📂</div>
             <div>
-              <div class="dropzone-title">Drop diagnostic archives or log files here, or click to browse</div>
-              <div class="dropzone-formats" style="margin-top:4px">Supported: .zip, .tgz, .tar.gz, .tar.bz2, .tar.xz, .log, .txt, .out, .dump</div>
+              <div class="dropzone-title">Drop diagnostic archives or switch logs here, or <span style="color:var(--accent);text-decoration:underline">click to browse</span></div>
+              <div class="format-tags-row">
+                <span class="format-tag">.ZIP / SUPPORT-SAVE</span>
+                <span class="format-tag">.TGZ / .TAR.GZ</span>
+                <span class="format-tag">.LOG / SHOW-TECH</span>
+                <span class="format-tag">CORE DUMPS (.CORE, .DMP)</span>
+              </div>
             </div>
           </div>
 
@@ -1154,10 +1404,74 @@
         </div>
       </div>
       <div id="out">
-        <div class="empty">
-          <strong>Ready to Investigate</strong>
-          <p>Drop a diagnostic archive, paste case logs, or load a sample above, then select <strong>Analyze Evidence</strong>.</p>
-          <p>The report provides structured analysis across 6 sections: Summary, Timeline, Evidence, Hypotheses, Next Actions, and Escalation.</p>
+        <div class="diagnostic-hero" id="default-hero">
+          <div class="hero-header-box">
+            <span class="hero-tag">⚡ Network Intelligence Engine · Extreme SLX-OS &amp; NOS</span>
+            <h2 class="hero-title">Diagnostic Studio &amp; Root Cause Analysis Hub</h2>
+            <p class="hero-sub">Ingest raw SupportSave archives, show-tech dumps, or syslog streams. The engine correlates causal timelines, isolates software defect signatures, and drafts DE escalation packages.</p>
+            
+            <div class="capabilities-strip">
+              <div class="cap-card">
+                <span class="cap-icon">⚡</span>
+                <div class="cap-text">
+                  <span class="cap-title">169 Regex Pattern Matchers</span>
+                  <span class="cap-sub">Sub-second hardware &amp; protocol extraction</span>
+                </div>
+              </div>
+              <div class="cap-card">
+                <span class="cap-icon">🎯</span>
+                <div class="cap-text">
+                  <span class="cap-title">10/10 Reverse-Test Standard</span>
+                  <span class="cap-sub">0 Miss, 0 False-Eliminations</span>
+                </div>
+              </div>
+              <div class="cap-card">
+                <span class="cap-icon">🛡️</span>
+                <div class="cap-text">
+                  <span class="cap-title">Air-Gapped In-Memory</span>
+                  <span class="cap-sub">Zero permanent disk persistence</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+              <span style="font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-secondary)">One-Click Diagnostic Scenarios:</span>
+              <span style="font-size:11px;color:var(--ink-faint)">Click any preset to test live analysis</span>
+            </div>
+            <div class="scenarios-grid">
+              <div class="scenario-card" data-sample="sample_case.txt" title="Click to test live analysis">
+                <div class="scenario-top">
+                  <span class="scenario-badge crit">Critical Bug</span>
+                  <span style="font-family:var(--mono);font-size:10px;color:var(--ink-faint)">SLX 9540</span>
+                </div>
+                <div class="scenario-name">Hardware TCAM Exhaustion</div>
+                <div class="scenario-desc">Route table overflow, microcode write timeout, and HAL_ERR_TABLE_EXHAUSTION parity warning.</div>
+                <div class="scenario-action">▶ Load &amp; Run Analysis ➔</div>
+              </div>
+
+              <div class="scenario-card" data-sample="sample_raslog.txt" title="Click to test live analysis">
+                <div class="scenario-top">
+                  <span class="scenario-badge high">High Priority</span>
+                  <span style="font-family:var(--mono);font-size:10px;color:var(--ink-faint)">SLX-OS 20.7.3</span>
+                </div>
+                <div class="scenario-name">RASLOG &amp; Syslog Anomaly Stream</div>
+                <div class="scenario-desc">BGP EVPN session churn, keepalive hold timer expired, and interface flap correlation.</div>
+                <div class="scenario-action">▶ Load &amp; Run Analysis ➔</div>
+              </div>
+
+              <div class="scenario-card" id="preset-upload-card" title="Click to open file picker for your archive">
+                <div class="scenario-top">
+                  <span class="scenario-badge norm">Production Bundle</span>
+                  <span style="font-family:var(--mono);font-size:10px;color:var(--ink-faint)">SupportSave</span>
+                </div>
+                <div class="scenario-name">Enterprise Diagnostic Archive</div>
+                <div class="scenario-desc">Drop your real customer ShowSupport or SupportSave zip (up to 500 MB) for automated triage.</div>
+                <div class="scenario-action">📂 Browse or Drop File ➔</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1185,6 +1499,46 @@
         <div class="chat-msg assistant">
           <span class="chat-msg-role">GTAC Copilot</span>
           <div>Hello! I am your Network Troubleshooting Assistant.</div>
+          
+          <div class="copilot-welcome-box">
+            <div style="font-size:11.5px;color:var(--ink-secondary);line-height:1.45">
+              I can reason over active case evidence, validate Extreme SLX/NOS CLI commands, check for known defect caveats, and draft Tier 3 escalations.
+            </div>
+            
+            <div class="inquiry-grid">
+              <div class="inquiry-card" data-query="What is the probable root cause based on active diagnostic evidence?">
+                <span class="inquiry-icon">🔍</span>
+                <div>
+                  <div class="inquiry-title">Root Cause Triage</div>
+                  <div class="inquiry-sub">Identify primary defect hypothesis</div>
+                </div>
+              </div>
+
+              <div class="inquiry-card" data-query="What next diagnostic CLI commands should I execute on the switch to confirm this issue?">
+                <span class="inquiry-icon">⌨️</span>
+                <div>
+                  <div class="inquiry-title">Verification CLI</div>
+                  <div class="inquiry-sub">Show commands &amp; expected outputs</div>
+                </div>
+              </div>
+
+              <div class="inquiry-card" data-query="Are there known defect traps or caveats for this software version and hardware platform?">
+                <span class="inquiry-icon">⚠️</span>
+                <div>
+                  <div class="inquiry-title">Known Defect Traps</div>
+                  <div class="inquiry-sub">Microcode &amp; reload workarounds</div>
+                </div>
+              </div>
+
+              <div class="inquiry-card" data-target-tab="de" data-query="Draft an engineering escalation summary for Tier 3 / Defect Engineering.">
+                <span class="inquiry-icon">📋</span>
+                <div>
+                  <div class="inquiry-title">Tier 3 DE Package</div>
+                  <div class="inquiry-sub">DE Brief, Customer Email &amp; Notes</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1982,11 +2336,13 @@
     var n = $("text").value.length;
     $("size").textContent = n ? n.toLocaleString() + " chars · Ctrl+Enter" : "";
   });
+  var initialHeroHtml = ($("out") ? $("out").innerHTML : "");
   $("clear").addEventListener("click", function () {
     $("text").value = "";
     $("size").textContent = "";
-    $("out").replaceChildren();
-    $("out").appendChild(el("div", "empty", "Paste diagnostics or upload an archive and select Analyze Evidence."));
+    if ($("out")) {
+      $("out").innerHTML = initialHeroHtml;
+    }
     $("stamp").textContent = "";
     window._gtacLastAnalysis = null;
     window._gtacLastTimeline = null;
@@ -2189,6 +2545,24 @@
       }
     });
   }
+
+  // Handle Copilot welcome inquiry cards & upload presets
+  document.addEventListener("click", function(e) {
+    const card = e.target.closest(".inquiry-card");
+    if (card && card.dataset.query) {
+      if (card.dataset.targetTab && window.gtacOpenEscalationBrief) {
+        window.gtacOpenEscalationBrief(card.dataset.targetTab);
+      }
+      sendChatMessage(card.dataset.query);
+      return;
+    }
+
+    const uploadPreset = e.target.closest("#preset-upload-card");
+    if (uploadPreset) {
+      const fileInput = document.getElementById("file-input");
+      if (fileInput) fileInput.click();
+    }
+  });
 
   // Copilot Direct Log & Archive Attachment
   const chatFileInput = document.getElementById("chat-file-input");
