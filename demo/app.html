@@ -1576,7 +1576,10 @@
           text.textContent = data.loopback_only ? "127.0.0.1 Loopback" : "Connected";
         }
         if (prov && data.provider) {
-          var provName = data.provider === "openai" ? "LLM: Active Provider" : "LLM: Mock Offline";
+          var provName = "LLM: In-Memory Engine";
+          if (data.provider === "openai") provName = "LLM: OpenAI Online";
+          else if (data.provider === "gemini") provName = "LLM: Gemini Online";
+          else if (data.provider === "mock") provName = "LLM: In-Memory Engine";
           prov.textContent = provName;
         }
         if (ret && data.retention) {
