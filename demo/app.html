@@ -2304,6 +2304,14 @@
     detailsEl.textContent = `Validating archive structure (${(file.size / 1024).toFixed(1)} KB)...`;
     treeEl.replaceChildren();
 
+    if (file.size > 500 * 1024 * 1024) {
+      badgeEl.textContent = "Too Large";
+      badgeEl.style.borderColor = "var(--critical)";
+      badgeEl.style.color = "var(--critical)";
+      detailsEl.textContent = `File size (${(file.size / (1024 * 1024)).toFixed(1)} MB) exceeds maximum upload limit of 500 MB.`;
+      return;
+    }
+
     try {
       const b64 = await fileToBase64(file);
       const payload = {
@@ -2318,7 +2326,12 @@
         body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
+      let data;
+      try {
+        data = await res.json();
+      } catch (parseErr) {
+        throw new Error(`Server returned status ${res.status} (${res.statusText || "Connection closed"})`);
+      }
       if (!res.ok) {
         throw new Error(data.error || `Upload failed (${res.status})`);
       }
@@ -2343,9 +2356,10 @@
 
       detailsEl.textContent = `Extracted ${data.processed_count} files (${data.skipped_count} skipped).`;
 
-      // Render Archive Entry Breakdown Tree
+      // Render Archive Entry Breakdown Tree (limit to first 120 files for smooth DOM rendering)
       treeEl.replaceChildren();
-      for (const item of data.items || []) {
+      const itemsToRender = (data.items || []).slice(0, 120);
+      for (const item of itemsToRender) {
         const row = document.createElement("div");
         row.className = `archive-entry-row ${item.status}`;
         
@@ -2359,6 +2373,16 @@
         row.appendChild(statusSpan);
 
         treeEl.appendChild(row);
+      }
+
+      if (data.items && data.items.length > 120) {
+        const moreRow = document.createElement("div");
+        moreRow.className = "archive-entry-row";
+        moreRow.style.padding = "6px 10px";
+        moreRow.style.opacity = "0.8";
+        moreRow.style.fontStyle = "italic";
+        moreRow.textContent = `... and ${data.items.length - 120} more files indexed in diagnostic bundle`;
+        treeEl.appendChild(moreRow);
       }
 
       window._gtacEvidenceSource = "Archive: " + file.name;

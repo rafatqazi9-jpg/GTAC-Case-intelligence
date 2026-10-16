@@ -222,15 +222,19 @@ class IngestionPipeline:
 
                         if is_text and text:
                             report.processed_count += 1
+                            # Cap single file text in memory to max 5MB for analysis to prevent memory exhaustion
+                            extracted_sample = text if len(text) <= 5 * 1024 * 1024 else (text[:2500000] + "\n...[sample truncated for analysis]...\n" + text[-2500000:])
                             item = IngestionItem(
                                 original_path=info.filename,
                                 relative_path=info.filename,
                                 size_bytes=len(content),
                                 is_text=True,
                                 status="processed",
-                                extracted_text=text,
+                                extracted_text=extracted_sample,
                             )
-                            combined_texts.append(f"=== File: {info.filename} ===\n{text}\n")
+                            # Keep combined log text bounded to 15MB total to keep extraction instant
+                            if sum(len(c) for c in combined_texts) < 15 * 1024 * 1024:
+                                combined_texts.append(f"=== File: {info.filename} ===\n{extracted_sample[:1000000]}\n")
                         else:
                             report.skipped_count += 1
                             item = IngestionItem(
@@ -317,15 +321,19 @@ class IngestionPipeline:
 
                     if is_text and text:
                         report.processed_count += 1
+                        # Cap single file text in memory to max 5MB for analysis to prevent memory exhaustion
+                        extracted_sample = text if len(text) <= 5 * 1024 * 1024 else (text[:2500000] + "\n...[sample truncated for analysis]...\n" + text[-2500000:])
                         item = IngestionItem(
                             original_path=member.name,
                             relative_path=member.name,
                             size_bytes=len(content),
                             is_text=True,
                             status="processed",
-                            extracted_text=text,
+                            extracted_text=extracted_sample,
                         )
-                        combined_texts.append(f"=== File: {member.name} ===\n{text}\n")
+                        # Keep combined log text bounded to 15MB total to keep extraction instant
+                        if sum(len(c) for c in combined_texts) < 15 * 1024 * 1024:
+                            combined_texts.append(f"=== File: {member.name} ===\n{extracted_sample[:1000000]}\n")
                     else:
                         report.skipped_count += 1
                         item = IngestionItem(

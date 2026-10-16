@@ -56,6 +56,9 @@ SAMPLES = Path(__file__).resolve().parents[1] / "data" / "samples"
 # mistake or an attack, and either way should be refused rather than buffered.
 MAX_BODY = 8 * 1024 * 1024
 
+# Diagnostic archives and ShowSupport bundles can be hundreds of megabytes.
+MAX_UPLOAD_BODY = 750 * 1024 * 1024  # 750 MB for base64-encoded archive uploads
+
 # Lazy singleton: created on first chat request so the server starts fast
 # and tests that don't use chat don't pay for provider initialisation.
 _engine: ConversationEngine | None = None
@@ -159,8 +162,12 @@ def upload_payload(filename: str, content_b64: str, password: str | None = None)
         log = summarise_log(report.combined_log_text)
         analysis = as_json(ev, log)
 
-        # Build cross-file timeline from processed items
-        text_files = [(item.relative_path, item.extracted_text) for item in report.items if item.is_text and item.extracted_text]
+        # Build cross-file timeline from processed items (sample up to 30 files to ensure responsive processing)
+        text_files = [
+            (item.relative_path, item.extracted_text)
+            for item in report.items
+            if item.is_text and item.extracted_text
+        ][:30]
         if not text_files:
             text_files = [(filename, report.combined_log_text)]
 
@@ -184,7 +191,10 @@ def upload_payload(filename: str, content_b64: str, password: str | None = None)
     ]
     has_config = any("config" in item.relative_path.lower() or item.relative_path.lower().endswith(".cfg") for item in report.items)
     has_syslog = any(any(m in item.relative_path.lower() for m in ("raslog", "syslog", "messages", ".log")) for item in report.items)
-    has_supportsave = any(any(m in item.relative_path.lower() for m in ("supportsave", "show_tech", "support")) for item in report.items) or "supportsave" in filename.lower()
+    has_supportsave = (
+        any(any(m in item.relative_path.lower() for m in ("supportsave", "showsupport", "show_support", "show_tech", "support", "techsupport")) for item in report.items)
+        or any(m in filename.lower() for m in ("supportsave", "showsupport", "show_support", "techsupport", "show_tech"))
+    )
 
     scorecard = {
         "has_core_dumps": len(core_dumps) > 0,
@@ -346,8 +356,9 @@ class Handler(BaseHTTPRequestHandler):
         if length <= 0:
             self._json(400, {"error": "empty request"})
             return
-        if length > MAX_BODY:
-            self._json(413, {"error": f"input larger than {MAX_BODY // 1024 // 1024} MB"})
+        max_allowed = MAX_UPLOAD_BODY if path == "/api/upload" else MAX_BODY
+        if length > max_allowed:
+            self._json(413, {"error": f"input larger than {max_allowed // 1024 // 1024} MB"})
             return
 
         raw = self.rfile.read(length)

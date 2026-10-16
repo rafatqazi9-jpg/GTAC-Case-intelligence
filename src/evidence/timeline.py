@@ -65,8 +65,12 @@ class TimelineBuilder:
         all_events: list[TimelineEvent] = []
 
         for fname, text in file_entries:
-            parsed = parse_log_text(text, source_file=fname)
+            lines = text.splitlines()
+            sample_text = "\n".join(lines[:2500]) if len(lines) > 2500 else text
+            parsed = parse_log_text(sample_text, source_file=fname)
             all_events.extend(parsed)
+            if len(all_events) > 10000:
+                break
 
         # Sort chronologically by timestamp (entries without timestamps at end)
         all_events.sort(key=lambda e: (e.timestamp is None, e.timestamp or datetime.min))

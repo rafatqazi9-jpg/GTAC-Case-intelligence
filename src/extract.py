@@ -453,6 +453,8 @@ def summarise_log(text: str, *, top: int = 8) -> LogSummary:
     noise, the same WARNING four thousand times is the case.
     """
     lines = text.splitlines()
+    if len(lines) > 30000:
+        lines = lines[:15000] + lines[-15000:]
     sev: Counter[str] = Counter()
     msgs: Counter[str] = Counter()
     codes: Counter[str] = Counter()

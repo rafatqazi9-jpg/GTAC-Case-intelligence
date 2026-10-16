@@ -24,10 +24,10 @@ class SecurityViolation(Exception):
 
 @dataclass(frozen=True)
 class IngestLimits:
-    max_upload_size: int = 100 * 1024 * 1024       # 100 MB max archive upload
-    max_extracted_total_size: int = 500 * 1024 * 1024  # 500 MB max total decompressed
-    max_single_file_size: int = 100 * 1024 * 1024    # 100 MB max individual uncompressed file
-    max_files: int = 1000                           # Max files per archive
+    max_upload_size: int = 500 * 1024 * 1024       # 500 MB max archive upload
+    max_extracted_total_size: int = 2000 * 1024 * 1024  # 2 GB max total decompressed
+    max_single_file_size: int = 500 * 1024 * 1024    # 500 MB max individual uncompressed file
+    max_files: int = 25000                          # Max files per archive (supports deep ShowSupport dumps)
     max_nesting_depth: int = 3                      # Max archive-in-archive recursion depth
     max_compression_ratio: float = 100.0            # Max ratio between uncompressed and compressed size
 

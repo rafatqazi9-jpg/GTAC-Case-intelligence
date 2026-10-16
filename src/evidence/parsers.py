@@ -55,6 +55,12 @@ _SEV_MAP: dict[str, EventSeverity] = {
 }
 
 
+_SEV_WORD_RE = re.compile(
+    r"\b(EMERG(?:ENCY)?|ALERT|CRIT(?:ICAL)?|ERR(?:OR)?|WARN(?:ING)?|NOTICE|INFO(?:RMATIONAL)?|DEBUG)\b",
+    re.I,
+)
+
+
 def parse_timestamp(ts_str: str, default_year: int = 2026) -> datetime | None:
     """Safely parse various network timestamp representations without raising exceptions."""
     ts_clean = ts_str.replace("/", "-").strip()
@@ -114,10 +120,9 @@ def parse_log_line(line: str, line_num: int, source_file: str) -> TimelineEvent 
         raw_ts, host, sub, msg = m_iso.groups()
         # Look for severity indicators in text
         sev = EventSeverity.INFO
-        for k, v in _SEV_MAP.items():
-            if re.search(rf"\b{k}\b", msg, re.I):
-                sev = v
-                break
+        m_sev = _SEV_WORD_RE.search(msg)
+        if m_sev:
+            sev = _SEV_MAP.get(m_sev.group(1).upper(), EventSeverity.INFO)
         dt = parse_timestamp(raw_ts)
         return TimelineEvent(
             timestamp=dt,
@@ -136,10 +141,9 @@ def parse_log_line(line: str, line_num: int, source_file: str) -> TimelineEvent 
     if m_month:
         raw_ts, host, sub, msg = m_month.groups()
         sev = EventSeverity.INFO
-        for k, v in _SEV_MAP.items():
-            if re.search(rf"\b{k}\b", msg, re.I):
-                sev = v
-                break
+        m_sev = _SEV_WORD_RE.search(msg)
+        if m_sev:
+            sev = _SEV_MAP.get(m_sev.group(1).upper(), EventSeverity.INFO)
         dt = parse_timestamp(raw_ts)
         return TimelineEvent(
             timestamp=dt,
