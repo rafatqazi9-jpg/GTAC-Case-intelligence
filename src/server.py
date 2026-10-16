@@ -32,6 +32,7 @@ from datetime import datetime, timedelta
 import argparse
 import base64
 import json
+import os
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -327,10 +328,12 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/health":
             try:
                 engine = _get_engine()
+                host = self.server.server_address[0]
+                is_loopback = host in ("127.0.0.1", "localhost", "::1")
                 self._json(200, {
                     "status": "online",
-                    "bind_address": "127.0.0.1",
-                    "loopback_only": True,
+                    "bind_address": host,
+                    "loopback_only": is_loopback,
                     "retention": "in-memory ephemeral (zero permanent disk persistence)",
                     "provider": engine.provider_name,
                     "active_sessions": engine.session_count,
@@ -473,17 +476,19 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(description="Local analyzer app (127.0.0.1 only)")
-    ap.add_argument("--port", type=int, default=8899)
+    default_port = int(os.environ.get("PORT", 8899))
+    default_host = os.environ.get("HOST", "127.0.0.1")
+
+    ap = argparse.ArgumentParser(description="GTAC Analyzer & Copilot Server")
+    ap.add_argument("--host", type=str, default=default_host, help="Host to bind to (e.g. 127.0.0.1 or 0.0.0.0)")
+    ap.add_argument("--port", type=int, default=default_port, help="Port to listen on")
     ap.add_argument("--open", action="store_true", help="open a browser tab")
     args = ap.parse_args(argv)
 
-    # 127.0.0.1, never 0.0.0.0: pasted case text must not be reachable from
-    # anywhere but this machine.
-    httpd = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
-    url = f"http://127.0.0.1:{args.port}/"
+    httpd = ThreadingHTTPServer((args.host, args.port), Handler)
+    url = f"http://{args.host}:{args.port}/"
     print(f"GTAC analyzer  ->  {url}")
-    print("  bound to 127.0.0.1 only · nothing written to disk · no outbound calls")
+    print(f"  bound to {args.host} · nothing written to disk · in-memory ephemeral retention")
     print("  Ctrl-C to stop\n")
     if args.open:
         webbrowser.open(url)

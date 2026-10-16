@@ -2,6 +2,12 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.mypy_cache/
+*.egg-info/
+*.bak
+*.backup
+SESSION_CHECKPOINT_*.txt
 .env
 .env.*
 !.env.example
+
