@@ -1148,8 +1148,10 @@
           <h2 id="report-title">INVESTIGATION REPORT &amp; ROOT CAUSE ANALYSIS</h2>
           <p class="sub">Evidence-grounded diagnosis, causal timeline, and defect correlation across Extreme SLX-OS &amp; NOS devices.</p>
         </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <button type="button" class="btn-escalation" id="report-escalation-btn" title="Export Tier 3 / Defect Engineering Escalation Brief">📋 Export Escalation Brief</button>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <button type="button" class="btn-escalation" id="report-escalation-btn" title="Export Tier 3 / Defect Engineering Escalation Brief">🛠️ DE Brief</button>
+          <button type="button" class="tab-btn" id="report-email-btn" style="color:var(--clear);border-color:var(--clear);background:var(--clear-soft)" title="Draft Sanitized Customer Status Email">📧 Customer Email</button>
+          <button type="button" class="tab-btn" id="report-notes-btn" style="color:var(--accent);border-color:var(--accent);background:var(--accent-soft)" title="Format Salesforce / CRM GTAC Case Notes">📋 Case Notes</button>
           <span class="sub" id="stamp" style="font-family:var(--mono);font-size:11px"></span>
         </div>
       </div>
@@ -1192,9 +1194,11 @@
       <div class="quick-prompts" id="quick-prompts">
         <span style="font-size:11px;color:var(--ink-faint);font-weight:600">Suggested queries:</span>
         <button type="button" class="prompt-chip" data-query="What is the probable root cause based on these logs?">💬 Root Cause Analysis</button>
-        <button type="button" class="prompt-chip" data-query="What next diagnostic CLI commands should I execute on the switch to confirm this issue?">🔍 Recommended CLI Commands</button>
-        <button type="button" class="prompt-chip" data-query="Are there known defect traps or caveats for this software version and hardware platform?">⚠️ Known Defect Traps</button>
-        <button type="button" class="prompt-chip" data-query="Draft an engineering escalation summary for Tier 3 / Defect Engineering.">📋 Draft Escalation Brief</button>
+        <button type="button" class="prompt-chip" data-query="What next diagnostic CLI commands should I execute on the switch to confirm this issue?">🔍 Recommended CLI</button>
+        <button type="button" class="prompt-chip" data-query="Are there known defect traps or caveats for this software version and hardware platform?">⚠️ Known Traps</button>
+        <button type="button" class="prompt-chip" data-target-tab="de" data-query="Draft an engineering escalation summary for Tier 3 / Defect Engineering.">🛠️ DE Brief</button>
+        <button type="button" class="prompt-chip" data-target-tab="email" data-query="Draft a sanitized customer status update email with diagnostic next steps.">📧 Customer Update</button>
+        <button type="button" class="prompt-chip" data-target-tab="notes" data-query="Generate standardized GTAC CRM case worklog notes for Salesforce.">📋 Case Notes</button>
       </div>
 
       <!-- Copilot File Attachment & Input Controls -->
@@ -1215,14 +1219,20 @@
   <div style="background:var(--surface-card);border:1px solid var(--line);border-radius:var(--radius-lg);width:min(940px, 95vw);max-height:88vh;display:flex;flex-direction:column;box-shadow:var(--shadow-card);overflow:hidden">
     <div style="padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
       <div style="display:flex;align-items:center;gap:10px">
-        <h2 style="margin:0;font-size:13px;font-weight:700;letter-spacing:0.04em;color:var(--ink-bright)">TIER 3 / DEFECT ENGINEERING ESCALATION BRIEF</h2>
+        <h2 id="modal-title" style="margin:0;font-size:13px;font-weight:700;letter-spacing:0.04em;color:var(--ink-bright)">TIER 3 / DEFECT ENGINEERING ESCALATION BRIEF</h2>
         <span id="modal-readiness-badge" class="chat-badge">Ready for DE</span>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
-        <button type="button" class="link" id="copy-escalation-btn" style="border:1px solid var(--line);border-radius:var(--radius-sm)">📋 Copy Markdown</button>
-        <button type="button" class="link" id="download-escalation-btn" style="border:1px solid var(--line);border-radius:var(--radius-sm)">💾 Download .md</button>
+        <button type="button" class="link" id="copy-escalation-btn" style="border:1px solid var(--line);border-radius:var(--radius-sm)">📋 Copy to Clipboard</button>
+        <button type="button" class="link" id="download-escalation-btn" style="border:1px solid var(--line);border-radius:var(--radius-sm)">💾 Download</button>
         <button type="button" class="link" id="close-escalation-modal" style="font-size:16px;padding:4px 8px;border-radius:var(--radius-sm)">&times;</button>
       </div>
+    </div>
+    <!-- Modal Navigation Tabs -->
+    <div style="display:flex;gap:8px;padding:8px 20px;background:var(--surface-elevated);border-bottom:1px solid var(--line);flex-wrap:wrap">
+      <button type="button" class="tab-btn active" id="modal-tab-de">🛠️ Tier 3 DE Escalation Brief</button>
+      <button type="button" class="tab-btn" id="modal-tab-email">📧 Customer Update Email</button>
+      <button type="button" class="tab-btn" id="modal-tab-notes">📋 GTAC Case Notes</button>
     </div>
     <div style="padding:18px;overflow-y:auto;flex:1;background:var(--ground)">
       <pre id="escalation-markdown-view" style="margin:0;white-space:pre-wrap;font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--ink);background:var(--surface-elevated);padding:16px;border-radius:var(--radius-md);border:1px solid var(--line-subtle);overflow-x:auto"></pre>
@@ -1673,12 +1683,39 @@
     escText.appendChild(el("p", "sub", "Ready to compile an engineering escalation package containing vital hardware metrics, observed signatures, and reproduction steps for DE review."));
     escBody.appendChild(escText);
 
-    var triggerBtn = el("button", "btn-escalation", "📋 Generate Escalation Brief");
+    var escBtns = el("div", null);
+    escBtns.style.display = "flex";
+    escBtns.style.gap = "8px";
+    escBtns.style.flexWrap = "wrap";
+
+    var triggerBtn = el("button", "btn-escalation", "🛠️ Tier 3 DE Brief");
     triggerBtn.type = "button";
     triggerBtn.addEventListener("click", function() {
-      if (window.gtacOpenEscalationBrief) window.gtacOpenEscalationBrief();
+      if (window.gtacOpenEscalationBrief) window.gtacOpenEscalationBrief("de");
     });
-    escBody.appendChild(triggerBtn);
+    escBtns.appendChild(triggerBtn);
+
+    var emailBtn = el("button", "tab-btn", "📧 Customer Update Email");
+    emailBtn.type = "button";
+    emailBtn.style.color = "var(--clear)";
+    emailBtn.style.borderColor = "var(--clear)";
+    emailBtn.style.background = "var(--clear-soft)";
+    emailBtn.addEventListener("click", function() {
+      if (window.gtacOpenEscalationBrief) window.gtacOpenEscalationBrief("email");
+    });
+    escBtns.appendChild(emailBtn);
+
+    var notesBtn = el("button", "tab-btn", "📋 GTAC Case Notes");
+    notesBtn.type = "button";
+    notesBtn.style.color = "var(--accent)";
+    notesBtn.style.borderColor = "var(--accent)";
+    notesBtn.style.background = "var(--accent-soft)";
+    notesBtn.addEventListener("click", function() {
+      if (window.gtacOpenEscalationBrief) window.gtacOpenEscalationBrief("notes");
+    });
+    escBtns.appendChild(notesBtn);
+
+    escBody.appendChild(escBtns);
     sec6.appendChild(escBody);
     out.appendChild(sec6);
 
@@ -1929,8 +1966,10 @@
     quickPrompts.addEventListener("click", function(e) {
       const target = e.target.closest(".prompt-chip");
       if (target && target.dataset.query) {
-        if (target.dataset.query.includes("escalation") && window.gtacOpenEscalationBrief) {
-          window.gtacOpenEscalationBrief();
+        if (target.dataset.targetTab && window.gtacOpenEscalationBrief) {
+          window.gtacOpenEscalationBrief(target.dataset.targetTab);
+        } else if (target.dataset.query.includes("escalation") && window.gtacOpenEscalationBrief) {
+          window.gtacOpenEscalationBrief("de");
         }
         sendChatMessage(target.dataset.query);
       }
@@ -2126,7 +2165,7 @@
   window.gtacProcessUploadFile = processUploadFile;
 })();
 
-// ------------------------------------------------------------- Escalation Brief Modal
+// ------------------------------------------------------------- Escalation & Customer Brief Modal
 (function() {
   const modal = document.getElementById("escalation-modal");
   const closeBtn = document.getElementById("close-escalation-modal");
@@ -2134,8 +2173,14 @@
   const downloadBtn = document.getElementById("download-escalation-btn");
   const mdView = document.getElementById("escalation-markdown-view");
   const badge = document.getElementById("modal-readiness-badge");
+  const title = document.getElementById("modal-title");
 
-  let currentMarkdown = "";
+  const tabDe = document.getElementById("modal-tab-de");
+  const tabEmail = document.getElementById("modal-tab-email");
+  const tabNotes = document.getElementById("modal-tab-notes");
+
+  let currentTab = "de"; // "de" | "email" | "notes"
+  let cachedData = null;
 
   function closeModal() {
     if (modal) modal.style.display = "none";
@@ -2148,11 +2193,41 @@
     });
   }
 
-  async function openEscalationBrief(payload) {
+  function renderActiveTab() {
+    if (!cachedData) return;
+
+    if (tabDe) tabDe.className = "tab-btn" + (currentTab === "de" ? " active" : "");
+    if (tabEmail) tabEmail.className = "tab-btn" + (currentTab === "email" ? " active" : "");
+    if (tabNotes) tabNotes.className = "tab-btn" + (currentTab === "notes" ? " active" : "");
+
+    if (currentTab === "de") {
+      if (title) title.textContent = "TIER 3 / DEFECT ENGINEERING ESCALATION BRIEF";
+      mdView.textContent = cachedData.markdown || "No escalation markdown generated.";
+      if (copyBtn) copyBtn.textContent = "📋 Copy Markdown";
+      if (downloadBtn) downloadBtn.textContent = "💾 Download .md";
+    } else if (currentTab === "email") {
+      if (title) title.textContent = "CUSTOMER STATUS UPDATE EMAIL (GTAC DRAFT)";
+      mdView.textContent = cachedData.customer_email || "No customer update email generated.";
+      if (copyBtn) copyBtn.textContent = "📋 Copy Email Text";
+      if (downloadBtn) downloadBtn.textContent = "💾 Download .txt";
+    } else if (currentTab === "notes") {
+      if (title) title.textContent = "GTAC CRM / SALESFORCE CASE WORKLOG";
+      mdView.textContent = cachedData.case_notes || "No case notes generated.";
+      if (copyBtn) copyBtn.textContent = "📋 Copy Case Notes";
+      if (downloadBtn) downloadBtn.textContent = "💾 Download .txt";
+    }
+  }
+
+  if (tabDe) tabDe.addEventListener("click", () => { currentTab = "de"; renderActiveTab(); });
+  if (tabEmail) tabEmail.addEventListener("click", () => { currentTab = "email"; renderActiveTab(); });
+  if (tabNotes) tabNotes.addEventListener("click", () => { currentTab = "notes"; renderActiveTab(); });
+
+  async function openEscalationBrief(payload, targetTab = "de") {
     if (!modal) return;
+    currentTab = targetTab;
     modal.style.display = "flex";
-    mdView.textContent = "Generating Defect Engineering Escalation Brief...";
-    badge.textContent = "Computing...";
+    mdView.textContent = "Generating technical package from evidence...";
+    badge.textContent = "Computing…";
     badge.className = "chat-badge";
 
     try {
@@ -2164,8 +2239,8 @@
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
 
-      currentMarkdown = data.markdown;
-      mdView.textContent = data.markdown;
+      cachedData = data;
+      renderActiveTab();
 
       if (data.readiness_status === "READY_FOR_ESCALATION") {
         badge.textContent = `Score: ${data.readiness_score}/100 · Ready for DE`;
@@ -2184,7 +2259,7 @@
     }
   }
 
-  async function triggerBrief() {
+  async function triggerBrief(targetTab = "de") {
     const payload = {};
     const textArea = document.getElementById("text");
     if (!window._gtacLastAnalysis && textArea && textArea.value.trim()) {
@@ -2205,36 +2280,59 @@
     if (window._gtacLastTimeline) {
       payload.timeline = window._gtacLastTimeline;
     }
-    openEscalationBrief(payload);
+    openEscalationBrief(payload, targetTab);
   }
 
   const reportEscBtn = document.getElementById("report-escalation-btn");
-  if (reportEscBtn) reportEscBtn.addEventListener("click", triggerBrief);
+  if (reportEscBtn) reportEscBtn.addEventListener("click", () => triggerBrief("de"));
+
+  const reportEmailBtn = document.getElementById("report-email-btn");
+  if (reportEmailBtn) reportEmailBtn.addEventListener("click", () => triggerBrief("email"));
+
+  const reportNotesBtn = document.getElementById("report-notes-btn");
+  if (reportNotesBtn) reportNotesBtn.addEventListener("click", () => triggerBrief("notes"));
 
   window.gtacOpenEscalationBrief = triggerBrief;
 
   if (copyBtn) {
     copyBtn.addEventListener("click", async function() {
-      if (!currentMarkdown) return;
+      if (!cachedData) return;
+      const textToCopy = currentTab === "email"
+        ? cachedData.customer_email
+        : (currentTab === "notes" ? cachedData.case_notes : cachedData.markdown);
+      if (!textToCopy) return;
+
       try {
-        await navigator.clipboard.writeText(currentMarkdown);
+        await navigator.clipboard.writeText(textToCopy);
         const oldText = copyBtn.textContent;
         copyBtn.textContent = "✅ Copied!";
-        setTimeout(() => { copyBtn.textContent = oldText; }, 2000);
+        setTimeout(() => { copyBtn.textContent = oldText; }, 1800);
       } catch (e) {
-        alert("Copied to clipboard failed: " + e.message);
+        alert("Copy to clipboard failed: " + e.message);
       }
     });
   }
 
   if (downloadBtn) {
     downloadBtn.addEventListener("click", function() {
-      if (!currentMarkdown) return;
-      const blob = new Blob([currentMarkdown], { type: "text/markdown;charset=utf-8" });
+      if (!cachedData) return;
+      let textContent = cachedData.markdown;
+      let filename = "GTAC_Escalation_Brief.md";
+
+      if (currentTab === "email") {
+        textContent = cachedData.customer_email;
+        filename = "GTAC_Customer_Update.txt";
+      } else if (currentTab === "notes") {
+        textContent = cachedData.case_notes;
+        filename = "GTAC_Case_Notes.txt";
+      }
+      if (!textContent) return;
+
+      const blob = new Blob([textContent], { type: "text/plain;charset=utf-8" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "GTAC_Escalation_Brief.md";
+      a.download = filename;
       a.click();
       URL.revokeObjectURL(url);
     });

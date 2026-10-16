@@ -155,6 +155,149 @@ class EscalationPackage:
 
         return "\n".join(lines)
 
+    def to_customer_email(self) -> str:
+        """Render customer-safe status email without internal defect IDs or unverified bug links."""
+        date_str = self.generated_at.strftime("%Y-%m-%d %H:%M UTC")
+        lines: list[str] = [
+            f"Subject: [GTAC Update] Case {self.case_id}: Technical Diagnostic Summary & Next Steps",
+            "",
+            "Dear Customer,",
+            "",
+            "Thank you for contacting Extreme Networks Global Technical Assistance Center (GTAC).",
+            f"We have completed an initial diagnostic assessment of the telemetry and log data provided for case {self.case_id}.",
+            "",
+            "---",
+            "### 1. Environment Under Investigation",
+            f"- Target Platform: {self.platform or 'Extreme Switch'}",
+            f"- Identified Firmware Release: {self.sw_version or 'Under verification'}",
+            f"- Affected Domain / Subsystem: {', '.join(self.subsystems) if self.subsystems else 'General Network'}",
+            "",
+            "### 2. Diagnostic Summary & Observed Symptoms",
+        ]
+
+        if self.symptoms:
+            for s in self.symptoms:
+                lines.append(f"- Observed symptom: {s}")
+        else:
+            lines.append("- Symptoms are under active baseline investigation from the supplied logs.")
+
+        lines.extend([
+            "",
+            "### 3. Immediate Action Plan & Recommended Verification Commands",
+            "To confirm device state and isolate the trigger condition, please execute the following read-only commands during your next observation window and upload the outputs to the case portal:",
+            "```text",
+            "show version",
+            "show logging raslog",
+        ])
+
+        if any("bgp" in s.lower() for s in self.subsystems):
+            lines.extend([
+                "show ip bgp summary",
+                "show ip bgp neighbors",
+            ])
+        elif any("tcam" in s.lower() or "hardware" in s.lower() for s in self.subsystems):
+            lines.extend([
+                "show hardware profile",
+                "show table entry count",
+            ])
+        elif any("lacp" in s.lower() or "link" in s.lower() for s in self.subsystems):
+            lines.extend([
+                "show port-channel detail",
+                "show lacp sys-id",
+            ])
+        else:
+            lines.append("show environment")
+
+        lines.extend([
+            "supportsave",
+            "```",
+            "",
+            "### 4. Current Status & Next Steps",
+            "- Current Case Status: In Progress (GTAC Diagnostic Evaluation)",
+            "- Next Follow-up: GTAC engineer will review updated outputs within 1 business day of receipt.",
+            "",
+            "If you have any questions or schedule constraints for maintenance activities, please reply directly to this email or update the case portal.",
+            "",
+            "Best regards,",
+            "Extreme Networks Global Technical Assistance Center (GTAC)",
+            f"Case: {self.case_id} | Timestamp: {date_str}",
+        ])
+        return "\n".join(lines)
+
+    def to_case_notes(self) -> str:
+        """Render standardized CRM / Salesforce GTAC engineering case notes."""
+        date_str = self.generated_at.strftime("%Y-%m-%d %H:%M:%S UTC")
+        lines: list[str] = [
+            "================================================================================",
+            "GTAC CASE WORKLOG & TECHNICAL SUMMARY",
+            "================================================================================",
+            f"CASE ID        : {self.case_id}",
+            f"TIMESTAMP      : {date_str}",
+            f"PLATFORM       : {self.platform or 'Unspecified'}",
+            f"RUNNING SW     : {self.sw_version or 'Unestablished'}",
+            f"SUBSYSTEMS     : {', '.join(self.subsystems) if self.subsystems else 'General'}",
+            f"DE READINESS   : {self.readiness_score}/100 ({self.readiness_status})",
+            "--------------------------------------------------------------------------------",
+            "",
+            "[PROBLEM STATEMENT]",
+        ]
+
+        if self.symptoms:
+            for s in self.symptoms:
+                lines.append(f"- {s}")
+        else:
+            lines.append("- Symptoms under active triage.")
+
+        lines.extend([
+            "",
+            "[VERIFIED LOG EVIDENCE & SYMPTOMS]",
+        ])
+        if self.evidence_provenance:
+            for ev in self.evidence_provenance[:6]:
+                lines.append(f"- {ev.get('value', '')} (Source: {ev.get('source', 'log')})")
+        else:
+            lines.append("- No raw log lines cataloged.")
+
+        lines.extend([
+            "",
+            "[DEFECT HYPOTHESES & TRAP RULINGS]",
+        ])
+        if self.candidate_defects:
+            for d in self.candidate_defects:
+                lines.append(f"- Candidate: {d.get('id', '')} [{d.get('confidence', '')}] - {d.get('statement', '')}")
+        else:
+            lines.append("- No confirmed defect match identified.")
+
+        if self.eliminated_traps:
+            for t in self.eliminated_traps:
+                lines.append(f"- Ruled Out: {t.get('id', '')} - {t.get('statement', '')}")
+
+        lines.extend([
+            "",
+            "[ACTIONS COMPLETED BY GTAC]",
+        ])
+        if self.actions_taken:
+            for a in self.actions_taken:
+                lines.append(f"- {a}")
+        else:
+            lines.append("- Initial automated diagnostic log and defect exposure analysis performed.")
+
+        lines.extend([
+            "",
+            "[ACTION PLAN & NEXT STEPS]",
+        ])
+        if self.missing_artifacts:
+            for m in self.missing_artifacts:
+                lines.append(f"- Request from customer: {m}")
+        else:
+            lines.append("- Validate symptoms against test bed reproduction.")
+
+        lines.extend([
+            "- Review customer updates upon receipt of next diagnostics.",
+            "================================================================================",
+        ])
+        return "\n".join(lines)
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "case_id": self.case_id,
@@ -173,6 +316,8 @@ class EscalationPackage:
             "readiness_score": self.readiness_score,
             "bounce_risk_notes": self.bounce_risk_notes,
             "markdown": self.to_markdown(),
+            "customer_email": self.to_customer_email(),
+            "case_notes": self.to_case_notes(),
         }
 
     def to_json(self, indent: int = 2) -> str:

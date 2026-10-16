@@ -90,3 +90,30 @@ def test_markdown_and_json_serialization() -> None:
     assert parsed["case_id"] == "CS-TEST-1"
     assert parsed["readiness_score"] >= 0
     assert parsed["readiness_status"] in ("READY_FOR_ESCALATION", "NEEDS_EVIDENCE")
+    assert "customer_email" in parsed
+    assert "case_notes" in parsed
+
+
+def test_customer_email_and_case_notes() -> None:
+    pkg = build_escalation_package(
+        case_id="CS-EMAIL-100",
+        evidence={
+            "running_version": {"value": "20.2.3a"},
+            "platforms": [{"value": "SLX 9240"}],
+            "errors": [{"value": "BGP-1002 session reset"}],
+        },
+    )
+
+    email = pkg.to_customer_email()
+    assert "[GTAC Update] Case CS-EMAIL-100" in email
+    assert "SLX 9240" in email
+    assert "20.2.3a" in email
+    assert "supportsave" in email
+    # Internal defect strings or raw defect tags should not be in customer email
+    assert "DEFECT000" not in email
+
+    notes = pkg.to_case_notes()
+    assert "GTAC CASE WORKLOG" in notes
+    assert "CS-EMAIL-100" in notes
+    assert "[PROBLEM STATEMENT]" in notes
+    assert "[ACTION PLAN & NEXT STEPS]" in notes
