@@ -1395,7 +1395,7 @@
         <div class="chat-header-title">
           <div class="copilot-avatar">✨</div>
           <div>
-            <h2 id="chat-title" style="margin:0;font-size:12.5px;font-weight:700;letter-spacing:0.06em;color:var(--ink-bright)">GTAC COPILOT &middot; CONVERSATIONAL TROUBLESHOOTING</h2>
+            <h2 id="chat-title" style="margin:0;font-size:12.5px;font-weight:700;letter-spacing:0.06em;color:var(--ink-bright)">AI TROUBLESHOOTING AGENT</h2>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
@@ -1406,7 +1406,7 @@
 
       <div class="chat-body" id="chat-messages" aria-live="polite">
         <div class="chat-msg assistant">
-          <span class="chat-msg-role">GTAC Copilot</span>
+          <span class="chat-msg-role">AI Troubleshooting Agent</span>
           <div>Hello! I am your Network Troubleshooting Assistant.</div>
           
           <div class="copilot-welcome-box">
@@ -1469,7 +1469,7 @@
           <span>📎</span> Attach Log
         </button>
         <textarea id="chat-input" placeholder="Ask a diagnostic question, test a hypothesis, or upload logs..." rows="2"></textarea>
-        <button type="button" class="primary" id="chat-send" style="align-self:flex-end">Ask Copilot</button>
+        <button type="button" class="primary" id="chat-send" style="align-self:flex-end">Ask Agent</button>
       </div>
     </section>
   </aside>
@@ -2389,7 +2389,7 @@
 
     const roleSpan = document.createElement("span");
     roleSpan.className = "chat-msg-role";
-    roleSpan.textContent = role === "user" ? "Network Engineer" : "GTAC Copilot";
+    roleSpan.textContent = role === "user" ? "Network Engineer" : "AI Troubleshooting Agent";
     msg.appendChild(roleSpan);
 
     const textDiv = document.createElement("div");
