@@ -38,6 +38,7 @@ class Session:
     findings: list[Finding] = field(default_factory=list)
     active_evidence: dict[str, Any] | None = None
     active_timeline: dict[str, Any] | None = None
+    security_intelligence: str | None = None
 
     # Conversation history — system prompt is NOT stored here; it is
     # rebuilt each turn from the current context.

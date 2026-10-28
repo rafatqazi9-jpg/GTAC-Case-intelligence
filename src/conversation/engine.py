@@ -16,6 +16,7 @@ from typing import Any
 from ..adapters.base import Adapter, EvidenceWindow
 from ..brief import build
 from ..extract import extract_all, summarise_log
+from ..intelligence.security import gather_security_intelligence, is_security_query
 from ..llm.base import LLMProvider, LLMResponse, ProviderError
 from ..models import Confidence
 from .prompts import build_messages
@@ -151,6 +152,12 @@ class ConversationEngine:
             if ev.errors:
                 session.symptom_text = ", ".join(e.value for e in ev.errors[:3])
             session.data_source = "pasted log input"
+
+        # Check for real-time security & CVE threat intelligence lookup
+        if is_security_query(question):
+            intel = gather_security_intelligence(question)
+            if intel:
+                session.security_intelligence = intel
 
         # Build the prompt.
         messages = build_messages(session, question)

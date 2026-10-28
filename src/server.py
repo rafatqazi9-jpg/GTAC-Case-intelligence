@@ -479,7 +479,7 @@ def main(argv: list[str] | None = None) -> int:
     default_port = int(os.environ.get("PORT", 8899))
     default_host = os.environ.get("HOST", "127.0.0.1")
 
-    ap = argparse.ArgumentParser(description="GTAC Analyzer & Copilot Server")
+    ap = argparse.ArgumentParser(description="GTAC Analyzer & AI Assistant Server")
     ap.add_argument("--host", type=str, default=default_host, help="Host to bind to (e.g. 127.0.0.1 or 0.0.0.0)")
     ap.add_argument("--port", type=int, default=default_port, help="Port to listen on")
     ap.add_argument("--open", action="store_true", help="open a browser tab")

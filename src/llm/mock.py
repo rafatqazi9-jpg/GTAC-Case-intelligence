@@ -128,6 +128,31 @@ _RESPONSES: list[tuple[re.Pattern[str], str]] = [
      "- **Gaps**: Missing data that would be needed for escalation.\n\n"
      "When no candidate reaches the confidence threshold, the brief abstains "
      "rather than guessing."),
+
+    (re.compile(r"\b(netsight|purview|extremeanalytics|xiq-se|extreme\s+management\s+center)\b.*(php|cve|vulnerab|php2shell)", re.I),
+     "### Extreme Networks Security Assessment: NetSight Engine & Purview\n\n"
+     "**Conclusion:** NetSight (Extreme Management Center / XIQ-SE) and Extreme Purview (ExtremeAnalytics) are **NOT affected** by standard PHP runtime vulnerabilities (including PHP2Shell or PHP-CGI argument injection).\n\n"
+     "#### Architecture Analysis:\n"
+     "1. **NetSight / XIQ-SE Engine:** NetSight is an enterprise Java management suite running on a Java Virtual Machine (JVM) using WildFly/Tomcat/Jetty application servlets. It does not bundle or expose PHP as a web scripting engine or web application layer.\n"
+     "2. **Extreme Purview (ExtremeAnalytics):** Purview operates as a flow telemetry sensor appliance (Linux kernel flow-capture daemons and NetSight Java collectors). It does not host PHP web endpoints.\n"
+     "3. **Operating System Layer:** The underlying Linux appliance OS (CentOS/AlmaLinux/Debian) does not install PHP packages by default unless an administrator manually added third-party packages.\n\n"
+     "#### Host Verification Commands:\n"
+     "To confirm no unauthorized or residual PHP binaries exist on the appliance host, execute on the shell:\n"
+     "```bash\n"
+     "# 1. Verify if PHP binary exists\n"
+     "which php || type php\n\n"
+     "# 2. Check for installed PHP packages (RPM/Debian)\n"
+     "rpm -qa | grep -i php || dpkg -l | grep -i php\n\n"
+     "# 3. Verify listening web services are JVM/Java\n"
+     "ss -tulpn | grep -E ':(80|443|8443)'\n"
+     "```"),
+
+    (re.compile(r"\b(php2shell|cve-\d{4}-\d+|vulnerab\w*|advisory|security\s+bulletin)\b", re.I),
+     "### Security & Vulnerability Analysis\n\n"
+     "When evaluating published CVEs (such as PHP, OpenSSL, or Apache vulnerabilities) across Extreme Networks infrastructure:\n\n"
+     "1. **Platform Scope:** Extreme SLX-OS and VDX/NOS network operating systems do not employ PHP in their management plane (SSMD/SEC daemons and Netconf/REST APIs use Python/C/Go microservices). NetSight/XIQ-SE is built upon a Java/WildFly runtime.\n"
+     "2. **Triage Recommendation:** Confirm whether the package is present on the appliance host using package manager queries (`rpm -qa`, `dpkg -l`) and verify open network listeners with `ss -tulpn` or `netstat -tlpn`.\n"
+     "3. **Official Advisory:** Reference the Extreme Networks Security Advisory Portal for specific patch releases and signed software advisories."),
 ]
 
 
@@ -185,12 +210,37 @@ class MockLLMProvider(LLMProvider):
                     text=response_text, provider="mock", model="mock-v1"
                 )
 
+        # Extract live security intelligence if available in system prompt
+        sec_intel = ""
+        system_msg = next((m for m in messages if m.role == "system"), None)
+        system_text = system_msg.content if system_msg else ""
+        if "## Real-Time Security & Threat Intelligence" in system_text:
+            sec_intel = system_text.split("## Real-Time Security & Threat Intelligence", 1)[1].strip()
+
         # Check built-in pattern bank.
         for pattern, response_text in _RESPONSES:
             if pattern.search(query):
+                if sec_intel and ("Security" in response_text or "CVE" in response_text or "NetSight" in response_text):
+                    response_text += f"\n\n#### Real-Time Threat Intelligence:\n{sec_intel}"
                 return LLMResponse(
                     text=response_text, provider="mock", model="mock-v1"
                 )
+
+        # If live security intelligence was gathered and query is asking about CVE / security
+        if sec_intel:
+            return LLMResponse(
+                text=(
+                    f"### Real-Time Security Advisory Analysis\n\n"
+                    f"{sec_intel}\n\n"
+                    f"#### Extreme Networks Architecture Guidance:\n"
+                    f"- Extreme SLX-OS and VDX/NOS management planes do not use PHP; Web/API endpoints run on dedicated system daemons.\n"
+                    f"- NetSight / XIQ-SE runs on a Java Virtual Machine (JVM/WildFly) and does not deploy PHP.\n"
+                    f"- Extreme Purview / ExtremeAnalytics utilizes flow telemetry sensors and does not expose PHP services.\n"
+                    f"- Run `rpm -qa | grep -i php` or `which php` on the appliance shell to confirm no third-party PHP packages are installed."
+                ),
+                provider="mock",
+                model="mock-v1",
+            )
 
         # Analysis if the user pasted raw RASLOG / Syslog text
         if ("SEC-3020" in query or "NSM-1004" in query or "SSMD-1005" in query or "Interface Ethernet" in query) and len(query) > 60:
