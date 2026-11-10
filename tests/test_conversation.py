@@ -179,3 +179,10 @@ class TestConversationEngine:
         assert res.error is not None
         assert "Simulated API failure" in res.error
         assert "error communicating" in res.text.lower()
+
+    def test_session_pruning_capacity(self) -> None:
+        from src.conversation.engine import MAX_SESSIONS
+        engine = ConversationEngine(MockLLMProvider(), MockAdapter())
+        for i in range(MAX_SESSIONS + 10):
+            engine.create_session()
+        assert engine.session_count == MAX_SESSIONS

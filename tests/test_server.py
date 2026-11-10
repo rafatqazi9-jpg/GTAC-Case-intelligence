@@ -425,4 +425,61 @@ def test_escalation_endpoint_success(base_url: str) -> None:
     assert "readiness_score" in data
 
 
+# ------------------------------------------------------------- security & headers
+def test_security_headers_present(base_url: str) -> None:
+    req = urllib.request.Request(base_url + "/")
+    with urllib.request.urlopen(req) as r:
+        headers = dict(r.headers)
+        assert headers.get("X-Frame-Options") == "DENY"
+        assert "Content-Security-Policy" in headers
+        assert "Strict-Transport-Security" in headers
+        assert "Permissions-Policy" in headers
+
+
+def test_http_options_preflight(base_url: str) -> None:
+    req = urllib.request.Request(base_url + "/api/analyze", method="OPTIONS")
+    with urllib.request.urlopen(req) as r:
+        assert r.status == 204
+        assert r.headers.get("Allow") == "GET, POST, OPTIONS"
+
+
+def test_unsupported_verbs_return_405(base_url: str) -> None:
+    for verb in ("PUT", "DELETE", "PATCH", "TRACE"):
+        req = urllib.request.Request(
+            base_url + "/api/analyze",
+            data=b"{}",
+            headers={"Content-Type": "application/json"},
+            method=verb,
+        )
+        try:
+            with urllib.request.urlopen(req) as r:
+                assert False, f"Expected 405 for {verb}, got {r.status}"
+        except urllib.error.HTTPError as e:
+            assert e.code == 405
+            data = json.loads(e.read())
+            assert data["error"] == "Method Not Allowed"
+
+
+def test_core_dump_filename_html_sanitized(base_url: str) -> None:
+    import base64
+    import io
+    import zipfile
+
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w") as zf:
+        zf.writestr('<img src=x onerror=alert(1)>.core', b"crash log")
+    b64 = base64.b64encode(buf.getvalue()).decode("ascii")
+
+    code, data = _post_upload(base_url, {
+        "filename": "crash.zip",
+        "content_b64": b64,
+    })
+    assert code == 200
+    core_dumps = data["core_dumps"]
+    assert len(core_dumps) == 1
+    assert "<img" not in core_dumps[0]
+    assert "&lt;img" in core_dumps[0]
+
+
+
 

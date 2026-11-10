@@ -48,6 +48,9 @@ class ChatResponse:
         return d
 
 
+MAX_SESSIONS = 50
+
+
 class ConversationEngine:
     """Manages investigation sessions and routes questions to the LLM.
 
@@ -62,6 +65,18 @@ class ConversationEngine:
         self._adapter = adapter
         self._sessions: dict[str, Session] = {}
 
+    def _prune_sessions(self) -> None:
+        """Evict oldest inactive sessions to prevent unbounded memory growth."""
+        if len(self._sessions) <= MAX_SESSIONS:
+            return
+        sorted_items = sorted(
+            self._sessions.items(),
+            key=lambda item: getattr(item[1], "last_accessed", item[1].created_at),
+        )
+        to_evict = len(self._sessions) - MAX_SESSIONS
+        for sid, _ in sorted_items[:to_evict]:
+            self._sessions.pop(sid, None)
+
     @property
     def provider_name(self) -> str:
         return self._provider.name
@@ -71,7 +86,10 @@ class ConversationEngine:
         return len(self._sessions)
 
     def get_session(self, session_id: str) -> Session | None:
-        return self._sessions.get(session_id)
+        s = self._sessions.get(session_id)
+        if s is not None:
+            s.last_accessed = datetime.now()
+        return s
 
     def create_session(self, case_id: str | None = None) -> Session:
         """Create a new investigation session, optionally loading a case."""
@@ -81,6 +99,7 @@ class ConversationEngine:
             self._load_case(session, case_id)
 
         self._sessions[session.id] = session
+        self._prune_sessions()
         return session
 
     def list_sessions(self) -> list[dict[str, Any]]:
@@ -129,9 +148,11 @@ class ConversationEngine:
 
         if session is None:
             session = self.create_session(case_id=case_id)
-        elif case_id and session.case_id != case_id:
-            # Load a different case into the existing session.
-            self._load_case(session, case_id)
+        else:
+            session.last_accessed = datetime.now()
+            if case_id and session.case_id != case_id:
+                # Load a different case into the existing session.
+                self._load_case(session, case_id)
 
         # If active evidence was supplied with the request, ground session in it
         if evidence and isinstance(evidence, dict):

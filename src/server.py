@@ -57,8 +57,8 @@ SAMPLES = Path(__file__).resolve().parents[1] / "data" / "samples"
 # mistake or an attack, and either way should be refused rather than buffered.
 MAX_BODY = 8 * 1024 * 1024
 
-# Diagnostic archives and ShowSupport bundles can be hundreds of megabytes.
-MAX_UPLOAD_BODY = 750 * 1024 * 1024  # 750 MB for base64-encoded archive uploads
+# Diagnostic archives in base64 format are bounded to 50 MB to prevent memory exhaustion / DoS
+MAX_UPLOAD_BODY = 50 * 1024 * 1024  # 50 MB for base64-encoded archive uploads
 
 # Lazy singleton: created on first chat request so the server starts fast
 # and tests that don't use chat don't pay for provider initialisation.
@@ -187,7 +187,8 @@ def upload_payload(filename: str, content_b64: str, password: str | None = None)
 
     # Core dump detection & bundle completeness evaluation
     core_dumps = [
-        item.relative_path for item in report.items
+        item.relative_path.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+        for item in report.items
         if any(marker in item.relative_path.lower() for marker in (".core", ".dmp", "core.", ".dump", "crash"))
     ]
     has_config = any("config" in item.relative_path.lower() or item.relative_path.lower().endswith(".cfg") for item in report.items)
@@ -277,12 +278,50 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Referrer-Policy", "no-referrer")
         self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
+        self.send_header("X-Frame-Options", "DENY")
+        self.send_header("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
+        self.send_header("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+        self.send_header(
+            "Content-Security-Policy",
+            "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';"
+        )
         self.end_headers()
         self.wfile.write(body)
 
     def _json(self, code: int, payload: dict[str, Any]) -> None:
         self._send(code, json.dumps(payload).encode("utf-8"),
                    "application/json; charset=utf-8")
+
+    # ---------------------------------------------------------------- OPTIONS & REST Verbs
+    def do_OPTIONS(self) -> None:
+        self.send_response(204)
+        self.send_header("Allow", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+
+    def _reject_method(self) -> None:
+        try:
+            length = int(self.headers.get("Content-Length") or 0)
+            if 0 < length <= MAX_BODY:
+                self.rfile.read(length)
+        except Exception:
+            pass
+        self._json(405, {"error": "Method Not Allowed"})
+
+    def do_PUT(self) -> None:
+        self._reject_method()
+
+    def do_DELETE(self) -> None:
+        self._reject_method()
+
+    def do_PATCH(self) -> None:
+        self._reject_method()
+
+    def do_TRACE(self) -> None:
+        self._reject_method()
 
     # ---------------------------------------------------------------- GET
     def do_GET(self) -> None:
@@ -315,6 +354,11 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/sessions":
+            # Session catalog is restricted to local loopback clients to prevent unauthorized remote harvesting
+            client_ip = self.client_address[0]
+            if client_ip not in ("127.0.0.1", "localhost", "::1"):
+                self._json(403, {"error": "Access to active session catalog is restricted to local loopback"})
+                return
             try:
                 engine = _get_engine()
                 self._json(200, {

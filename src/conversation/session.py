@@ -25,6 +25,7 @@ class Session:
     """
     id: str = field(default_factory=lambda: uuid.uuid4().hex[:12])
     created_at: datetime = field(default_factory=datetime.now)
+    last_accessed: datetime = field(default_factory=datetime.now)
 
     # Investigation context — set when a case is loaded.
     case_id: str | None = None
