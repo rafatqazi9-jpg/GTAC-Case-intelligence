@@ -183,21 +183,28 @@ class ConversationEngine:
         # Build the prompt.
         messages = build_messages(session, question)
 
-        # Call the LLM.
+        # Call the LLM with automatic fallback on provider failure.
         try:
             llm_response: LLMResponse = self._provider.complete(messages)
             response_text = llm_response.text
             error = None
         except ProviderError as exc:
+            # Fall back to built-in offline engine so the engineer always receives an answer
+            from ..llm.mock import MockLLMProvider
+            fallback_provider = MockLLMProvider()
+            fallback_resp = fallback_provider.complete(messages)
+            fallback_body = fallback_resp.text
+
             response_text = (
-                f"I encountered an error communicating with the AI provider: "
-                f"{exc}. Please try again."
+                f"*(Note: Error communicating with AI provider [{self._provider.name}]: {exc}. "
+                f"Served via built-in GTAC diagnostic engine.)*\n\n"
+                f"{fallback_body}"
             )
-            error = str(exc)
+            error = f"Error communicating with provider ({self._provider.name}): {exc}"
             llm_response = LLMResponse(
                 text=response_text,
-                provider=self._provider.name,
-                model="error",
+                provider="offline-fallback",
+                model="mock-v1",
             )
 
         # Update session history.

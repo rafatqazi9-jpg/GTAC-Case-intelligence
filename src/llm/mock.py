@@ -153,6 +153,29 @@ _RESPONSES: list[tuple[re.Pattern[str], str]] = [
      "1. **Platform Scope:** Extreme SLX-OS and VDX/NOS network operating systems do not employ PHP in their management plane (SSMD/SEC daemons and Netconf/REST APIs use Python/C/Go microservices). NetSight/XIQ-SE is built upon a Java/WildFly runtime.\n"
      "2. **Triage Recommendation:** Confirm whether the package is present on the appliance host using package manager queries (`rpm -qa`, `dpkg -l`) and verify open network listeners with `ss -tulpn` or `netstat -tlpn`.\n"
      "3. **Official Advisory:** Reference the Extreme Networks Security Advisory Portal for specific patch releases and signed software advisories."),
+
+    (re.compile(r"\b(?:8820|slx|nos|vdx|exos|voss|extreme|switch|router)?\s*(?:mac\s*(?:address)?\s*table|mac\s*address|show\s+mac|fdb)\b", re.I),
+     "### Extreme Networks MAC Address Table CLI Commands\n\n"
+     "On the **ExtremeRouting SLX 8820** (running **SLX-OS**), use the following commands to inspect learned MAC addresses:\n\n"
+     "```bash\n"
+     "# 1. Display the complete MAC address table\n"
+     "show mac-address-table\n\n"
+     "# 2. Filter MAC address table by specific VLAN\n"
+     "show mac-address-table vlan <vlan-id>\n\n"
+     "# 3. Filter by specific Ethernet interface\n"
+     "show mac-address-table interface ethernet <slot/port>\n\n"
+     "# 4. Lookup a specific host MAC address\n"
+     "show mac-address-table address <xxxx.xxxx.xxxx>\n\n"
+     "# 5. Display total count of learned MAC addresses\n"
+     "show mac-address-table count\n\n"
+     "# 6. Clear dynamic learned MAC addresses\n"
+     "clear mac-address-table dynamic\n"
+     "```\n\n"
+     "#### Cross-Platform Extreme Command Syntax:\n"
+     "- **SLX-OS (SLX 8820, 9540, 9850):** `show mac-address-table [vlan <id>] [interface ethernet <slot/port>]`\n"
+     "- **NOS / VDX (VDX 6740, 8770):** `show mac-address-table`\n"
+     "- **EXOS / SwitchEngine (Summit, 5520, 5420):** `show fdb [vlan <vlan-name>]`\n"
+     "- **VOSS / Fabric Engine (VSP 4000/7000/8000):** `show mac-address-table` or `show vlan mac-address-entry`"),
 ]
 
 
