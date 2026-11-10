@@ -355,8 +355,9 @@ class Handler(BaseHTTPRequestHandler):
 
         if path == "/api/sessions":
             # Session catalog is restricted to local loopback clients to prevent unauthorized remote harvesting
+            forwarded = self.headers.get("X-Forwarded-For")
             client_ip = self.client_address[0]
-            if client_ip not in ("127.0.0.1", "localhost", "::1"):
+            if forwarded or client_ip not in ("127.0.0.1", "localhost", "::1"):
                 self._json(403, {"error": "Access to active session catalog is restricted to local loopback"})
                 return
             try:
