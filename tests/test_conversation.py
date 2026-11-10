@@ -178,7 +178,8 @@ class TestConversationEngine:
         res = engine.ask("Help me troubleshoot")
         assert res.error is not None
         assert "Simulated API failure" in res.error
-        assert "error communicating" in res.text.lower()
+        assert res.provider == "offline-fallback"
+        assert res.text is not None and len(res.text) > 0
 
     def test_session_pruning_capacity(self) -> None:
         from src.conversation.engine import MAX_SESSIONS

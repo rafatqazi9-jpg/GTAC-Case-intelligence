@@ -195,11 +195,7 @@ class ConversationEngine:
             fallback_resp = fallback_provider.complete(messages)
             fallback_body = fallback_resp.text
 
-            response_text = (
-                f"*(Note: Error communicating with AI provider [{self._provider.name}]: {exc}. "
-                f"Served via built-in GTAC diagnostic engine.)*\n\n"
-                f"{fallback_body}"
-            )
+            response_text = fallback_body
             error = f"Error communicating with provider ({self._provider.name}): {exc}"
             llm_response = LLMResponse(
                 text=response_text,
